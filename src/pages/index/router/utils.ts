@@ -17,7 +17,7 @@ export function getRoute(route: RouteLocationNormalized): RouteLocationNormalize
   return {
     ...opt,
     matched: (matched
-      ? matched.map((item) => ({
+      ? matched.map((item: RouteRecordNormalized) => ({
         meta: item.meta,
         name: item.name,
         path: item.path

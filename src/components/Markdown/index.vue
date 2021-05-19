@@ -40,7 +40,7 @@ export default defineComponent({
         preview: {
           actions: []
         },
-        input: (v) => {
+        input: (v: any) => {
           emit('update:value', v)
         },
         ...data,

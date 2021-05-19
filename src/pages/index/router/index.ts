@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecord } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { AppRouteRecordRaw } from './types'
 import type { App } from 'vue'
@@ -85,7 +85,8 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
       }
     ]
   },
-  {
+  /*eslint-disable*/
+  /*{
     path: '/external-link',
     component: Layout,
     meta: {},
@@ -95,7 +96,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
         meta: { title: '文档', icon: 'documentation' }
       }
     ]
-  },
+  },*/
   {
     path: '/guide',
     component: Layout,
@@ -654,7 +655,7 @@ export function resetRouter(): void {
     'Dashboard',
     'Page404'
   ]
-  router.getRoutes().forEach((route) => {
+  router.getRoutes().forEach((route: RouteRecord) => {
     const { name } = route
     if (name && !resetWhiteNameList.includes(name as string)) {
       router.hasRoute(name) && router.removeRoute(name)
