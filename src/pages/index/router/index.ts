@@ -85,18 +85,19 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
       }
     ]
   },
-  /*eslint-disable*/
-  /*{
+  {
     path: '/external-link',
     component: Layout,
-    meta: {},
+    meta: {
+      // hidden: true
+    },
     children: [
       {
         path: 'http://8.133.179.48:4000/dist-doc/',
         meta: { title: '文档', icon: 'documentation' }
       }
     ]
-  },*/
+  },
   {
     path: '/guide',
     component: Layout,

@@ -178,6 +178,7 @@ const vueConfig = {
   },
   // 跨域代理
   devServer: {
+    port: 9999,
     proxy: {
       '/api': {
         target: 'http://220.160.52.164:8213',
