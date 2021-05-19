@@ -203,7 +203,8 @@ export default defineComponent({
     // 表单验证规则
     rules: {
       type: Object as PropType<{ [key: number]: any }>,
-      default: () => []
+      // default: () => []
+      default: () => {}
     },
     // 是否显示重置按钮
     showReset: {

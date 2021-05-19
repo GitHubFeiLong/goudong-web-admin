@@ -167,7 +167,7 @@ const vueConfig = {
     })
   },
   configureWebpack: {
-    
+
   },
   css: {
     loaderOptions: {
