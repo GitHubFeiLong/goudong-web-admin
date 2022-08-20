@@ -179,6 +179,26 @@ aside {
     vertical-align: middle;
     margin-bottom: 10px;
   }
+
+  .filter-item-first-condition {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px 10px 10px 0px;
+  }
+
+  .filter-item-condition {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px 10px 10px 40px;
+  }
+
+  .filter-btn-first {
+    margin: 0px 10px 10px 40px;
+  }
+
+  .filter-btn {
+    margin: 0px 10px 10px 10px;
+  }
 }
 
 //refine vue-multiselect plugin

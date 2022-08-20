@@ -1,9 +1,10 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import {getInfo, login, logout} from '@/api/user'
+import {getToken, removeToken, setToken} from '@/utils/auth'
+import router, {resetRouter} from '@/router'
 import LocalStorageUtil from '@/pojo/LocalStorageUtil'
-import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst.js'
+import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst.js'
 import Token from '@/pojo/Token'
+import defaultAvatarPng from '@/assets/png/default-avatar.png'
 
 const state = {
   token: getToken(),
@@ -51,9 +52,9 @@ const actions = {
         for (const key in user.roles) {
           roles.push(user.roles[key].roleName)
         }
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', roles.length === 0 ? ['匿名角色'] : roles)
         commit('SET_NAME', username)
-        commit('SET_AVATAR', 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663385878&t=2ced0a76ecc119b3bfa3664ead8f789b')
+        commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
         resolve()
       }).catch(error => {
@@ -73,42 +74,13 @@ const actions = {
         for (const key in user.roles) {
           roles.push(user.roles[key].roleName)
         }
-        // user.roles.for((role, index) => {
-        //   roles.push(role.roleName)
-        // })
-
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', roles.length === 0 ? ['匿名角色'] : roles)
         commit('SET_NAME', username)
-        commit('SET_AVATAR', 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F4k%2Fs%2F02%2F2109242332225H9-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1663385878&t=2ced0a76ecc119b3bfa3664ead8f789b')
+        commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
         resolve()
       })
     })
-
-    // return new Promise((resolve, reject) => {
-    //   getInfo(state.token).then(response => {
-    //     const { data } = response
-    //
-    //     if (!data) {
-    //       reject('Verification failed, please Login again.')
-    //     }
-    //
-    //     const { roles, name, avatar, introduction } = data
-    //
-    //     // roles must be a non-empty array
-    //     if (!roles || roles.length <= 0) {
-    //       reject('getInfo: roles must be a non-null array!')
-    //     }
-    //
-    //     commit('SET_ROLES', roles)
-    //     commit('SET_NAME', name)
-    //     commit('SET_AVATAR', avatar)
-    //     commit('SET_INTRODUCTION', introduction)
-    //     resolve(data)
-    //   }).catch(error => {
-    //     reject(error)
-    //   })
-    // })
   },
 
   // user logout
@@ -141,6 +113,8 @@ const actions = {
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
       LocalStorageUtil.remove(USER_LOCAL_STORAGE)
       removeToken()
+      resetRouter()
+      dispatch('tagsView/delAllViews', null, {root: true})
       resolve()
     })
   },

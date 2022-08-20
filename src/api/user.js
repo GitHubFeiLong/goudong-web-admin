@@ -27,3 +27,29 @@ export function logout() {
     method: 'put'
   })
 }
+
+/**
+ * 根据字段进行分页查询用户
+ * @param page
+ * @returns {*}
+ */
+export function pageUserByField(page) {
+  return request({
+    url: '/api/user/base-user/page-field',
+    method: 'get',
+    params: page
+  })
+}
+
+/**
+ * 列表的分页查询
+ * @param page : { page, size, username, validTime, createTime }
+ * @returns {*}
+ */
+export function pageUser(page) {
+  return request({
+    url: '/api/user/base-user/page',
+    method: 'get',
+    params: page
+  })
+}

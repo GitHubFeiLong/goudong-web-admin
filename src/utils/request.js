@@ -1,13 +1,12 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 import store from '@/store'
-import router from '@/router'
 import Token from '@/pojo/Token'
-import { validateUrlAuthentication } from '@/utils/validate'
+import {validateUrlAuthentication} from '@/utils/validate'
 import LocalStorageUtil from '@/pojo/LocalStorageUtil'
-import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
-import { refresh } from '@/api/user'
-import { AUTHORIZATION, BEARER } from '@/constant/HttpHeaderConst'
+import {TOKEN_LOCAL_STORAGE} from '@/constant/LocalStorageConst'
+import {refresh} from '@/api/user'
+import {AUTHORIZATION, BEARER} from '@/constant/HttpHeaderConst'
 
 // create an axios instance
 const service = axios.create({
@@ -18,6 +17,9 @@ const service = axios.create({
   withCredentials: true,
   // 请求头配置
   headers: {
+    // get: {
+    //   'Content-Type': 'application/x-www-form-urlencoded'
+    // },
     post: {
       'Content-Type': 'application/json;charset=UTF-8'
     },
@@ -102,8 +104,8 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         })
-        LocalStorageUtil.remove(USER_LOCAL_STORAGE)
-        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
+        this.$store.dispatch('user/resetToken')
+        window.location.href = '/login'
         return Promise.reject()
       }
 
@@ -114,6 +116,8 @@ service.interceptors.response.use(
         return refreshingToken(token, config, result)
       } else {
         // 跳转到登录页
+        store.dispatch('user/resetToken')
+        window.location.href = '/login'
         return Promise.reject()
       }
     }
@@ -202,8 +206,9 @@ function refreshingToken(token, config, result) {
       }).catch(error => {
         // 刷新令牌失败，直接跳转登录界面
         console.error('刷新令牌时，refresh_token无效，跳转到登录页')
-        LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
-        LocalStorageUtil.remove(USER_LOCAL_STORAGE)
+        store.dispatch('user/resetToken')
+        // 跳转到登录页
+        window.location.href = '/login'
         requests = []
         reject(error)
       }).finally(() => {
