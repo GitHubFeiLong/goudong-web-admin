@@ -1,13 +1,13 @@
-import {getInfo, login, logout} from '@/api/user'
-import {getToken, removeToken, setToken} from '@/utils/auth'
-import router, {resetRouter} from '@/router'
-import LocalStorageUtil from '@/pojo/LocalStorageUtil'
-import {TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE} from '@/constant/LocalStorageConst.js'
+import { getInfo, login, logout } from '@/api/user'
+import router, { resetRouter } from '@/router'
+import LocalStorageUtil from '@/utils/LocalStorageUtil'
+import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst.js'
 import Token from '@/pojo/Token'
 import defaultAvatarPng from '@/assets/png/default-avatar.png'
+import store from "@/store"
 
 const state = {
-  token: getToken(),
+  token: '',
   name: '',
   avatar: '',
   introduction: '',
@@ -39,8 +39,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.data.accessToken)
-        setToken(data.data.accessToken)
         const { accessExpires, accessToken, refreshExpires, refreshToken } = data.data
         const token = new Token(accessToken, refreshToken, accessExpires, refreshExpires)
         LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, token)
@@ -52,10 +50,18 @@ const actions = {
         for (const key in user.roles) {
           roles.push(user.roles[key].roleName)
         }
-        commit('SET_ROLES', roles.length === 0 ? ['匿名角色'] : roles)
+
+        if (roles.length === 0) {
+          roles.push('匿名角色')
+        }
+
+        commit('SET_TOKEN', accessToken)
+        commit('SET_ROLES', roles)
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
+        // 计算菜单
+        const accessRoutes = store.dispatch('permission/generateRoutes', roles)
         resolve()
       }).catch(error => {
         reject(error)
@@ -74,7 +80,11 @@ const actions = {
         for (const key in user.roles) {
           roles.push(user.roles[key].roleName)
         }
-        commit('SET_ROLES', roles.length === 0 ? ['匿名角色'] : roles)
+        if (roles.length === 0) {
+          roles.push('匿名角色')
+        }
+        commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
+        commit('SET_ROLES', roles)
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
@@ -91,7 +101,6 @@ const actions = {
         commit('SET_ROLES', [])
         LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
         LocalStorageUtil.remove(USER_LOCAL_STORAGE)
-        removeToken()
         resetRouter()
 
         // reset visited views and cached views
@@ -112,9 +121,8 @@ const actions = {
       commit('SET_ROLES', [])
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
       LocalStorageUtil.remove(USER_LOCAL_STORAGE)
-      removeToken()
       resetRouter()
-      dispatch('tagsView/delAllViews', null, {root: true})
+      this.$store.dispatch('tagsView/delAllViews', null, { root: true })
       resolve()
     })
   },
@@ -124,12 +132,8 @@ const actions = {
     const token = role + '-token'
 
     commit('SET_TOKEN', token)
-    setToken(token)
-
     const { roles } = await dispatch('getInfo')
-
     resetRouter()
-
     // generate accessible routes map based on roles
     const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
     // dynamically add accessible routes

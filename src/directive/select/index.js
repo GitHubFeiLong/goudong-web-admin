@@ -12,7 +12,6 @@ import Vue from 'vue'
 // select.install = install
 // export default select
 
-
 // 注册下拉框滚动底部指令
 
 Vue.directive('loadmore', {
@@ -20,7 +19,7 @@ Vue.directive('loadmore', {
     console.log(1111)
     // 获取element-ui定义好的scroll盒子 下拉选框滚动底部事件
     const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-    SELECTWRAP_DOM.addEventListener('scroll', function () {
+    SELECTWRAP_DOM.addEventListener('scroll', function() {
 
       const CONDITION = this.scrollHeight - this.scrollTop <= this.clientHeight
       if (CONDITION) {
@@ -37,8 +36,7 @@ Vue.directive('moretable', {
     console.log(2222)
     // 获取element-ui定义好的scroll盒子 表格滚动底部事件
     const TABLE_DOM = el.querySelector('.table-style .el-table__body-wrapper')
-    TABLE_DOM.addEventListener('scroll', function () {
-
+    TABLE_DOM.addEventListener('scroll', function() {
       const CONDITIONVALUE = this.scrollHeight - this.scrollTop <= this.clientHeight
       if (CONDITIONVALUE) {
         binding.value()

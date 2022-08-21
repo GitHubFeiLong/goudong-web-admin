@@ -155,7 +155,6 @@ export default {
       })
     },
     handleLogin() {
-      console.log(this.$refs.loginForm)
       // element的表单验证
       this.$refs.loginForm.validate(valid => {
         if (valid) {

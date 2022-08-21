@@ -1,3 +1,5 @@
+import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
+
 /**
  * localStorage 封装
  */
@@ -49,5 +51,20 @@ export default class LocalStorageUtil {
    */
   static remove(key) {
     LocalStorageUtil.s.removeItem(key)
+  }
+
+  static getUser() {
+    return LocalStorageUtil.get(USER_LOCAL_STORAGE)
+  }
+
+  static getToken() {
+    return LocalStorageUtil.get(TOKEN_LOCAL_STORAGE)
+  }
+
+  static getAccessToken() {
+    const token = LocalStorageUtil.getToken()
+    if (token) {
+      return token.accessToken
+    }
   }
 }

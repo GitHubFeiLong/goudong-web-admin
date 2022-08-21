@@ -3,7 +3,7 @@ import {Message} from 'element-ui'
 import store from '@/store'
 import Token from '@/pojo/Token'
 import {validateUrlAuthentication} from '@/utils/validate'
-import LocalStorageUtil from '@/pojo/LocalStorageUtil'
+import LocalStorageUtil from '@/utils/LocalStorageUtil'
 import {TOKEN_LOCAL_STORAGE} from '@/constant/LocalStorageConst'
 import {refresh} from '@/api/user'
 import {AUTHORIZATION, BEARER} from '@/constant/HttpHeaderConst'
@@ -64,7 +64,7 @@ service.interceptors.request.use(
     // do something before request is sent
 
     if (store.getters.token) {
-      config.headers[AUTHORIZATION] = BEARER + store.getters.token
+      config.headers[AUTHORIZATION] = BEARER + LocalStorageUtil.getAccessToken()
     }
     return config
   },
