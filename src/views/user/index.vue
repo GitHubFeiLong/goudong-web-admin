@@ -140,32 +140,16 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
-    <el-dialog
-      title="提示"
-      :visible.sync="addUserData.isShow"
-      width="30%"
-      :before-close="handleClose">
-      <AddUser />
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 
 import waves from '@/directive/waves' // waves directive
-import CreateUser from "./components/CreateUser";
 import {pageUser, pageUserByField} from '@/api/user'
 
 export default {
   name: 'UserPage',
-  components: {
-    CreateUser
-  },
   directives: {waves},
   data() {
     return {
@@ -219,9 +203,6 @@ export default {
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
       },
-      addUserData: {
-        isShow: false
-      }
     }
   },
   mounted() {
