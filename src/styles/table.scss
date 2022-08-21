@@ -1,15 +1,14 @@
 // 关于表格相关的自定义样式
 .el-table {
   .warning-row {
-    background: oldlace;
+    background: oldlace!important;
   }
 
   .success-row {
-    background: #e5fae2;
+    background: #e5fae2!important;
   }
-
 }
 
 .el-pagination {
-  text-align: center;
+  text-align: right;
 }

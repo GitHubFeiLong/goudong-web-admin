@@ -11,6 +11,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
+  console.log(1)
   // start progress bar
   NProgress.start()
 
@@ -26,11 +27,13 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      // 当有角色，且已经根据角色添加过路由了就放行，否则需要去计算路由
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0 && store.getters.permission_routes && store.getters.permission_routes.length > 0
       console.log(hasRoles, store.getters.roles)
       if (hasRoles) {
         next()
       } else {
+        // 当页面刷新时会store会清空。
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']

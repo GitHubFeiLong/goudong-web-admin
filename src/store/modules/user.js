@@ -1,10 +1,9 @@
 import { getInfo, login, logout } from '@/api/user'
-import router, { resetRouter } from '@/router'
+import { router, resetRouter } from '@/router'
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
 import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst.js'
 import Token from '@/pojo/Token'
 import defaultAvatarPng from '@/assets/png/default-avatar.png'
-import store from "@/store"
 
 const state = {
   token: '',
@@ -60,9 +59,7 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
-        // 计算菜单
-        const accessRoutes = store.dispatch('permission/generateRoutes', roles)
-        resolve()
+        resolve(data.data)
       }).catch(error => {
         reject(error)
       })

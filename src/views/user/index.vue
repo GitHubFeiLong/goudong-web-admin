@@ -23,7 +23,6 @@
           :value="item.value"
         />
       </el-select>
-
       <span class="filter-item-condition">有效日期: </span>
       <el-date-picker
         v-model="filter.validTime"
@@ -52,12 +51,15 @@
       />
 
       <!-- 操作菜单  -->
-      <el-button v-waves class="filter-item filter-btn-first" icon="el-icon-search" type="primary"
-                 @click="loadPageUser">
+      <el-button v-waves
+                 class="filter-item filter-btn-first"
+                 icon="el-icon-search"
+                 type="primary"
+                 @click="loadPageUser" >
         查询
       </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" style="margin-left: 10px;" type="primary"
-                 @click="addUser">
+<!--      <el-button class="filter-item filter-btn" icon="el-icon-edit" style="margin-left: 10px;" type="primary" @click="addUserData.isShow=true">-->
+      <el-button class="filter-item filter-btn" icon="el-icon-edit" style="margin-left: 10px;" type="primary" @click="addUser">
         新增
       </el-button>
       <!--      <el-button v-waves :loading="downloadLoading" class="filter-item filter-btn" type="primary" icon="el-icon-download" @click="exportExcel">
@@ -118,9 +120,15 @@
         prop="remark"
       />
       <el-table-column
+        fixed="right"
         label="操作"
-        min-width="150"
-      />
+        min-width="150">
+        <template v-slot="scope">
+          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button type="text" size="small">编辑</el-button>
+          <el-button v-if="scope.row.id !== '1'" type="text" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 分页控件 -->
     <el-pagination
@@ -132,17 +140,32 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <el-dialog
+      title="提示"
+      :visible.sync="addUserData.isShow"
+      width="30%"
+      :before-close="handleClose">
+      <AddUser />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 
 import waves from '@/directive/waves' // waves directive
-
+import CreateUser from "./components/CreateUser";
 import {pageUser, pageUserByField} from '@/api/user'
 
 export default {
   name: 'UserPage',
+  components: {
+    CreateUser
+  },
   directives: {waves},
   data() {
     return {
@@ -195,6 +218,9 @@ export default {
         total: 0,
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
+      },
+      addUserData: {
+        isShow: false
       }
     }
   },
@@ -296,7 +322,6 @@ export default {
       }
     },
     tableRowClassName({row, rowIndex}) {
-      console.log(row)
       // 最近一周创建的显示绿色
       if (row.createTime) {
         const diff = this.$moment(new Date())
@@ -317,7 +342,8 @@ export default {
       return ''
     },
     addUser() {
-
+      this.$router.push({ path: '/user/create-user', query: this.otherQuery })
+      // this.$router.push({ path: '/user/page/create-user' })
     },
     exportExcel() {
 
