@@ -1,5 +1,18 @@
 import request from '@/utils/request'
 
+/**
+ * 根据字段进行分页查询用户
+ * @param page
+ * @returns {*}
+ */
+export function pageRole(page) {
+  return request({
+    url: '/api/user/base-role/page',
+    method: 'get',
+    params: page
+  })
+}
+
 export function getRoutes() {
   return request({
     url: '/vue-element-admin/routes',
