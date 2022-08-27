@@ -32,7 +32,7 @@
             @keyup.enter.native="handleFilter"
           >
             <el-option
-              v-for="item in usernameFilter.usernames"
+              v-for="item in role.roles"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -59,7 +59,7 @@
 
 <script>
 import {pageUserByField} from "@/api/user";
-
+import { password } from "@/utils/validate";
 export default {
   name: 'CreateUser',
   data() {
@@ -79,8 +79,12 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { validator: password, trigger: 'blur' },
+          // { min: 8, max: 20, message: '长度在 1 到 32 个字符', trigger: 'blur' }
         ],
         region: [
           { required: true, message: '请选择活动区域', trigger: 'change' }
@@ -104,6 +108,7 @@ export default {
       role: {
         roleNameCn: '',
         loading: false,
+        roles: []
       }
     };
   },

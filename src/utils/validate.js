@@ -128,3 +128,21 @@ export function isJSON(str) {
     }
   })
 }
+
+// ~ 自定义element-ui 的校验规则
+// =====================================================================================================================
+const matching = (value, callback, reg, message) => {
+  if (value === '' || value === undefined || value == null) {
+    callback(new Error(message))
+  } else {
+    if (!reg.test(value)) {
+      callback(new Error(message))
+    } else {
+      callback()
+    }
+  }
+}
+export function password(rule, value, callback) {
+  const reg = /^(?![0-9]*$)(?![a-zA-Z]*$)[a-zA-Z0-9]{6,12}$/
+  matching(value, callback, reg, '请输入6-12位字母和数字组合')
+}

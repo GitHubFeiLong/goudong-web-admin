@@ -7,8 +7,18 @@
   .success-row {
     background: #e5fae2!important;
   }
+
+  .el-table__fixed, .el-table__fixed-right{
+    height: 100% !important; //设置高优先，以覆盖内联样式
+  }
 }
 
+// 分页组件
 .el-pagination {
   text-align: right;
+  margin-top: 20px;
+}
+
+.el-table--border th:first-child .cell, .el-table--border td:first-child .cell{
+  padding: 0;
 }

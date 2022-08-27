@@ -3,26 +3,7 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">用户账号: </span>
-      <el-select
-        v-model="filter.username"
-        :loading="filter.loading"
-        :remote-method="loadMoreUsername"
-        allow-create
-        class="filter-item"
-        clearable
-        filterable
-        placeholder="请输入用户名"
-        remote
-        style="width: 200px;"
-        @keyup.enter.native="handleFilter"
-      >
-        <el-option
-          v-for="item in usernameFilter.usernames"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <UsernameSelect @getUsername="getUsername"/>
       <span class="filter-item-condition">有效日期: </span>
       <el-date-picker
         v-model="filter.validTime"
@@ -71,38 +52,54 @@
       :data="user.users"
       :height="tableHeight"
       :row-class-name="tableRowClassName"
+      ref="table"
       border
       style="width: 100%"
     >
       <el-table-column
         min-width="55"
         type="selection"
+        header-align="center"
+        align="center"
       />
       <el-table-column
         fixed
+        label="序号"
+        min-width="55"
+      >
+        <template v-slot="scope">
+          {{(user.currentPage - 1) * user.pageSize + (scope.$index + 1)}}
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed
         label="用户名"
-        min-width="150"
+        min-width="100"
         prop="username"
       />
       <el-table-column
         label="角色"
         min-width="120"
         prop="roleNameCn"
+        show-overflow-tooltip
       />
       <el-table-column
         label="手机号"
         min-width="90"
         prop="phone"
+        show-overflow-tooltip
       />
       <el-table-column
         label="邮箱"
         min-width="120"
         prop="email"
+        show-overflow-tooltip
       />
       <el-table-column
         label="昵称"
         min-width="120"
         prop="nickname"
+        show-overflow-tooltip
       />
       <el-table-column
         label="有效期"
@@ -118,6 +115,7 @@
         label="备注"
         min-width="300"
         prop="remark"
+        show-overflow-tooltip
       />
       <el-table-column
         fixed="right"
@@ -145,12 +143,17 @@
 
 <script>
 
+import UsernameSelect from '@/components/User/UsernameSelect';
+
 import waves from '@/directive/waves' // waves directive
 import {pageUser, pageUserByField} from '@/api/user'
 
 export default {
   name: 'UserPage',
   directives: {waves},
+  components: {
+    UsernameSelect,
+  },
   data() {
     return {
       tableHeight: this.$globalVariable.TABLE_HEIGHT,
@@ -209,11 +212,17 @@ export default {
     this.tableHeight = this.$globalVariable.TABLE_HEIGHT
     // 优先加载表格数据
     this.loadPageUser()
-    this.loadMoreUsername(this.filter.username)
+    // 强制渲染，解决表格 固定列后，列错位问题
+    this.$nextTick(() => {
+      this.$refs.table.doLayout()
+    })
   },
   methods: {
     handleRolesChange() {
       this.$router.push({path: '/permission/index?' + +new Date()})
+    },
+    getUsername(ev) {
+      this.filter.username = ev
     },
     loadPageUser() {
       const pageParam = {
@@ -276,31 +285,6 @@ export default {
           this.user.users.push(column)
         })
       })
-    },
-    loadMoreUsername(usernamePattern) {
-      if (usernamePattern !== '') {
-        this.usernameFilter.loading = true
-        const page = {page: this.usernameFilter.page, size: this.usernameFilter.size, username: usernamePattern}
-        pageUserByField(page).then(response => {
-          this.loading = false
-          const content = response.data.data.content
-          if (content && content.length > 0) {
-            // 将value使用逗号拼接起来，用于去重。
-            const existsUsernames = this.usernameFilter.usernames.map((item) => {
-              return item.value
-            }).join()
-            content.forEach((user, index, arr) => {
-              if (existsUsernames.indexOf(user.username) === -1) {
-                this.usernameFilter.usernames.push({value: user.username, label: user.username})
-              }
-            })
-          }
-        }).catch(err => {
-          console.warn('err', err)
-        })
-      } else {
-        this.usernameFilter.usernames = []
-      }
     },
     tableRowClassName({row, rowIndex}) {
       // 最近一周创建的显示绿色

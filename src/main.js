@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
+import loadMore from "@/directive/select";
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import Element from 'element-ui'
@@ -46,6 +47,8 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+// 全局指令
 
 // 挂载变量到vue上
 Vue.prototype.$globalVariable = globalVariable

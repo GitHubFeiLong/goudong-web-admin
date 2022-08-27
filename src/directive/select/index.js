@@ -1,20 +1,7 @@
 import Vue from 'vue'
 
-// const install = function(Vue) {
-//   Vue.directive('loadmore', select)
-// }
-//
-// if (window.Vue) {
-//   window['select'] = select
-//   Vue.use(install); // eslint-disable-line
-// }
-//
-// select.install = install
-// export default select
-
 // 注册下拉框滚动底部指令
-
-Vue.directive('loadmore', {
+Vue.directive('load-more', {
   bind(el, binding) {
     console.log(1111)
     // 获取element-ui定义好的scroll盒子 下拉选框滚动底部事件
@@ -30,7 +17,6 @@ Vue.directive('loadmore', {
 })
 
 // 注册 表格滚动底部指令
-
 Vue.directive('moretable', {
   bind(el, binding) {
     console.log(2222)
