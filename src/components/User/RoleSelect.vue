@@ -1,10 +1,11 @@
-<!--用户名模糊下拉分页, 搜索结果不存在时，可以创建元素-->
+<!--用户名模糊下拉分页-->
 <template>
   <div class="username-select-container">
     <el-select
       v-model="username"
       :loading="loading"
       allow-create
+      class="filter-item"
       clearable
       filterable
       placeholder="请输入用户名"

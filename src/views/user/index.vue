@@ -3,7 +3,7 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">用户账号: </span>
-      <UsernameSelect @getUsername="getUsername"/>
+      <UsernameSelect @getUsername="getUsername" class="filter-item"/>
       <span class="filter-item-condition">有效日期: </span>
       <el-date-picker
         v-model="filter.validTime"

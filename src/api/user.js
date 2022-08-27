@@ -3,6 +3,7 @@ import request from '@/utils/request'
 export function login(data) {
   return request({
     url: `/api/oauth2/authentication/login?username=${data.username}&password=${data.password}`,
+    // url: `/vue-element-admin/user/login`,
     method: 'post'
   })
 }
@@ -17,6 +18,7 @@ export function refresh(refreshToken) {
 export function getInfo() {
   return request({
     url: '/api/oauth2/authentication/current-user-info',
+    // url: '/vue-element-admin/user/info',
     method: 'get'
   })
 }
@@ -24,6 +26,7 @@ export function getInfo() {
 export function logout() {
   return request({
     url: '/api/oauth2/authentication/logout',
+    // url: '/vue-element-admin/user/logout',
     method: 'put'
   })
 }

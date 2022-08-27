@@ -1,10 +1,9 @@
-<!--用户名模糊下拉分页, 搜索结果不存在时，可以创建元素-->
+<!--用户名模糊下拉分页-->
 <template>
   <div class="username-select-container">
     <el-select
       v-model="username"
       :loading="loading"
-      allow-create
       clearable
       filterable
       placeholder="请输入用户名"
@@ -55,7 +54,7 @@ export default {
           }).join()
           content.forEach((user, index, arr) => {
             if (existsUsernames.indexOf(user.username) === -1) {
-              this.usernames.push({value: user.username, label: user.username})
+              this.usernames.push({value: user.id, label: user.username})
             }
           })
         }
@@ -65,10 +64,10 @@ export default {
         this.loading = false
       })
     },
-    change(username) {
+    change(id) {
       // 给父组件传递值
-      this.$emit('getUsername', username)
-      console.log(username)
+      this.$emit('getUserId', id)
+      console.log(id)
     },
     loadMore: function() {
       // 总页数大于当前页，请求下一页数据
