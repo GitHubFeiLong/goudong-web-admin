@@ -145,9 +145,6 @@
 </template>
 
 <script>
-import UsernameSelect from '@/components/User/UsernameSelect'
-import CreateUser from '@/views/user/components/CreateUserDialog'
-
 import waves from '@/directive/waves' // waves directive
 import { pageUser } from '@/api/user'
 
@@ -155,8 +152,8 @@ export default {
   name: 'UserPage',
   directives: { waves },
   components: {
-    UsernameSelect,
-    CreateUser
+    UsernameSelect: () => import('@/components/User/UsernameSelect'),
+    CreateUser: () => import('@/views/user/components/CreateUserDialog'),
   },
   data() {
     return {

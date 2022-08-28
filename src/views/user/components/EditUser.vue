@@ -1,4 +1,24 @@
 <template>
+  <el-dialog title="编辑用户" width="600px" :visible.sync="visible" @close="close">
+    <el-form ref="user" :model="user" :rules="rules" label-width="70px" class="demo-ruleForm">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="user.username" clearable />
+      </el-form-item>
+      <el-form-item label="手机号" prop="phone">
+        <el-input v-model="user.phone" clearable />
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="user.email" clearable />
+      </el-form-item>
+      <el-form-item label="角色" prop="roleIds">
+        <RoleSelect :role-multiple="roleSelect.roleMultiple" @getRoles="getRoles" />
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="resetForm('user')">重 置</el-button>
+      <el-button type="primary" @click="submitForm('user')">确 定</el-button>
+    </div>
+  </el-dialog>
   <div class="app-container">
     <div class="form-container">
       <el-form :model="user" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">

@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import RoleSelect from '@/components/User/RoleSelect'
-
 import * as validate from '@/utils/validate'
 import { simpleCreateUser } from '@/api/user'
 import { Message } from "element-ui"
@@ -32,7 +30,7 @@ import { Message } from "element-ui"
 export default {
   name: 'CreateUser',
   components: {
-    RoleSelect
+    RoleSelect: () => import('@/components/User/RoleSelect')
   },
   props: {
     // 弹框
