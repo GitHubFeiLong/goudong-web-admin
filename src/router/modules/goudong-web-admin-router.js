@@ -33,25 +33,6 @@ const goudongWebAdminRouter = [
           activeMenu: '/user/page'
         },
       },
-      {
-        path: 'directive',
-        component: () => import('@/views/user/directive'),
-        name: '角色管理',
-        meta: {
-          title: '角色管理',
-          noCache: true
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/user/role'),
-        name: 'RolePermission1',
-        meta: {
-          title: '菜单管理',
-          roles: ['ROLE_ADMIN']
-        }
-      }
     ]
   }
 ]

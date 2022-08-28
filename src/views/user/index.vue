@@ -3,7 +3,7 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">用户账号: </span>
-      <UsernameSelect @getUsername="getUsername" class="filter-item"/>
+      <UsernameSelect class="filter-item" @getUsername="getUsername" />
       <span class="filter-item-condition">有效日期: </span>
       <el-date-picker
         v-model="filter.validTime"
@@ -32,11 +32,13 @@
       />
 
       <!-- 操作菜单  -->
-      <el-button v-waves
-                 class="filter-item filter-btn-first"
-                 icon="el-icon-search"
-                 type="primary"
-                 @click="loadPageUser" >
+      <el-button
+        v-waves
+        class="filter-item filter-btn-first"
+        icon="el-icon-search"
+        type="primary"
+        @click="loadPageUser"
+      >
         查询
       </el-button>
       <!-- @click="addUser"-->
@@ -46,12 +48,12 @@
     </div>
     <!-- 表格  -->
     <el-table
+      ref="table"
+      style="width: 100%"
       :data="user.users"
       :height="tableHeight"
       :row-class-name="tableRowClassName"
-      ref="table"
       border
-      style="width: 100%"
     >
       <el-table-column
         min-width="55"
@@ -65,7 +67,7 @@
         min-width="55"
       >
         <template v-slot="scope">
-          {{(user.page - 1) * user.size + (scope.$index + 1)}}
+          {{ (user.page - 1) * user.size + (scope.$index + 1) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -117,9 +119,10 @@
       <el-table-column
         fixed="right"
         label="操作"
-        min-width="150">
+        min-width="150"
+      >
         <template v-slot="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
           <el-button type="text" size="small">编辑</el-button>
           <el-button v-if="scope.row.id !== '1'" type="text" size="small">删除</el-button>
         </template>
@@ -137,24 +140,23 @@
     />
 
     <!-- 新增用户弹框 -->
-    <CreateUser :createUserDialog.sync="createUserDialog"/>
+    <CreateUser :create-user-dialog.sync="createUserDialog" />
   </div>
 </template>
 
 <script>
-
-import UsernameSelect from '@/components/User/UsernameSelect';
+import UsernameSelect from '@/components/User/UsernameSelect'
 import CreateUser from '@/views/user/components/CreateUserDialog'
 
 import waves from '@/directive/waves' // waves directive
-import {pageUser} from '@/api/user'
+import { pageUser } from '@/api/user'
 
 export default {
   name: 'UserPage',
-  directives: {waves},
+  directives: { waves },
   components: {
     UsernameSelect,
-    CreateUser,
+    CreateUser
   },
   data() {
     return {
@@ -201,7 +203,7 @@ export default {
         total: 0,
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
-      },
+      }
     }
   },
   mounted() {
@@ -214,9 +216,6 @@ export default {
     })
   },
   methods: {
-    handleRolesChange() {
-      this.$router.push({path: '/permission/index?' + +new Date()})
-    },
     getUsername(ev) {
       this.filter.username = ev
     },
@@ -282,7 +281,7 @@ export default {
         })
       })
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName({ row, rowIndex }) {
       // 最近一周创建的显示绿色
       if (row.createTime) {
         const diff = this.$moment(new Date())

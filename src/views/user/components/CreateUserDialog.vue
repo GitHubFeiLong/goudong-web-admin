@@ -1,18 +1,18 @@
 <!--新增用户的弹框-->
 <template>
-  <el-dialog title="新增用户" :visible.sync="visible" @close="close" width="600px">
-    <el-form :model="user" :rules="rules" ref="user" label-width="70px" class="demo-ruleForm">
+  <el-dialog title="新增用户" width="600px" :visible.sync="visible" @close="close">
+    <el-form ref="user" :model="user" :rules="rules" label-width="70px" class="demo-ruleForm">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="user.username" clearable></el-input>
+        <el-input v-model="user.username" clearable />
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
-        <el-input v-model="user.phone" clearable></el-input>
+        <el-input v-model="user.phone" clearable />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="user.email" clearable></el-input>
+        <el-input v-model="user.email" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roleIds">
-        <RoleSelect @getRoles="getRoles" :roleMultiple="roleSelect.roleMultiple"/>
+        <RoleSelect :role-multiple="roleSelect.roleMultiple" @getRoles="getRoles" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import RoleSelect from '@/components/User/RoleSelect';
+import RoleSelect from '@/components/User/RoleSelect'
 
-import * as validate from '@/utils/validate';
-import { simpleCreateUser } from '@/api/user';
-import {Message} from "element-ui";
+import * as validate from '@/utils/validate'
+import { simpleCreateUser } from '@/api/user'
+import { Message } from "element-ui"
 
 export default {
   name: 'CreateUser',
@@ -36,7 +36,7 @@ export default {
   },
   props: {
     // 弹框
-    createUserDialog: {required: true, type: Boolean, default: false },
+    createUserDialog: { required: true, type: Boolean, default: false }
   },
   data() {
     return {
@@ -66,6 +66,12 @@ export default {
       }
     };
   },
+  watch: {
+    // 监听 createUserDialog
+    createUserDialog() {
+      this.visible = this.createUserDialog;
+    },
+  },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -75,11 +81,12 @@ export default {
             Message({
               message: '保存成功',
               type: 'success',
-              duration: 3 * 1000
             })
+            this.visible = false
+            // 调用父组件的方法
+            this.$parent.loadPageUser();
           })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -96,16 +103,8 @@ export default {
       this.$emit("update:createUserDialog", false)
     }
   },
-  watch: {
-    // 监听 createUserDialog
-    createUserDialog() {
-      this.visible = this.createUserDialog;
-    },
-  }
 }
 </script>
 <style lang="scss" scoped>
-.form-container{
-  width: 500px;
-}
+
 </style>
