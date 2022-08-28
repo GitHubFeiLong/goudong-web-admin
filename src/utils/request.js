@@ -17,29 +17,28 @@ const service = axios.create({
   withCredentials: true,
   // 请求头配置
   headers: {
-    // get: {
-    //   'Content-Type': 'application/x-www-form-urlencoded'
-    // },
+    get: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
     post: {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/json;',
     },
     patch: {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/json;'
     }
   },
   // `transformRequest` 允许在向服务器发送前，修改请求数据
   // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
   // 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
-  transformRequest: function(data) {
+  transformRequest: [function(data) {
     if (data instanceof FormData) {
       return data
     }
     if (typeof data === 'object') {
       return JSON.stringify(data)
     }
-
     return data
-  },
+  }],
   // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 reject
   validateStatus(status) {
     return status < 500
@@ -135,34 +134,6 @@ service.interceptors.response.use(
     }
 
     return Promise.resolve(response)
-    //
-    // const res = response.data
-    //
-    // // if the custom code is not 20000, it is judged as an error.
-    // if (res.code !== 20000) {
-    //   Message({
-    //     message: res.message || 'Error',
-    //     type: 'error',
-    //     duration: 5 * 1000
-    //   })
-    //
-    //   // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-    //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-    //     // to re-login
-    //     MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-    //       confirmButtonText: 'Re-Login',
-    //       cancelButtonText: 'Cancel',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       store.dispatch('user/resetToken').then(() => {
-    //         location.reload()
-    //       })
-    //     })
-    //   }
-    //   return Promise.reject(new Error(res.message || 'Error'))
-    // } else {
-    //   return res
-    // }
   },
   error => {
     console.log('err' + error) // for debug

@@ -1,20 +1,19 @@
-<!--用户名模糊下拉分页-->
+<!--角色名模糊下拉分页-->
 <template>
-  <div class="username-select-container">
+  <div class="role-select-container">
     <el-select
-      v-model="username"
+      v-model="roleNameCn"
       :loading="loading"
-      allow-create
-      class="filter-item"
       clearable
       filterable
-      placeholder="请输入用户名"
+      v-bind:multiple="roleMultiple === true"
+      placeholder="请输入角色名称"
       @change="change"
       style="width: 200px;"
       v-load-more="loadMore"
     >
       <el-option
-        v-for="item in usernames"
+        v-for="item in roles"
         :key="item.value"
         :label="item.label"
         :value="item.value"
@@ -25,39 +24,37 @@
 
 <script>
 
-import {pageUserByField} from "@/api/user";
+import {pageRole} from "@/api/role";
 
 export default {
+  props: {
+    // 角色是否是多选
+    roleMultiple: { type: Boolean, required: false }
+  },
   mounted() {
     // 优先加载表格数据
-    this.loadUsername(this.username)
+    this.loadRole(this.roleNameCn)
   },
   data() {
     return {
-      username: undefined,
+      roleNameCn: undefined,
       loading: false,
-      usernames: [],
+      roles: [],
       page: 1,
       size: 10,
       totalPage: undefined, // 下拉总页码
     }
   },
   methods: {
-    loadUsername() {
+    loadRole() {
       this.loading = true
-      const page = {page: this.page, size: this.size, username: this.username}
-      pageUserByField(page).then(response => {
+      const page = {page: this.page, size: this.size, roleNameCn: this.roleNameCn}
+      pageRole(page).then(response => {
         this.totalPage = Number(response.data.data.totalPage)
         const content = response.data.data.content
         if (content && content.length > 0) {
-          // 将value使用逗号拼接起来，用于去重。
-          const existsUsernames = this.usernames.map((item) => {
-            return item.value
-          }).join()
-          content.forEach((user, index, arr) => {
-            if (existsUsernames.indexOf(user.username) === -1) {
-              this.usernames.push({value: user.username, label: user.username})
-            }
+          content.forEach((role, index, arr) => {
+            this.roles.push({value: role.id, label: role.roleNameCn})
           })
         }
       }).catch(err => {
@@ -66,16 +63,16 @@ export default {
         this.loading = false
       })
     },
-    change(username) {
+    change(roleId) {
       // 给父组件传递值
-      this.$emit('getUsername', username)
-      console.log(username)
+      this.$emit('getRoles', roleId)
+      console.log(roleId)
     },
     loadMore: function() {
       // 总页数大于当前页，请求下一页数据
       if (this.totalPage > this.page) {
         this.page += 1;
-        this.loadUsername();
+        this.loadRole();
       }
     }
   }
@@ -83,7 +80,7 @@ export default {
 </script>
 
 <style scoped>
-  .username-select-container{
+  .role-select-container{
     display: inline-block;
   }
 </style>

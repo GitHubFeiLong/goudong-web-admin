@@ -56,3 +56,52 @@ export function pageUser(page) {
     params: page
   })
 }
+
+/**
+ * 检查用户名是否可用
+ * @param username
+ * @returns {*}
+ */
+export function checkUsername(username) {
+  return request({
+    url: `/api/user/base-user/check-registry/username/${username}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 检查手机号是否可用
+ * @param phone
+ * @returns {*}
+ */
+export function checkPhone(phone) {
+  return request({
+    url: `/api/user/base-user/check-registry/phone/${phone}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 检查邮箱号是否可用
+ * @param email
+ * @returns {*}
+ */
+export function checkEmail(email) {
+  return request({
+    url: `/api/user/base-user/check-registry/email/${email}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 创建用户
+ * @param username
+ * @returns {*}
+ */
+export function simpleCreateUser(user) {
+  return request({
+    url: `/api/user/base-user/simple-create-user`,
+    method: 'post',
+    data: user
+  })
+}

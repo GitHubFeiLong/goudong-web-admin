@@ -39,13 +39,10 @@
                  @click="loadPageUser" >
         查询
       </el-button>
-<!--      <el-button class="filter-item filter-btn" icon="el-icon-edit" style="margin-left: 10px;" type="primary" @click="addUserData.isShow=true">-->
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" style="margin-left: 10px;" type="primary" @click="addUser">
+      <!-- @click="addUser"-->
+      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="createUserDialog=true">
         新增
       </el-button>
-      <!--      <el-button v-waves :loading="downloadLoading" class="filter-item filter-btn" type="primary" icon="el-icon-download" @click="exportExcel">
-              导出
-            </el-button>-->
     </div>
     <!-- 表格  -->
     <el-table
@@ -68,7 +65,7 @@
         min-width="55"
       >
         <template v-slot="scope">
-          {{(user.currentPage - 1) * user.pageSize + (scope.$index + 1)}}
+          {{(user.page - 1) * user.size + (scope.$index + 1)}}
         </template>
       </el-table-column>
       <el-table-column
@@ -130,29 +127,34 @@
     </el-table>
     <!-- 分页控件 -->
     <el-pagination
-      :current-page="user.currentPage"
-      :page-size="user.pageSize"
+      :current-page="user.page"
+      :page-size="user.size"
       :page-sizes="user.pageSizes"
       :total="user.total"
       layout="total, sizes, prev, pager, next, jumper"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <!-- 新增用户弹框 -->
+    <CreateUser :createUserDialog.sync="createUserDialog"/>
   </div>
 </template>
 
 <script>
 
 import UsernameSelect from '@/components/User/UsernameSelect';
+import CreateUser from '@/views/user/components/CreateUserDialog'
 
 import waves from '@/directive/waves' // waves directive
-import {pageUser, pageUserByField} from '@/api/user'
+import {pageUser} from '@/api/user'
 
 export default {
   name: 'UserPage',
   directives: {waves},
   components: {
     UsernameSelect,
+    CreateUser,
   },
   data() {
     return {
@@ -189,19 +191,13 @@ export default {
           }
         }]
       },
-
-      // 用户账号列表
-      usernameFilter: {
-        usernames: [],
-        loading: false,
-        page: 1,
-        size: 10
-      },
+      // 新增用户 子组件新增用户 弹框显示变量
+      createUserDialog: false,
       // 表格中的用户
       user: {
         users: [],
-        currentPage: 1,
-        pageSize: this.$globalVariable.PAGE_SIZES[0],
+        page: 1,
+        size: this.$globalVariable.PAGE_SIZES[0],
         total: 0,
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
@@ -226,8 +222,8 @@ export default {
     },
     loadPageUser() {
       const pageParam = {
-        page: this.user.currentPage,
-        size: this.user.pageSize,
+        page: this.user.page,
+        size: this.user.size,
         username: this.filter.username
       }
 
@@ -257,8 +253,8 @@ export default {
         const content = data.content
 
         // 修改分页组件
-        this.user.currentPage = Number(data.pageNumber)
-        this.user.pageSize = Number(data.pageSize)
+        this.user.page = Number(data.page)
+        this.user.size = Number(data.size)
         this.user.total = Number(data.total)
         this.user.totalPage = Number(data.totalPage)
 
@@ -310,17 +306,14 @@ export default {
       this.$router.push({ path: '/user/create-user', query: this.otherQuery })
       // this.$router.push({ path: '/user/page/create-user' })
     },
-    exportExcel() {
-
-    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
-      this.user.pageSize = val
+      this.user.size = val
       this.loadPageUser()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
-      this.user.currentPage = val
+      this.user.page = val
       this.loadPageUser()
     }
   }

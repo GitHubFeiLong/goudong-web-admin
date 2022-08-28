@@ -9,7 +9,7 @@
           <el-input v-model="user.password" show-password></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="user.confirmPassword"></el-input>
+          <el-input v-model="user.confirmPassword" show-password></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="user.phone"></el-input>
@@ -17,36 +17,23 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="user.email"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="region">
-          <el-select
-            v-model="role.roleNameCn"
-            :loading="role.loading"
-            :remote-method="loadMoreRole"
-            allow-create
-            class="filter-item"
-            clearable
-            filterable
-            placeholder="请输入用户名"
-            remote
-            style="width: 200px;"
-            @keyup.enter.native="handleFilter"
-          >
-            <el-option
-              v-for="item in role.roles"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+        <el-form-item label="角色" prop="roles">
+          <RoleSelect />
         </el-form-item>
-        <el-form-item label="昵 称" prop="name">
-          <el-input v-model="user.name" style="width: 100px"></el-input>
+        <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="user.nickName" style="width: 100px"></el-input>
         </el-form-item>
-        <el-form-item label="头像" prop="name">
-          <el-input v-model="user.name"></el-input>
+        <el-form-item label="头像" prop="avatar">
+          <el-input v-model="user.avatar"></el-input>
         </el-form-item>
-        <el-form-item label="有效日期" prop="name">
-          <el-input v-model="user.name"></el-input>
+        <el-form-item label="有效日期" prop="validTime">
+          <div class="block">
+            <el-date-picker
+              v-model="user.validTime"
+              type="datetime"
+              placeholder="选择日期时间">
+            </el-date-picker>
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('user')">立即创建</el-button>
@@ -58,10 +45,13 @@
 </template>
 
 <script>
-import {pageUserByField} from "@/api/user";
+import RoleSelect from '@/components/User/RoleSelect';
 import { password } from "@/utils/validate";
 export default {
   name: 'CreateUser',
+  components: {
+    RoleSelect
+  },
   data() {
     return {
       user: {
@@ -70,12 +60,10 @@ export default {
         confirmPassword: '',
         phone: '',
         email: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        roles: [],
+        nickName: '',
+        avatar: '',
+        validTime: this.$moment().add(3, 'M'),
       },
       rules: {
         username: [
@@ -83,27 +71,23 @@ export default {
           { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
         ],
         password: [
-          { validator: password, trigger: 'blur' },
-          // { min: 8, max: 20, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+          { required: true, validator: password, trigger: 'blur' },
         ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+        confirmPassword: [
+          { required: true, validator: password, trigger: 'blur' },
         ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        phone: [
+          { required: true, message: '请输入用户的手机号码', trigger: 'blur' }
         ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        email: [
+          { required: true, message: '请输入用户的邮箱', trigger: 'blur' }
         ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+        roles: [
+          { type: 'array', required: true, message: '请至少选择一个角色', trigger: 'change' }
         ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
+        validTime: [
+          { type: 'date', required: true, message: '请选择用户有效日期', trigger: 'change' }
         ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
-        ]
       },
       role: {
         roleNameCn: '',

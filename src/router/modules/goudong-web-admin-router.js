@@ -25,7 +25,7 @@ const goudongWebAdminRouter = [
       },
       {
         path: 'create-user',
-        component: () => import('@/views/user/components/CreateUser'),
+        component: () => import('@/views/user/components/CreateUserDialog'),
         name: '新增用户',
         hidden: true,
         meta: {

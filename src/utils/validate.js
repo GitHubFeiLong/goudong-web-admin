@@ -1,6 +1,7 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
+import {checkUsername, checkPhone, checkEmail} from '@/api/user';
 /**
  * @param {string} path
  * @returns {Boolean}
@@ -142,7 +143,109 @@ const matching = (value, callback, reg, message) => {
     }
   }
 }
+
+/**
+ * 用户名校验
+ * @param rule
+ * @param value
+ * @param callback
+ */
+export function username(rule, value, callback) {
+
+  if (value === undefined || value === null || value === '') {
+    return callback(new Error('请输入用户名'))
+  }
+
+  checkUsername(value).then(response => {
+    const data = response.data.data
+    if (data.length !== 0) {
+      return callback(new Error('用户名已存在, 可以选择使用：' + data.join()))
+    }
+    return callback();
+  })
+}
+
+/**
+ * 密码规则
+ * @param rule
+ * @param value
+ * @param callback
+ */
 export function password(rule, value, callback) {
   const reg = /^(?![0-9]*$)(?![a-zA-Z]*$)[a-zA-Z0-9]{6,12}$/
-  matching(value, callback, reg, '请输入6-12位字母和数字组合')
+
+  // 适中 包含(数字+字母)(数字+字符)(字母+字符) 比严格的要宽，所以先执行严格的正则
+  const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*\d)(?=\d*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])|(?=[a-zA-Z]*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*[a-zA-Z])/;
+
+  // 强密码（三种都包含）
+  const strong = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])/;
+
+  // 基本条件
+  if (value === '' || value === undefined || value === null || value.length < 8 || value.length > 20) {
+    return callback(new Error("请输入8-20位字母，数字，符号的组合"))
+  }
+  // 弱密码匹配（弱也可以注册）
+  if (/^\d{8,20}$/.test(value) || /^[a-zA-Z]{8,20}$/.test(value) || /^[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]{8,20}$/.test(value)) {
+    console.log(value, "是弱密码")
+    return callback()
+  }
+
+  // 强
+  if (strong.test(value)) {
+    console.log(value, "是强密码")
+    return callback()
+  }
+
+  // 一般
+  if (general.test(value)) {
+    console.log(value, "是一般强度的密码")
+    return callback()
+  }
+
+  callback(new Error("请输入8-20位字母，数字，符号的组合"))
+}
+
+/**
+ * 手机号校验
+ * @param rule
+ * @param value
+ * @param callback
+ */
+export function phone(rule, value, callback) {
+
+  const phone = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
+  if (!phone.test(value)) {
+    return callback(new Error('请输入格式正确的手机号'))
+  }
+
+  checkPhone(value).then(response => {
+    const data = response.data.data
+    if (!data) {
+      return callback(new Error('手机号已被使用'))
+    }
+    return callback();
+  })
+}
+
+/**
+ * 邮箱校验
+ * @param rule
+ * @param value
+ * @param callback
+ */
+export function email(rule, value, callback) {
+
+  const email = /^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/
+
+  if (!email.test(value)) {
+    return callback(new Error('请输入格式正确的邮箱地址'))
+  }
+
+  checkEmail(value).then(response => {
+    const data = response.data.data
+    if (!data) {
+      return callback(new Error('邮箱地址已被使用'))
+    }
+    return callback();
+  })
 }
