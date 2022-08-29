@@ -105,3 +105,15 @@ export function simpleCreateUser(user) {
     data: user
   })
 }
+
+/**
+ * 根据用户id查询用户基本信息
+ * @param id
+ * @returns {*}
+ */
+export function getUserById(id) {
+  return request({
+    url: `/api/user/base-user/${id}`,
+    method: 'get',
+  })
+}

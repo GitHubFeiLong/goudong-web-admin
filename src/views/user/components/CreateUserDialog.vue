@@ -1,7 +1,7 @@
 <!--新增用户的弹框-->
 <template>
   <el-dialog title="新增用户" width="600px" :visible.sync="visible" @close="close">
-    <el-form ref="user" :model="user" :rules="rules" label-width="70px" class="demo-ruleForm">
+    <el-form ref="user" :model="user" :rules="rules" label-width="80px" class="demo-ruleForm">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="user.username" clearable />
       </el-form-item>
@@ -28,7 +28,7 @@ import { simpleCreateUser } from '@/api/user'
 import { Message } from "element-ui"
 
 export default {
-  name: 'CreateUser',
+  name: 'CreateUserDialog',
   components: {
     RoleSelect: () => import('@/components/User/RoleSelect')
   },

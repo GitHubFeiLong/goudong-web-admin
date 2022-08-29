@@ -123,7 +123,7 @@
       >
         <template v-slot="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button type="text" size="small" @click="editUser(scope.row)" >编辑</el-button>
           <el-button v-if="scope.row.id !== '1'" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -140,7 +140,10 @@
     />
 
     <!-- 新增用户弹框 -->
-    <CreateUser :create-user-dialog.sync="createUserDialog" />
+    <CreateUserDialog :create-user-dialog.sync="createUserDialog" />
+
+    <!-- 新增用户弹框 -->
+    <EditUserDialog :edit-user-dialog.sync="editUserDialog" :user-id="editUserId" />
   </div>
 </template>
 
@@ -153,7 +156,8 @@ export default {
   directives: { waves },
   components: {
     UsernameSelect: () => import('@/components/User/UsernameSelect'),
-    CreateUser: () => import('@/views/user/components/CreateUserDialog'),
+    CreateUserDialog: () => import('@/views/user/components/CreateUserDialog'),
+    EditUserDialog: () => import('@/views/user/components/EditUserDialog')
   },
   data() {
     return {
@@ -192,6 +196,10 @@ export default {
       },
       // 新增用户 子组件新增用户 弹框显示变量
       createUserDialog: false,
+      // 修改用户 子组件弹框 弹框显示变量
+      editUserDialog: false,
+      // 被编辑的用户id
+      editUserId: undefined,
       // 表格中的用户
       user: {
         users: [],
@@ -311,6 +319,10 @@ export default {
       console.log(`当前页: ${val}`)
       this.user.page = val
       this.loadPageUser()
+    },
+    editUser(row) {
+      this.editUserId = row.id;
+      this.editUserDialog = true;
     }
   }
 

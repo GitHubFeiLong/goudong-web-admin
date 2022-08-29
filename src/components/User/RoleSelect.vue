@@ -27,13 +27,19 @@
 import {pageRole} from "@/api/role";
 
 export default {
+  name: 'RoleSelect',
   props: {
     // 角色是否是多选
-    roleMultiple: { type: Boolean, required: false }
+    roleMultiple: { type: Boolean, required: false },
+    // 默认选中
+    defaultRoles: { type: Array, required: false },
   },
   mounted() {
-    // 优先加载表格数据
     this.loadRole(this.roleNameCn)
+    if (this.defaultRoles) {
+      console.log(123123123)
+      this.roleNameCn = this.defaultRoles
+    }
   },
   data() {
     return {
