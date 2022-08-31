@@ -2,7 +2,7 @@
 <template>
   <div class="role-select-container">
     <el-select
-      v-model="roleNameCn"
+      v-model="roleIds"
       :loading="loading"
       clearable
       filterable
@@ -35,21 +35,24 @@ export default {
     defaultRoles: { type: Array, required: false },
   },
   mounted() {
-    this.loadRole(this.roleNameCn)
-    if (this.defaultRoles) {
-      console.log(123123123)
-      this.roleNameCn = this.defaultRoles
-    }
+    this.loadRole()
   },
   data() {
     return {
-      roleNameCn: undefined,
+      roleIds: [], // 选中的角色id集合
+      // roleNameCn: undefined,
       loading: false,
       roles: [],
       page: 1,
       size: 10,
       totalPage: undefined, // 下拉总页码
     }
+  },
+  watch: {
+    // 监听
+    defaultRoles() {
+      this.roleIds = this.defaultRoles
+    },
   },
   methods: {
     loadRole() {
@@ -71,8 +74,7 @@ export default {
     },
     change(roleId) {
       // 给父组件传递值
-      this.$emit('getRoles', roleId)
-      console.log(roleId)
+      this.$emit('getSelectRoleIds', roleId)
     },
     loadMore: function() {
       // 总页数大于当前页，请求下一页数据

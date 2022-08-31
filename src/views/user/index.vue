@@ -117,6 +117,12 @@
         show-overflow-tooltip
       />
       <el-table-column
+        label="角色id集合"
+        min-width="300"
+        prop="roleIds"
+        v-if="false"
+      />
+      <el-table-column
         fixed="right"
         label="操作"
         min-width="150"
@@ -142,8 +148,8 @@
     <!-- 新增用户弹框 -->
     <CreateUserDialog :create-user-dialog.sync="createUserDialog" />
 
-    <!-- 新增用户弹框 -->
-    <EditUserDialog :edit-user-dialog.sync="editUserDialog" :user-id="editUserId" />
+    <!-- 编辑用户弹框 -->
+    <EditUserDialog :edit-user-dialog.sync="editUserDialog" :edit-user-info="editUserInfo" @closeEditUserDialog="closeEditUserDialog"/>
   </div>
 </template>
 
@@ -198,8 +204,8 @@ export default {
       createUserDialog: false,
       // 修改用户 子组件弹框 弹框显示变量
       editUserDialog: false,
-      // 被编辑的用户id
-      editUserId: undefined,
+      // 被编辑的用户信息
+      editUserInfo: undefined,
       // 表格中的用户
       user: {
         users: [],
@@ -280,8 +286,8 @@ export default {
 
           if (item.roles && item.roles.length > 0) {
             column['roleNameCn'] = item.roles.map(m => m.roleNameCn).join()
+            column['roleIds'] = item.roles.map(m => m.id)
           }
-
           this.user.users.push(column)
         })
       })
@@ -321,8 +327,12 @@ export default {
       this.loadPageUser()
     },
     editUser(row) {
-      this.editUserId = row.id;
+      console.log(row, 'row')
+      this.editUserInfo = row;
       this.editUserDialog = true;
+    },
+    closeEditUserDialog() {
+      this.editUserDialog = false;
     }
   }
 

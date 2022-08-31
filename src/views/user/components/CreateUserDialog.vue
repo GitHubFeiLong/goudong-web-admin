@@ -12,7 +12,7 @@
         <el-input v-model="user.email" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roleIds">
-        <RoleSelect :role-multiple="roleSelect.roleMultiple" @getRoles="getRoles" />
+        <RoleSelect :role-multiple="roleSelect.roleMultiple" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -94,7 +94,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     // 获取子组件的角色
-    getRoles(roleIds) {
+    getSelectRoleIds(roleIds) {
       this.user.roleIds = roleIds;
     },
     close() {

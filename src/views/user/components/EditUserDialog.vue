@@ -1,7 +1,7 @@
 <!--修改用户的弹框-->
 <template>
   <el-dialog title="编辑用户" width="600px" :visible.sync="visible" @close="close">
-    <el-form ref="user" :model="user" :rules="rules" label-width="80px">
+    <el-form ref="editUser" :model="user" :rules="rules" label-width="80px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="user.username" :disabled="true" />
       </el-form-item>
@@ -12,10 +12,10 @@
         <el-input v-model="user.email" :disabled="true" />
       </el-form-item>
       <el-form-item label="角色" prop="roleIds">
-        <RoleSelect :role-multiple="roleSelect.roleMultiple" :default-roles="user.roleIds" @getRoles="getRoles" />
+        <RoleSelect :role-multiple="roleSelect.roleMultiple" :default-roles="user.roleIds" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
       <el-form-item label="昵称" prop="nickName">
-        <el-input v-model="user.nickName" style="width: 100px"></el-input>
+        <el-input v-model="user.nickName" clearable></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
         <el-input v-model="user.avatar"></el-input>
@@ -29,17 +29,20 @@
           </el-date-picker>
         </div>
       </el-form-item>
+      <el-form-item label="备注" prop="avatar">
+        <el-input v-model="user.remark" clearable />
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="resetForm('user')">重 置</el-button>
-      <el-button type="primary" @click="submitForm('user')">确 定</el-button>
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click="submitForm('editUser')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import * as validate from '@/utils/validate'
-import { getUserById } from '@/api/user'
+import adminEditUser from '@/api/user'
 import { Message } from "element-ui"
 
 export default {
@@ -50,23 +53,26 @@ export default {
   props: {
     // 弹框
     editUserDialog: { required: true, type: Boolean, default: false },
-    userId: { required: false, type: String }
+    editUserInfo: { required: false, type: Object }
   },
   data() {
     return {
       visible: false,
       user: {
+        id: '',
         username: '',
         phone: '',
         email: '',
         roleIds: [],
+        roleNameCn: '',
         nickName: '',
         avatar: '',
         validTime: undefined,
+        remark: '',
       },
       rules: {
         username: [
-          { required: true, validator: validate.username, trigger: 'blur' },
+          { required: true },
         ],
         phone: [
           { required: true }
@@ -91,54 +97,61 @@ export default {
     // 监听 editUserDialog
     editUserDialog() {
       this.visible = this.editUserDialog;
-    },
-    // 监听父组件传递的用户id
-    userId() {
-      if (this.visible && this.userId) {
-        getUserById(this.userId).then(response => {
-          this.user = response.data.data;
-          // 角色id 集合
-          const roles = [];
-          response.data.data.roles.map(m => {
-            roles.push({ value: m.id, label: m.roleNameCn });
-          })
-          this.roleSelect.roles = roles;
-        })
+      if (this.visible) {
+        this.user = this.editUserInfo;
+        this.user = {
+          id: this.editUserInfo.id,
+          username: this.editUserInfo.username,
+          phone: this.editUserInfo.phone,
+          email: this.editUserInfo.email,
+          roleIds: this.editUserInfo.roleIds,
+          roleNameCn: this.editUserInfo.roleNameCn,
+          nickName: this.editUserInfo.nickName,
+          avatar: this.editUserInfo.avatar,
+          validTime: this.editUserInfo.validTime,
+          remark: this.editUserInfo.remark,
+        };
+        //
+      } else {
+        this.user = {
+          id: '',
+          username: '',
+          phone: '',
+          email: '',
+          roleIds: [],
+          roleNameCn: '',
+          nickName: '',
+          avatar: '',
+          validTime: undefined,
+          remark: '',
+        };
       }
-    }
-  },
-  mounted() {
-
+    },
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          simpleCreateUser(this.user).then(response => {
-            // 保存成功
+          adminEditUser(this.user).then(response => {
+            const data = response.data.data
+            console.log(data)
             Message({
-              message: '修改成功',
+              message: '保存成功',
               type: 'success',
             })
-            this.visible = false
-            // 调用父组件的方法
-            this.$parent.loadPageUser();
           })
         } else {
           return false;
         }
       });
     },
-    resetForm(formName) {
-      console.log(formName, "formName")
-      this.$refs[formName].resetFields();
-    },
     // 获取子组件的角色
-    getRoles(roleIds) {
+    getSelectRoleIds(roleIds) {
       this.user.roleIds = roleIds;
     },
     close() {
-      this.$emit("update:editUserDialog", false)
+      // 表单清空
+      this.$emit("closeEditUserDialog", false)
     }
   },
 }

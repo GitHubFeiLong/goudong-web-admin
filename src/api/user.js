@@ -117,3 +117,16 @@ export function getUserById(id) {
     method: 'get',
   })
 }
+
+/**
+ * admin 平台修改用户信息
+ * @param user 修改后的用户信息
+ * @returns {*}
+ */
+export function adminEditUser(user) {
+  return request({
+    url: `/api/user/base-user/admin/user`,
+    method: 'put',
+    data: user
+  })
+}
