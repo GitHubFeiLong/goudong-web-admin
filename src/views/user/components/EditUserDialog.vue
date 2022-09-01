@@ -14,18 +14,28 @@
       <el-form-item label="角色" prop="roleIds">
         <RoleSelect :role-multiple="roleSelect.roleMultiple" :default-roles="user.roleIds" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
-      <el-form-item label="昵称" prop="nickName">
-        <el-input v-model="user.nickName" clearable></el-input>
+      <el-form-item label="昵称" prop="nickname">
+        <el-input v-model="user.nickname" clearable></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
-        <el-input v-model="user.avatar"></el-input>
+        <el-upload
+          class="avatar-uploader"
+          :action="avatar.avatarAction"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="avatar.imageUrl" :src="avatar.imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-form-item>
       <el-form-item label="有效日期" prop="validTime">
         <div class="block">
           <el-date-picker
             v-model="user.validTime"
             type="datetime"
-            placeholder="选择日期时间">
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          >
           </el-date-picker>
         </div>
       </el-form-item>
@@ -41,8 +51,8 @@
 </template>
 
 <script>
-import * as validate from '@/utils/validate'
-import adminEditUser from '@/api/user'
+import { adminEditUser } from '@/api/user'
+import { simpleUpload } from '@/api/file'
 import { Message } from "element-ui"
 
 export default {
@@ -65,9 +75,9 @@ export default {
         email: '',
         roleIds: [],
         roleNameCn: '',
-        nickName: '',
+        nickname: '',
         avatar: '',
-        validTime: undefined,
+        validTime: new Date(),
         remark: '',
       },
       rules: {
@@ -84,13 +94,18 @@ export default {
           { type: 'array', required: true, message: '请至少选择一个角色', trigger: 'blur' }
         ],
         validTime: [
-          { type: 'date', required: true, message: '请选择用户有效日期', trigger: 'blur' }
+          {required: true, message: '请选择用户有效日期', trigger: 'change' }
         ],
       },
       roleSelect: {
         roleMultiple: true,
         roles: []
+      },
+      avatar: {
+        avatarAction: 'http://localhost:10004/api/file/upload-group/upload',
+        imageUrl: '',
       }
+
     };
   },
   watch: {
@@ -106,7 +121,7 @@ export default {
           email: this.editUserInfo.email,
           roleIds: this.editUserInfo.roleIds,
           roleNameCn: this.editUserInfo.roleNameCn,
-          nickName: this.editUserInfo.nickName,
+          nickname: this.editUserInfo.nickname,
           avatar: this.editUserInfo.avatar,
           validTime: this.editUserInfo.validTime,
           remark: this.editUserInfo.remark,
@@ -115,14 +130,10 @@ export default {
       } else {
         this.user = {
           id: '',
-          username: '',
-          phone: '',
-          email: '',
-          roleIds: [],
           roleNameCn: '',
-          nickName: '',
+          nickname: '',
           avatar: '',
-          validTime: undefined,
+          validTime: new Date(),
           remark: '',
         };
       }
@@ -130,6 +141,7 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      console.log("点击编辑按钮")
       this.$refs[formName].validate((valid) => {
         if (valid) {
           adminEditUser(this.user).then(response => {
@@ -139,6 +151,10 @@ export default {
               message: '保存成功',
               type: 'success',
             })
+            // 关闭弹框
+            this.close();
+            // 刷新列表
+            this.$parent.loadPageUser();
           })
         } else {
           return false;
@@ -151,11 +167,50 @@ export default {
     },
     close() {
       // 表单清空
+      this.$refs.editUser.resetFields();
       this.$emit("closeEditUserDialog", false)
+    },
+    beforeAvatarUpload(file) {
+      console.log(file)
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    handleAvatarSuccess(res, file) {
+      this.avatar.imageUrl = URL.createObjectURL(file.raw);
     }
   },
 }
 </script>
 <style lang="scss" scoped>
-
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

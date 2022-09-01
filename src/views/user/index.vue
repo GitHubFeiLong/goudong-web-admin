@@ -123,6 +123,12 @@
         v-if="false"
       />
       <el-table-column
+        label="头像"
+        min-width="300"
+        prop="avatar"
+        v-if="false"
+      />
+      <el-table-column
         fixed="right"
         label="操作"
         min-width="150"
@@ -281,7 +287,8 @@ export default {
             nickname: item.nickname,
             validTime: item.validTime,
             createTime: item.createTime,
-            remark: item.remark
+            remark: item.remark,
+            avatar: item.avatar,
           }
 
           if (item.roles && item.roles.length > 0) {

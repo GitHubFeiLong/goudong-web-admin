@@ -66,6 +66,9 @@ export default {
             this.roles.push({value: role.id, label: role.roleNameCn})
           })
         }
+        // 第一次时请求接口数据还未过来，默认值设置不生效，所以这里再次设置下。
+        this.roleIds = this.defaultRoles
+
       }).catch(err => {
         console.warn('err', err)
       }).finally(() => {

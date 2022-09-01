@@ -23,6 +23,9 @@ const service = axios.create({
     post: {
       'Content-Type': 'application/json;',
     },
+    put: {
+      'Content-Type': 'application/json;',
+    },
     patch: {
       'Content-Type': 'application/json;'
     }
