@@ -19,14 +19,17 @@
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
         <el-upload
-          class="avatar-uploader"
           :action="avatar.avatarAction"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="avatar.imageUrl" :src="avatar.imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          list-type="picture-card"
+          :on-preview="handlePictureCardPreview"
+          :multiple=false
+          :on-remove="handleRemove">
+          <i class="el-icon-plus"></i>
         </el-upload>
+        <el-dialog :visible.sync="avatar.dialogVisible" :modal=false>
+          <img width="100%" :src="avatar.dialogImageUrl" alt="">
+        </el-dialog>
+
       </el-form-item>
       <el-form-item label="有效日期" prop="validTime">
         <div class="block">
@@ -104,6 +107,8 @@ export default {
       avatar: {
         avatarAction: 'http://localhost:10004/api/file/upload-group/upload',
         imageUrl: '',
+        dialogImageUrl: '',
+        dialogVisible: false,
       }
 
     };
@@ -175,42 +180,50 @@ export default {
       const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('上传头像图片大小不能超过 2MB!');
+      // }
+      return true;
+      // return isJPG && isLt2M;
     },
     handleAvatarSuccess(res, file) {
       this.avatar.imageUrl = URL.createObjectURL(file.raw);
+    },
+    handlePictureCardPreview(file) {
+      this.avatar.dialogImageUrl = file.url;
+      this.avatar.dialogVisible = true;
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
     }
   },
 }
 </script>
 <style lang="scss" scoped>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409EFF;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
+//.avatar-uploader .el-upload {
+//  border: 1px dashed #d9d9d9;
+//  border-radius: 6px;
+//  cursor: pointer;
+//  position: relative;
+//  overflow: hidden;
+//}
+//.avatar-uploader .el-upload:hover {
+//  border-color: #409EFF;
+//}
+//.avatar-uploader-icon {
+//  font-size: 28px;
+//  color: #8c939d;
+//  width: 178px;
+//  height: 178px;
+//  line-height: 178px;
+//  text-align: center;
+//}
+//.avatar {
+//  width: 178px;
+//  height: 178px;
+//  display: block;
+//}
 </style>
