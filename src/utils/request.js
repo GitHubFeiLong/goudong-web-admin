@@ -106,11 +106,14 @@ service.interceptors.response.use(
           duration: 5 * 1000
         })
         this.$store.dispatch('user/resetToken')
-        window.location.href = '/login'
+        // window.location.href = '/login'
         return Promise.reject()
       }
 
       // 其它请求，获取token
+      requests.push(() => {
+        service(config)
+      })
       const token = LocalStorageUtil.get(TOKEN_LOCAL_STORAGE)
       if (token) {
         // 这里进行判断，只有一个请求进入判断
@@ -118,7 +121,7 @@ service.interceptors.response.use(
       } else {
         // 跳转到登录页
         store.dispatch('user/resetToken')
-        window.location.href = '/login'
+        // window.location.href = '/login'
         return Promise.reject()
       }
     }
@@ -161,6 +164,7 @@ function refreshingToken(token, config, result) {
     return new Promise((resolve, reject) => {
       // 请求刷新令牌
       refresh(token.refreshToken).then(response => {
+        console.log("requests", requests)
         // 这个是才后端反的data一层数据
         const result = response.data.data
         // 生成token对象
@@ -181,7 +185,7 @@ function refreshingToken(token, config, result) {
         console.error('刷新令牌时，refresh_token无效，跳转到登录页')
         store.dispatch('user/resetToken')
         // 跳转到登录页
-        window.location.href = '/login'
+        // window.location.href = '/login'
         requests = []
         reject(error)
       }).finally(() => {
