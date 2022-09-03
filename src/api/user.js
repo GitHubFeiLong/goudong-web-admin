@@ -130,3 +130,15 @@ export function adminEditUser(user) {
     data: user
   })
 }
+
+/**
+ * 根据id删除用户
+ * @param userId 用户id
+ * @returns {*}
+ */
+export function deleteUserById(userId) {
+  return request({
+    url: `/api/user/base-user/${userId}`,
+    method: 'delete'
+  })
+}

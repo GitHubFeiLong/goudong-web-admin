@@ -1,7 +1,6 @@
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
-import loadMore from "@/directive/select";
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import Element from 'element-ui'

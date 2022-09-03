@@ -56,7 +56,7 @@ const vueElementAdminRouter = [
         path: 'index',
         component: () => import('@/views/icons/index'),
         name: 'Icons',
-        meta: {title: 'Icons', icon: 'icon', noCache: true}
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
     ]
   },
@@ -81,20 +81,20 @@ const vueElementAdminRouter = [
         path: 'create',
         component: () => import('@/views/example/create'),
         name: 'CreateArticle',
-        meta: {title: 'Create Article', icon: 'edit'}
+        meta: { title: 'Create Article', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/example/edit'),
         name: 'EditArticle',
-        meta: {title: 'Edit Article', noCache: true, activeMenu: '/example/list'},
+        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
         hidden: true
       },
       {
         path: 'list',
         component: () => import('@/views/example/list'),
         name: 'ArticleList',
-        meta: {title: 'Article List', icon: 'list'}
+        meta: { title: 'Article List', icon: 'list' }
       }
     ]
   },
@@ -107,7 +107,7 @@ const vueElementAdminRouter = [
         path: 'index',
         component: () => import('@/views/tab/index'),
         name: 'Tab',
-        meta: {title: 'Tab', icon: 'tab'}
+        meta: { title: 'Tab', icon: 'tab' }
       }
     ]
   },
@@ -126,13 +126,13 @@ const vueElementAdminRouter = [
         path: '401',
         component: () => import('@/views/error-page/401'),
         name: 'Page401',
-        meta: {title: '401', noCache: true}
+        meta: { title: '401', noCache: true }
       },
       {
         path: '404',
         component: () => import('@/views/error-page/404'),
         name: 'Page404',
-        meta: {title: '404', noCache: true}
+        meta: { title: '404', noCache: true }
       }
     ]
   },
@@ -145,7 +145,7 @@ const vueElementAdminRouter = [
         path: 'log',
         component: () => import('@/views/error-log/index'),
         name: 'ErrorLog',
-        meta: {title: 'Error Log', icon: 'bug'}
+        meta: { title: 'Error Log', icon: 'bug' }
       }
     ]
   },
@@ -164,25 +164,25 @@ const vueElementAdminRouter = [
         path: 'export-excel',
         component: () => import('@/views/excel/export-excel'),
         name: 'ExportExcel',
-        meta: {title: 'Export Excel'}
+        meta: { title: 'Export Excel' }
       },
       {
         path: 'export-selected-excel',
         component: () => import('@/views/excel/select-excel'),
         name: 'SelectExcel',
-        meta: {title: 'Export Selected'}
+        meta: { title: 'Export Selected' }
       },
       {
         path: 'export-merge-header',
         component: () => import('@/views/excel/merge-header'),
         name: 'MergeHeader',
-        meta: {title: 'Merge Header'}
+        meta: { title: 'Merge Header' }
       },
       {
         path: 'upload-excel',
         component: () => import('@/views/excel/upload-excel'),
         name: 'UploadExcel',
-        meta: {title: 'Upload Excel'}
+        meta: { title: 'Upload Excel' }
       }
     ]
   },
@@ -193,13 +193,13 @@ const vueElementAdminRouter = [
     redirect: '/zip/download',
     alwaysShow: true,
     name: 'Zip',
-    meta: {title: 'Zip', icon: 'zip'},
+    meta: { title: 'Zip', icon: 'zip' },
     children: [
       {
         path: 'download',
         component: () => import('@/views/zip/index'),
         name: 'ExportZip',
-        meta: {title: 'Export Zip'}
+        meta: { title: 'Export Zip' }
       }
     ]
   },
@@ -213,7 +213,7 @@ const vueElementAdminRouter = [
         path: 'index',
         component: () => import('@/views/pdf/index'),
         name: 'PDF',
-        meta: {title: 'PDF', icon: 'pdf'}
+        meta: { title: 'PDF', icon: 'pdf' }
       }
     ]
   },
@@ -231,7 +231,7 @@ const vueElementAdminRouter = [
         path: 'index',
         component: () => import('@/views/theme/index'),
         name: 'Theme',
-        meta: {title: 'Theme', icon: 'theme'}
+        meta: { title: 'Theme', icon: 'theme' }
       }
     ]
   },
@@ -244,7 +244,7 @@ const vueElementAdminRouter = [
         path: 'index',
         component: () => import('@/views/clipboard/index'),
         name: 'ClipboardDemo',
-        meta: {title: 'Clipboard', icon: 'clipboard'}
+        meta: { title: 'Clipboard', icon: 'clipboard' }
       }
     ]
   },
@@ -255,13 +255,13 @@ const vueElementAdminRouter = [
     children: [
       {
         path: 'https://github.com/PanJiaChen/vue-element-ROLE_ADMIN',
-        meta: {title: 'External Link', icon: 'link'}
+        meta: { title: 'External Link', icon: 'link' }
       }
     ]
   },
 
   // 404 page must be placed at the end !!!
-  {path: '*', redirect: '/404', hidden: true}
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 export default vueElementAdminRouter

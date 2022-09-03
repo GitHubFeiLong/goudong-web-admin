@@ -3,13 +3,13 @@
   <div class="username-select-container">
     <el-select
       v-model="username"
+      v-load-more="loadMore"
+      style="width: 200px;"
       :loading="loading"
       clearable
       filterable
       placeholder="请输入用户名"
       @change="change"
-      style="width: 200px;"
-      v-load-more="loadMore"
     >
       <el-option
         v-for="item in usernames"
@@ -23,13 +23,9 @@
 
 <script>
 
-import {pageUserByField} from "@/api/user";
+import { pageUserByField } from "@/api/user";
 
 export default {
-  mounted() {
-    // 优先加载表格数据
-    this.loadUsername(this.username)
-  },
   data() {
     return {
       username: undefined,
@@ -40,10 +36,14 @@ export default {
       totalPage: undefined, // 下拉总页码
     }
   },
+  mounted() {
+    // 优先加载表格数据
+    this.loadUsername(this.username)
+  },
   methods: {
     loadUsername() {
       this.loading = true
-      const page = {page: this.page, size: this.size, username: this.username}
+      const page = { page: this.page, size: this.size, username: this.username }
       pageUserByField(page).then(response => {
         this.totalPage = Number(response.data.data.totalPage)
         const content = response.data.data.content
@@ -54,7 +54,7 @@ export default {
           }).join()
           content.forEach((user, index, arr) => {
             if (existsUsernames.indexOf(user.username) === -1) {
-              this.usernames.push({value: user.id, label: user.username})
+              this.usernames.push({ value: user.id, label: user.username })
             }
           })
         }

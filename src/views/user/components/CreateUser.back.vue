@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <div class="form-container">
-      <el-form :model="user" :rules="rules" ref="user" label-width="100px" class="demo-ruleForm">
+      <el-form ref="user" :model="user" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="user.username" clearable></el-input>
+          <el-input v-model="user.username" clearable />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="user.phone" clearable></el-input>
+          <el-input v-model="user.phone" clearable />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="user.email" clearable></el-input>
+          <el-input v-model="user.email" clearable />
         </el-form-item>
         <el-form-item label="角色" prop="roles">
-          <RoleSelect @getRoles="getRoles" :roleMultiple="roleSelect.roleMultiple"/>
+          <RoleSelect :role-multiple="roleSelect.roleMultiple" @getRoles="getRoles" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('user')">立即创建</el-button>

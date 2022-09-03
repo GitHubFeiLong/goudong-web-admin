@@ -1,7 +1,7 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
-import {checkUsername, checkPhone, checkEmail} from '@/api/user';
+import { checkUsername, checkPhone, checkEmail } from '@/api/user';
 /**
  * @param {string} path
  * @returns {Boolean}
@@ -132,18 +132,6 @@ export function isJSON(str) {
 
 // ~ 自定义element-ui 的校验规则
 // =====================================================================================================================
-const matching = (value, callback, reg, message) => {
-  if (value === '' || value === undefined || value == null) {
-    callback(new Error(message))
-  } else {
-    if (!reg.test(value)) {
-      callback(new Error(message))
-    } else {
-      callback()
-    }
-  }
-}
-
 /**
  * 用户名校验
  * @param rule
@@ -151,7 +139,6 @@ const matching = (value, callback, reg, message) => {
  * @param callback
  */
 export function username(rule, value, callback) {
-
   if (value === undefined || value === null || value === '') {
     return callback(new Error('请输入用户名'))
   }
@@ -172,8 +159,6 @@ export function username(rule, value, callback) {
  * @param callback
  */
 export function password(rule, value, callback) {
-  const reg = /^(?![0-9]*$)(?![a-zA-Z]*$)[a-zA-Z0-9]{6,12}$/
-
   // 适中 包含(数字+字母)(数字+字符)(字母+字符) 比严格的要宽，所以先执行严格的正则
   const general = /^(?=[a-zA-Z]*\d)(?=\d*[a-zA-Z])|(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*\d)(?=\d*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])|(?=[a-zA-Z]*[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&])(?=[+-\\*/,.<>?;:'"+=-_\\(\\)\\|!@#$%^&]*[a-zA-Z])/;
 
@@ -212,7 +197,6 @@ export function password(rule, value, callback) {
  * @param callback
  */
 export function phone(rule, value, callback) {
-
   const phone = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
   if (!phone.test(value)) {
     return callback(new Error('请输入格式正确的手机号'))
@@ -234,7 +218,6 @@ export function phone(rule, value, callback) {
  * @param callback
  */
 export function email(rule, value, callback) {
-
   const email = /^([a-zA-Z0-9]+[-_.]?)+@[a-zA-Z0-9]+.[a-z]+$/
 
   if (!email.test(value)) {

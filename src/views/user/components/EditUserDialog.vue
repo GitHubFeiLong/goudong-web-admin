@@ -15,18 +15,25 @@
         <RoleSelect :role-multiple="roleSelect.roleMultiple" :default-roles="user.roleIds" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
       <el-form-item label="昵称" prop="nickname">
-        <el-input v-model="user.nickname" clearable></el-input>
+        <el-input v-model="user.nickname" clearable />
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
         <el-upload
-          :action="avatar.avatarAction"
+          class="avatar-update-class"
           list-type="picture-card"
+          :file-list="avatar.fileList"
+          :action="avatar.avatarAction"
           :on-preview="handlePictureCardPreview"
-          :multiple=false
-          :on-remove="handleRemove">
-          <i class="el-icon-plus"></i>
+          :multiple="false"
+          :before-upload="beforeAvatarUpload"
+          :on-success="handleAvatarSuccess"
+          :on-remove="handleRemove"
+          :on-progress="handleProgress"
+          :on-change="handleChange"
+        >
+          <i class="el-icon-plus" />
         </el-upload>
-        <el-dialog :visible.sync="avatar.dialogVisible" :modal=false>
+        <el-dialog :visible.sync="avatar.dialogVisible" :modal="false">
           <img width="100%" :src="avatar.dialogImageUrl" alt="">
         </el-dialog>
 
@@ -38,8 +45,7 @@
             type="datetime"
             placeholder="选择日期时间"
             value-format="yyyy-MM-dd HH:mm:ss"
-          >
-          </el-date-picker>
+          />
         </div>
       </el-form-item>
       <el-form-item label="备注" prop="avatar">
@@ -55,7 +61,6 @@
 
 <script>
 import { adminEditUser } from '@/api/user'
-import { simpleUpload } from '@/api/file'
 import { Message } from "element-ui"
 
 export default {
@@ -66,7 +71,7 @@ export default {
   props: {
     // 弹框
     editUserDialog: { required: true, type: Boolean, default: false },
-    editUserInfo: { required: false, type: Object }
+    editUserInfo: { required: false, type: Object, default: Object }
   },
   data() {
     return {
@@ -97,7 +102,7 @@ export default {
           { type: 'array', required: true, message: '请至少选择一个角色', trigger: 'blur' }
         ],
         validTime: [
-          {required: true, message: '请选择用户有效日期', trigger: 'change' }
+          { required: true, message: '请选择用户有效日期', trigger: 'change' }
         ],
       },
       roleSelect: {
@@ -105,12 +110,11 @@ export default {
         roles: []
       },
       avatar: {
-        avatarAction: 'http://localhost:10004/api/file/upload-group/upload',
-        imageUrl: '',
+        avatarAction: '/api/file/upload-group/upload',
         dialogImageUrl: '',
         dialogVisible: false,
+        fileList: [], // 已上传的文件列表
       }
-
     };
   },
   watch: {
@@ -118,7 +122,7 @@ export default {
     editUserDialog() {
       this.visible = this.editUserDialog;
       if (this.visible) {
-        this.user = this.editUserInfo;
+        // this.user = this.editUserInfo;
         this.user = {
           id: this.editUserInfo.id,
           username: this.editUserInfo.username,
@@ -130,8 +134,14 @@ export default {
           avatar: this.editUserInfo.avatar,
           validTime: this.editUserInfo.validTime,
           remark: this.editUserInfo.remark,
-        };
-        //
+        }
+        // 设置头像默认值
+        if (this.user.avatar) {
+          this.avatar.fileList = [{ name: '头像', url: this.user.avatar }]
+          setTimeout(() => {
+            document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.add("hidden")
+          }, 1)
+        }
       } else {
         this.user = {
           id: '',
@@ -141,8 +151,13 @@ export default {
           validTime: new Date(),
           remark: '',
         };
+        this.avatar.fileList = []
+        document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.remove("hidden")
       }
     },
+    'avatar.fileList': function(newVal, oldVal) {
+      console.log("修改了")
+    }
   },
   methods: {
     submitForm(formName) {
@@ -175,22 +190,29 @@ export default {
       this.$refs.editUser.resetFields();
       this.$emit("closeEditUserDialog", false)
     },
+    handleChange(file, fileList) {
+      console.log("fileList:", fileList)
+      console.log("fileList:", fileList.length > 1)
+    },
     beforeAvatarUpload(file) {
       console.log(file)
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const typeSuccess = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!');
-      // }
-      // if (!isLt2M) {
-      //   this.$message.error('上传头像图片大小不能超过 2MB!');
-      // }
-      return true;
-      // return isJPG && isLt2M;
+      if (!typeSuccess) {
+        this.$message.error('上传头像图片只能是 png、jpg、jpeg 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return typeSuccess && isLt2M;
     },
-    handleAvatarSuccess(res, file) {
-      this.avatar.imageUrl = URL.createObjectURL(file.raw);
+    handleProgress(event, file, fileList) {
+      // 上传时，将上传隐藏
+      document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.add("hidden")
+    },
+    handleAvatarSuccess(response, file, fileList) {
+      this.user.avatar = response.data.fileLink
     },
     handlePictureCardPreview(file) {
       this.avatar.dialogImageUrl = file.url;
@@ -198,32 +220,14 @@ export default {
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.remove("hidden")
     }
   },
 }
 </script>
-<style lang="scss" scoped>
-//.avatar-uploader .el-upload {
-//  border: 1px dashed #d9d9d9;
-//  border-radius: 6px;
-//  cursor: pointer;
-//  position: relative;
-//  overflow: hidden;
-//}
-//.avatar-uploader .el-upload:hover {
-//  border-color: #409EFF;
-//}
-//.avatar-uploader-icon {
-//  font-size: 28px;
-//  color: #8c939d;
-//  width: 178px;
-//  height: 178px;
-//  line-height: 178px;
-//  text-align: center;
-//}
-//.avatar {
-//  width: 178px;
-//  height: 178px;
-//  display: block;
-//}
+<style>
+/*动态显示和隐藏头像上传*/
+.hidden{
+  display: none;
+}
 </style>

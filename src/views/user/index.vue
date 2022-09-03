@@ -37,7 +37,7 @@
         class="filter-item filter-btn-first"
         icon="el-icon-search"
         type="primary"
-        @click="loadPageUser"
+        @click="searchFunc"
       >
         查询
       </el-button>
@@ -117,16 +117,16 @@
         show-overflow-tooltip
       />
       <el-table-column
+        v-if="false"
         label="角色id集合"
         min-width="300"
         prop="roleIds"
-        v-if="false"
       />
       <el-table-column
+        v-if="false"
         label="头像"
         min-width="300"
         prop="avatar"
-        v-if="false"
       />
       <el-table-column
         fixed="right"
@@ -134,9 +134,8 @@
         min-width="150"
       >
         <template v-slot="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">查看</el-button>
-          <el-button type="text" size="small" @click="editUser(scope.row)" >编辑</el-button>
-          <el-button v-if="scope.row.id !== '1'" type="text" size="small">删除</el-button>
+          <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
+          <el-button v-if="scope.row.id !== '1'" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -155,13 +154,13 @@
     <CreateUserDialog :create-user-dialog.sync="createUserDialog" />
 
     <!-- 编辑用户弹框 -->
-    <EditUserDialog :edit-user-dialog.sync="editUserDialog" :edit-user-info="editUserInfo" @closeEditUserDialog="closeEditUserDialog"/>
+    <EditUserDialog :edit-user-dialog.sync="editUserDialog" :edit-user-info="editUserInfo" @closeEditUserDialog="closeEditUserDialog" />
   </div>
 </template>
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser } from '@/api/user'
+import { pageUser, deleteUserById } from '@/api/user'
 
 export default {
   name: 'UserPage',
@@ -235,6 +234,11 @@ export default {
   methods: {
     getUsername(ev) {
       this.filter.username = ev
+    },
+    searchFunc() {
+      // 点击查询按钮
+      this.user.page = 1
+      this.loadPageUser()
     },
     loadPageUser() {
       const pageParam = {
@@ -340,6 +344,16 @@ export default {
     },
     closeEditUserDialog() {
       this.editUserDialog = false;
+    },
+    deleteUser(userId) {
+      if (userId <= 100) {
+        this.$message.warning("删除预置用户失败")
+        return
+      }
+      deleteUserById(userId).then(response => {
+        this.$message.success("删除用户成功")
+        this.loadPageUser()
+      })
     }
   }
 

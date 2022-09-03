@@ -1,12 +1,12 @@
 import axios from 'axios'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import Token from '@/pojo/Token'
-import {validateUrlAuthentication} from '@/utils/validate'
+import { validateUrlAuthentication } from '@/utils/validate'
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
-import {TOKEN_LOCAL_STORAGE} from '@/constant/LocalStorageConst'
-import {refresh} from '@/api/user'
-import {AUTHORIZATION, BEARER} from '@/constant/HttpHeaderConst'
+import { TOKEN_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
+import { refresh } from '@/api/user'
+import { AUTHORIZATION, BEARER } from '@/constant/HttpHeaderConst'
 
 // create an axios instance
 const service = axios.create({
