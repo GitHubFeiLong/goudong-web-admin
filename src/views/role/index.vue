@@ -2,35 +2,8 @@
   <div class="app-container">
     <!--  查询条件  -->
     <div class="filter-container">
-      <span class="filter-item-first-condition">用户账号: </span>
-      <UsernameSelect class="filter-item" @getUsername="getUsername" />
-      <span class="filter-item-condition">有效日期: </span>
-      <el-date-picker
-        v-model="filter.validTime"
-        :picker-options="pickerOptions"
-        align="center"
-        class="filter-item"
-        end-placeholder="结束日期"
-        range-separator="至"
-        start-placeholder="开始日期"
-        type="daterange"
-        unlink-panels
-        value-format="yyyy-MM-dd"
-      />
-      <span class="filter-item-condition">创建日期: </span>
-      <el-date-picker
-        v-model="filter.createTime"
-        :picker-options="pickerOptions"
-        align="center"
-        class="filter-item"
-        end-placeholder="结束日期"
-        range-separator="至"
-        start-placeholder="开始日期"
-        type="daterange"
-        unlink-panels
-        value-format="yyyy-MM-dd"
-      />
-
+      <span class="filter-item-first-condition">角色名称: </span>
+      <el-input v-model="filter.roleNameCn" class="filter-item" style="width: 200px;" placeholder="请输入角色名称" />
       <!-- 操作菜单  -->
       <el-button
         v-waves
@@ -45,9 +18,6 @@
       <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="createUserDialog=true">
         新增
       </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-download" type="primary" @click="exportExcel">
-        导出
-      </el-button>
     </div>
     <!-- 表格  -->
     <el-table
@@ -57,7 +27,6 @@
       :height="tableHeight"
       :row-class-name="tableRowClassName"
       border
-      @selection-change="selectionChangeFunc"
     >
       <el-table-column
         min-width="55"
@@ -170,14 +139,12 @@ export default {
   name: 'UserPage',
   directives: { waves },
   components: {
-    UsernameSelect: () => import('@/components/User/UsernameSelect'),
-    CreateUserDialog: () => import('@/views/user/components/CreateUserDialog'),
-    EditUserDialog: () => import('@/views/user/components/EditUserDialog')
   },
   data() {
     return {
       tableHeight: this.$globalVariable.TABLE_HEIGHT,
       filter: {
+        roleNameCn: undefined,
         username: undefined,
         validTime: undefined,
         createTime: undefined
@@ -223,8 +190,7 @@ export default {
         total: 0,
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
-      },
-      checkUserIds: []
+      }
     }
   },
   mounted() {
@@ -359,18 +325,6 @@ export default {
         this.$message.success("删除用户成功")
         this.loadPageUser()
       })
-    },
-    // 复选框勾选事件
-    selectionChangeFunc(users) {
-      const ids = users.map(m => m.id)
-      console.log(ids, "ids")
-      console.log(users)
-    },
-    // 导出用户
-    exportExcel() {
-      // 如果勾选了就导出勾选的
-
-      // 如果没勾选就导出默认筛选条件的所有
     }
   }
 

@@ -33,6 +33,15 @@ const goudongWebAdminRouter = [
           activeMenu: '/user/page'
         },
       },
+      {
+        path: 'role',
+        component: () => import('@/views/role/index'),
+        name: '角色列表', // 使用name属性，才有面包屑
+        meta: {
+          title: '角色列表',
+          roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
+        },
+      },
     ]
   }
 ]
