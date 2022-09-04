@@ -70,8 +70,19 @@ export default {
   },
   props: {
     // 弹框
-    editUserDialog: { required: true, type: Boolean, default: false },
-    editUserInfo: { required: false, type: Object, default: Object }
+    editUserDialog: {
+      required: true,
+      type: Boolean,
+      default: function() {
+        return false
+      }
+    },
+    editUserInfo: { required: false,
+      type: Object,
+      default: function() {
+        return {}
+      }
+    }
   },
   data() {
     return {

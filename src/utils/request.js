@@ -106,7 +106,7 @@ service.interceptors.response.use(
           duration: 5 * 1000
         })
         this.$store.dispatch('user/resetToken')
-        // window.location.href = '/login'
+        window.location.href = '/login'
         return Promise.reject()
       }
 
@@ -121,7 +121,7 @@ service.interceptors.response.use(
       } else {
         // 跳转到登录页
         store.dispatch('user/resetToken')
-        // window.location.href = '/login'
+        window.location.href = '/login'
         return Promise.reject()
       }
     }
@@ -185,7 +185,7 @@ function refreshingToken(token, config, result) {
         console.error('刷新令牌时，refresh_token无效，跳转到登录页')
         store.dispatch('user/resetToken')
         // 跳转到登录页
-        // window.location.href = '/login'
+        window.location.href = '/login'
         requests = []
         reject(error)
       }).finally(() => {

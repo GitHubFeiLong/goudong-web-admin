@@ -142,3 +142,17 @@ export function deleteUserById(userId) {
     method: 'delete'
   })
 }
+
+/**
+ * 导出
+ * @param data
+ * @returns {*}
+ */
+export function exportExcelAPI(data) {
+  return request({
+    url: `/api/user/base-user/export`,
+    method: 'get',
+    params: data,
+    responseType: 'blob',
+  })
+}

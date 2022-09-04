@@ -105,7 +105,7 @@
         show-overflow-tooltip
       />
       <el-table-column
-        label="有效期"
+        label="账号有效期"
         min-width="150"
         prop="validTime"
       />
@@ -139,7 +139,7 @@
       >
         <template v-slot="scope">
           <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.id !== '1'" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
+          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -164,7 +164,8 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser, deleteUserById } from '@/api/user'
+import { pageUser, deleteUserById, exportExcelAPI } from '@/api/user'
+import { exportExcel } from "@/utils/export";
 
 export default {
   name: 'UserPage',
@@ -180,7 +181,11 @@ export default {
       filter: {
         username: undefined,
         validTime: undefined,
-        createTime: undefined
+        createTime: undefined,
+        startValidTime: undefined,
+        endValidTime: undefined,
+        startCreateTime: undefined,
+        endCreateTime: undefined,
       },
       pickerOptions: {
         shortcuts: [{
@@ -245,19 +250,11 @@ export default {
       this.user.page = 1
       this.loadPageUser()
     },
-    loadPageUser() {
-      const pageParam = {
-        page: this.user.page,
-        size: this.user.size,
-        username: this.filter.username
-      }
-
-      // 参数解析
+    filterTimeHandler() {
       const validTime = this.filter.validTime
       if (validTime && validTime.length > 0) {
-        pageParam.validTime = undefined
-        pageParam['startValidTime'] = this.$moment(validTime[0]).format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
-        pageParam['endValidTime'] = this.$moment(validTime[1])
+        this.filter.startValidTime = this.$moment(validTime[0]).format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
+        this.filter.endValidTime = this.$moment(validTime[1])
           .add(1, 'd')
           .subtract(1, 's')
           .format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
@@ -265,14 +262,24 @@ export default {
 
       const createTime = this.filter.createTime
       if (createTime && createTime.length > 0) {
-        pageParam.createTime = undefined
-        pageParam['startCreateTime'] = this.$moment(createTime[0]).format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
-        pageParam['endCreateTime'] = this.$moment(createTime[1])
+        this.filter.startCreateTime = this.$moment(createTime[0]).format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
+        this.filter.endCreateTime = this.$moment(createTime[1])
           .add(1, 'd')
           .subtract(1, 's')
           .format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
       }
-
+    },
+    loadPageUser() {
+      this.filterTimeHandler();
+      const pageParam = {
+        page: this.user.page,
+        size: this.user.size,
+        username: this.filter.username,
+        startValidTime: this.filter.startValidTime,
+        endValidTime: this.filter.endValidTime,
+        startCreateTime: this.filter.startCreateTime,
+        endCreateTime: this.filter.endCreateTime,
+      }
       pageUser(pageParam).then(response => {
         const data = response.data.data
         const content = data.content
@@ -363,14 +370,18 @@ export default {
     // 复选框勾选事件
     selectionChangeFunc(users) {
       const ids = users.map(m => m.id)
-      console.log(ids, "ids")
-      console.log(users)
+      this.checkUserIds = ids
     },
     // 导出用户
     exportExcel() {
+      this.filterTimeHandler();
       // 如果勾选了就导出勾选的
-
-      // 如果没勾选就导出默认筛选条件的所有
+      const data = {
+        ids: this.checkUserIds.join(","), ...this.filter
+      }
+      exportExcelAPI(data).then(response => {
+        exportExcel(response)
+      })
     }
   }
 
