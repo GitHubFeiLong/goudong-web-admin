@@ -138,7 +138,7 @@
         min-width="150"
       >
         <template v-slot="scope">
-          <el-button type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
+          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
           <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>

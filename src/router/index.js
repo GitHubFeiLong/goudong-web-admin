@@ -118,17 +118,10 @@ export const constantRoutes = [
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
-  }
-]
+  },
 
-/**
- * 需要权限的
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
   ...goudongWebAdminRouter,
-  ...vueElementAdminRouter
+  // ...vueElementAdminRouter,
 ]
 
 const createRouter = () => new Router({

@@ -1,3 +1,4 @@
+<!--菜单页面-->
 <template>
   <div class="app-container">
     <!--  查询条件  -->
@@ -63,9 +64,8 @@
         min-width="150"
       >
         <template v-slot="scope">
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editRole(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="editRole(scope.row)">编辑</el-button>
           <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteRole(scope.row.id)">删除</el-button>
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small">权限</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,7 +90,7 @@ import waves from '@/directive/waves' // waves directive
 import { pageRole, removeRole } from '@/api/role'
 
 export default {
-  name: 'RolePage',
+  name: 'MenuPage',
   components: {
     CreateRoleDialog: () => import('@/views/role/components/CreateRoleDialog'),
     EditRoleDialog: () => import('@/views/role/components/EditRoleDialog'),
