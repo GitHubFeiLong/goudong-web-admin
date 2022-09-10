@@ -12,7 +12,7 @@
         <el-input v-model="user.email" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roleIds">
-        <RoleSelect :role-multiple="roleSelect.roleMultiple" @getSelectRoleIds="getSelectRoleIds" />
+        <RoleSelect ref="roleSelectRef" :role-multiple="roleSelect.roleMultiple" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -90,7 +90,7 @@ export default {
       });
     },
     resetForm(formName) {
-      console.log(formName, "formName")
+      this.$refs.roleSelectRef.reset()
       this.$refs[formName].resetFields();
     },
     // 获取子组件的角色

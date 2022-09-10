@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       roleIds: [], // 选中的角色id集合
-      // roleNameCn: undefined,
       loading: false,
       roles: [],
       page: 1,
@@ -90,12 +89,17 @@ export default {
       // 给父组件传递值
       this.$emit('getSelectRoleIds', roleId)
     },
+    // 下拉滚动分页
     loadMore: function() {
       // 总页数大于当前页，请求下一页数据
       if (this.totalPage > this.page) {
         this.page += 1;
         this.loadRole();
       }
+    },
+    // 清除已选择的
+    reset() {
+      this.roleIds = []
     }
   }
 }

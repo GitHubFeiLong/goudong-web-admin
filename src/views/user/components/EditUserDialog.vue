@@ -30,6 +30,7 @@
           :on-remove="handleRemove"
           :on-progress="handleProgress"
           :on-change="handleChange"
+          :on-error="handleError"
         >
           <i class="el-icon-plus" />
         </el-upload>
@@ -218,10 +219,12 @@ export default {
       }
       return typeSuccess && isLt2M;
     },
+    // 文件上传时
     handleProgress(event, file, fileList) {
       // 上传时，将上传隐藏
       document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.add("hidden")
     },
+    // 上传成功回调
     handleAvatarSuccess(response, file, fileList) {
       this.user.avatar = response.data.fileLink
     },
@@ -232,6 +235,16 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
       document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.remove("hidden")
+    },
+    handleError(err, file, fileList) {
+      document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.remove("hidden")
+      // 获取失败的信息
+      const errMessage = JSON.parse(err["message"]);
+      if (errMessage.clientMessage) {
+        this.$message.error(errMessage.clientMessage)
+      } else {
+        this.$message.error("上传失败，请稍后再试")
+      }
     }
   },
 }
