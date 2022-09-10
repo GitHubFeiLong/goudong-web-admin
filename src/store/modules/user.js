@@ -33,11 +33,11 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // 登录
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ username: username.trim(), password: password }).then(async response => {
         const { data } = response
         const { accessExpires, accessToken, refreshExpires, refreshToken } = data.data
         const token = new Token(accessToken, refreshToken, accessExpires, refreshExpires)
@@ -60,6 +60,11 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
+
+        // 计算用户有权访问的路由，动态添加路由
+        const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+        router.addRoutes(accessRoutes)
+
         resolve(data.data)
       }).catch(error => {
         reject(error)
@@ -67,7 +72,7 @@ const actions = {
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo().then(response => {
@@ -91,7 +96,7 @@ const actions = {
     })
   },
 
-  // user logout
+  // 退出
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
@@ -112,7 +117,7 @@ const actions = {
     })
   },
 
-  // remove token
+  // 重置令牌
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')

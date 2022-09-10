@@ -47,6 +47,12 @@ const mutations = {
 }
 
 const actions = {
+  /**
+   * 动态添加路由
+   * @param commit
+   * @param roles
+   * @returns {Promise<unknown>}
+   */
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
