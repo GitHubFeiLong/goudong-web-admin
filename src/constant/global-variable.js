@@ -1,6 +1,6 @@
 /* 全局变量*/
 // 表格每页显示10条数据，正好不显示滚动条
-const TABLE_HEIGHT = '575'
+const TABLE_HEIGHT = 547
 // 日期时间格式化字符串
 const DATE_TIME_FORMATTER = 'YYYY-MM-DD HH:mm:ss'
 

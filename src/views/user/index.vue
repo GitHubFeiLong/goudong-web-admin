@@ -66,7 +66,6 @@
         align="center"
       />
       <el-table-column
-        fixed
         label="序号"
         min-width="55"
       >
@@ -75,7 +74,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed
         label="用户名"
         min-width="100"
         prop="username"
@@ -133,7 +131,6 @@
         prop="avatar"
       />
       <el-table-column
-        fixed="right"
         label="操作"
         min-width="150"
       >
