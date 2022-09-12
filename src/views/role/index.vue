@@ -65,7 +65,7 @@
         <template v-slot="scope">
           <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editRole(scope.row)">编辑</el-button>
           <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteRole(scope.row.id)">删除</el-button>
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small">权限</el-button>
+          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editRoleMenu(scope.row)">权限</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,7 +81,10 @@
     />
     <!--  新增角色弹窗  -->
     <CreateRoleDialog :create-role-dialog.sync="createRoleDialog" />
+    <!--编辑角色弹窗-->
     <EditRoleDialog :edit-role-dialog.sync="editRoleDialog" :edit-role-info="editRoleInfo" />
+    <!--编辑角色权限弹窗-->
+    <EditRoleMenuDialog :edit-role-menu-dialog.sync="editRoleMenuDialog" :edit-role-menu-info="editRoleMenuInfo" />
   </div>
 </template>
 
@@ -94,6 +97,7 @@ export default {
   components: {
     CreateRoleDialog: () => import('@/views/role/components/CreateRoleDialog'),
     EditRoleDialog: () => import('@/views/role/components/EditRoleDialog'),
+    EditRoleMenuDialog: () => import('@/views/role/components/EditRoleMenuDialog'),
   },
   directives: { waves },
   data() {
@@ -111,9 +115,11 @@ export default {
       filter: {
         roleNameCn: undefined
       },
-      createRoleDialog: false,
-      editRoleDialog: false,
-      editRoleInfo: undefined,
+      createRoleDialog: false, // 创建角色弹窗
+      editRoleDialog: false, // 编辑角色弹窗
+      editRoleInfo: undefined, // 编辑角色弹窗的数据
+      editRoleMenuDialog: false, // 编辑角色权限弹窗
+      editRoleMenuInfo: {}, // 编辑角色权限弹窗的数据
     }
   },
   mounted() {
@@ -183,6 +189,11 @@ export default {
         this.$message.success("删除成功")
         this.loadPageRole()
       })
+    },
+    // 设置权限
+    editRoleMenu(row) {
+      this.editRoleMenuInfo = row
+      this.editRoleMenuDialog = true
     }
   }
 

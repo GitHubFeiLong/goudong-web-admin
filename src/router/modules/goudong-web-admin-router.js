@@ -5,6 +5,7 @@ import Layout from '@/layout'
 const goudongWebAdminRouter = [
   {
     path: '/user',
+    name: '用户管理',
     component: Layout,
     redirect: '/user/page',
     alwaysShow: true, // will always show the root menu
@@ -15,23 +16,43 @@ const goudongWebAdminRouter = [
     },
     children: [
       {
-        path: 'page',
+        path: '/usr/page',
         component: () => import('@/views/user/index'),
         name: '用户列表', // 使用name属性，才有面包屑
         meta: {
           title: '用户列表',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         },
-      },
-      {
-        path: 'create-user',
-        component: () => import('@/views/user/components/CreateUserDialog'),
-        name: '新增用户',
-        hidden: true,
-        meta: {
-          title: '新增用户',
-          activeMenu: '/user/page'
-        },
+        children: [
+          {
+            name: '新增',
+            api: true, // 是否是接口
+            path: '/api/user/base-user/simple-create-user',
+            method: 'post',
+            hidden: true,
+          },
+          {
+            name: '导出',
+            api: true, // 是否是接口
+            path: '/api/user/base-user/export',
+            method: 'get',
+            hidden: true,
+          },
+          {
+            path: '/api/user/base-user/admin/user',
+            api: true, // 是否是接口
+            name: '编辑',
+            method: 'put',
+            hidden: true,
+          },
+          {
+            path: '/api/user/base-user/*',
+            api: true, // 是否是接口
+            name: '删除',
+            method: 'delete',
+            hidden: true,
+          },
+        ]
       },
       {
         path: 'role',
@@ -41,6 +62,29 @@ const goudongWebAdminRouter = [
           title: '角色列表',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         },
+        children: [
+          {
+            name: '新增',
+            api: true, // 是否是接口
+            path: '/api/user/base-role',
+            method: 'post',
+            hidden: true,
+          },
+          {
+            name: '编辑',
+            api: true, // 是否是接口
+            path: '/api/user/base-role',
+            method: 'put',
+            hidden: true,
+          },
+          {
+            name: '删除',
+            api: true, // 是否是接口
+            path: '/api/user/base-role/${id}',
+            method: 'delete',
+            hidden: true,
+          }
+        ]
       },
     ]
   }

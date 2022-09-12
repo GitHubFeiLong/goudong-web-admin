@@ -39,7 +39,7 @@ export function editRole(data) {
   })
 }
 /**
- * 修改角色
+ * 删除角色
  * @param id
  * @returns {*}
  */
