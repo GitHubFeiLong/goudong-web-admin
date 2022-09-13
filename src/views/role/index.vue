@@ -13,6 +13,9 @@
       >
         查询
       </el-button>
+      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="initMenu">
+        初始菜单
+      </el-button>
       <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="addRole">
         新增
       </el-button>
@@ -91,6 +94,9 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import { pageRole, removeRole } from '@/api/role'
+import { initMenuApi } from '@/api/menu'
+
+import goudongWebAdminRouter from "@/router/modules/goudong-web-admin-router";
 
 export default {
   name: 'RolePage',
@@ -173,6 +179,30 @@ export default {
       console.log(`当前页: ${val}`)
       this.role.page = val
       this.loadPageRole()
+    },
+    // 推送菜单
+    initMenu() {
+      const menus = [];
+      goudongWebAdminRouter.forEach((item, index, arr) => {
+        const obj = this.generate(item);
+        menus.push(obj)
+      })
+      console.log(menus);
+
+      initMenuApi(menus).then(response => {
+        console.log(response)
+      })
+    },
+    generate(item) {
+      const obj = { name: item.name, path: item.path, api: item.api, method: item.method };
+      if (item.children) {
+        // 子元素
+        obj.children = [];
+        item.children.forEach((i, index, arr) => {
+          obj.children.push(this.generate(i));
+        })
+      }
+      return obj;
     },
     // 新增角色
     addRole() {
