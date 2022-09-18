@@ -25,6 +25,13 @@ const goudongWebAdminRouter = [
         },
         children: [
           {
+            name: '查询',
+            api: true, // 是否是接口
+            path: '/api/user/base-user/page',
+            method: 'get',
+            hidden: true,
+          },
+          {
             name: '新增',
             api: true, // 是否是接口
             path: '/api/user/base-user/simple-create-user',
@@ -55,7 +62,7 @@ const goudongWebAdminRouter = [
         ]
       },
       {
-        path: 'role',
+        path: '/user/role',
         component: () => import('@/views/role/index'),
         name: '角色列表', // 使用name属性，才有面包屑
         meta: {
@@ -63,6 +70,13 @@ const goudongWebAdminRouter = [
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         },
         children: [
+          {
+            name: '查询',
+            api: true, // 是否是接口
+            path: '/api/user/base-role/page',
+            method: 'get',
+            hidden: true,
+          },
           {
             name: '新增',
             api: true, // 是否是接口

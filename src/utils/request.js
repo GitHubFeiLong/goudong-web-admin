@@ -18,15 +18,19 @@ const service = axios.create({
   // 请求头配置
   headers: {
     get: {
+      'X-Client-Side': 'browser',
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     post: {
+      'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
     },
     put: {
+      'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
     },
     patch: {
+      'X-Client-Side': 'browser',
       'Content-Type': 'application/json;'
     }
   },

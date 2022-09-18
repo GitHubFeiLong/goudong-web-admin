@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function initMenuApi(data) {
   return request({
-    url: `/api/user/base-menu`,
+    url: `/api/user/base-menu/init`,
     method: 'post',
     data
   })

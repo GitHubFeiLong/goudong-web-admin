@@ -190,7 +190,7 @@ export default {
       console.log(menus);
 
       initMenuApi(menus).then(response => {
-        console.log(response)
+        this.$message.success("推送成功")
       })
     },
     generate(item) {
