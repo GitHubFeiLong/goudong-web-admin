@@ -50,6 +50,20 @@ export function removeRole(id) {
   })
 }
 
+/**
+ * 查询角色以及角色的权限
+ * @param id
+ * @returns {*}
+ */
+export function getRoleById(id) {
+  return request({
+    url: `/api/user/base-role/${id}`,
+    method: 'get',
+  })
+}
+
+// export function edit
+
 export function getRoutes() {
   return request({
     url: '/vue-element-admin/routes',

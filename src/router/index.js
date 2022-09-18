@@ -120,6 +120,7 @@ export const constantRoutes = [
       }
     ]
   },
+  // ...vueElementAdminRouter
 ]
 
 /**
@@ -129,7 +130,6 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   ...goudongWebAdminRouter,
-  // ...vueElementAdminRouter
 ]
 
 const createRouter = () => new Router({

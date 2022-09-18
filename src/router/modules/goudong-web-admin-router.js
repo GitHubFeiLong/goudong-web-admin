@@ -94,8 +94,15 @@ const goudongWebAdminRouter = [
           {
             name: '删除',
             api: true, // 是否是接口
-            path: '/api/user/base-role/${id}',
+            path: '/api/user/base-role/*',
             method: 'delete',
+            hidden: true,
+          },
+          {
+            name: '权限',
+            api: true, // 是否是接口
+            path: '/api/user/base-role/permissions/*',
+            method: 'post',
             hidden: true,
           }
         ]

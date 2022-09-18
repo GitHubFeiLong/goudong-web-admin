@@ -1,19 +1,24 @@
-<!--编辑角色权限-->
+<!--编辑角色权限@getCurrentKey="getCurrentKey"-->
 <template>
   <el-dialog title="分配权限" width="600px" :visible.sync="visible" @close="close">
+    <div style="margin: -15px 0px 15px 0px">
+      <el-button size="medium" plain @click="reset">重置</el-button>
+      <el-button size="medium" type="primary" plain @click="submit">提交</el-button>
+    </div>
     <el-tree
+      ref="menuTree"
       :props="props"
       :data="menus"
-      node-key="label"
+      :default-checked-keys="defaultCheckedKeys"
+      default-expand-all
+      node-key="id"
       show-checkbox
-      @check-change="handleCheckChange"
     />
   </el-dialog>
 </template>
 
 <script>
-import { addRole } from '@/api/role'
-import goudongWebAdminRouter from '@/router/modules/goudong-web-admin-router'
+import { getRoleById } from '@/api/role'
 
 export default {
   name: 'EditRoleMenuDialog',
@@ -39,8 +44,9 @@ export default {
     return {
       visible: false,
       menus: [],
+      defaultCheckedKeys: [],
       props: {
-        label: 'label',
+        label: 'name',
         children: 'children'
       },
       count: 1
@@ -50,20 +56,49 @@ export default {
     editRoleMenuDialog() {
       this.visible = this.editRoleMenuDialog;
       if (this.visible) {
-        const data = [];
-        goudongWebAdminRouter.forEach((item, index, arr) => {
-          const obj = this.demo(item);
-          data.push(obj)
-          console.log(item);
+        // 查询角色的信息及权限
+        getRoleById(this.editRoleMenuInfo.id).then(response => {
+          this.menus = response.data.data.permission;
+          this.defaultCheckedKeys = [];
+          response.data.data.permission.map((item, index, array) => {
+            this.defaultCheckedKeys.push(...this.getCheckedId(item))
+            return item.id
+          });
+          console.log(this.menus);
         })
-        console.log(data)
-        this.menus = data;
       }
     },
   },
   methods: {
+    reset() {
+      this.$refs.menuTree.setCheckedKeys(this.defaultCheckedKeys)
+    },
+    submit() {
+      const halfCheckedKeys = this.$refs.menuTree.getHalfCheckedKeys();
+      const checkedKeys = this.$refs.menuTree.getCheckedKeys();
+      const ids = [];
+      ids.push(...halfCheckedKeys, ...checkedKeys);
+
+      // 调用接口
+    },
     close() {
+      // 清理数据
+      this.defaultCheckedKeys = []
+      this.menus = []
       this.$emit("update:editRoleMenuDialog", false)
+    },
+    // 获取选中的id
+    getCheckedId(item) {
+      const ids = [];
+      if (item.checked) {
+        ids.push(item.id)
+        if (item.children) {
+          item.children.forEach((i, index, arr) => {
+            ids.push(...this.getCheckedId(i));
+          })
+        }
+      }
+      return ids;
     },
     demo(item) {
       const obj = { label: item.name };
@@ -75,12 +110,6 @@ export default {
         })
       }
       return obj;
-    },
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
-    },
-    handleNodeClick(data) {
-      console.log(data);
     },
   },
 }
