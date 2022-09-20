@@ -4,9 +4,11 @@
 # 下载依赖
 npm i
 
-# 出现下载git上的包错误时使用以下方式
+# 出现下载git上的包错误时使用以下方式(https://github.com/adobe-webplatform/eve.git)
 npm install https://github.com/nhn/raphael.git --save -dev
 
+# 出现了  D:\application\git\Git\bin\git.EXE ls-remote -h -t ssh://git@github.com/sohee-lee7/Squire.git
+git config --global url."https://".insteadOf git://
 # 启动
 npm run serve
 ```

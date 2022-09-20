@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getRoleById } from '@/api/role'
+import { getRoleById, updatePermissions } from '@/api/role'
 
 export default {
   name: 'EditRoleMenuDialog',
@@ -44,12 +44,11 @@ export default {
     return {
       visible: false,
       menus: [],
-      defaultCheckedKeys: [],
+      defaultCheckedKeys: ["1572128238631784455"],
       props: {
         label: 'name',
         children: 'children'
       },
-      count: 1
     };
   },
   watch: {
@@ -59,9 +58,9 @@ export default {
         // 查询角色的信息及权限
         getRoleById(this.editRoleMenuInfo.id).then(response => {
           this.menus = response.data.data.permission;
-          this.defaultCheckedKeys = [];
+          // this.defaultCheckedKeys = [];
           response.data.data.permission.map((item, index, array) => {
-            this.defaultCheckedKeys.push(...this.getCheckedId(item))
+            // this.defaultCheckedKeys.push(...this.getCheckedId(item))
             return item.id
           });
           console.log(this.menus);
@@ -80,6 +79,9 @@ export default {
       ids.push(...halfCheckedKeys, ...checkedKeys);
 
       // 调用接口
+      updatePermissions(this.editRoleMenuInfo.id, ids).then(response => {
+        this.$message.success("修改成功");
+      })
     },
     close() {
       // 清理数据
@@ -90,7 +92,7 @@ export default {
     // 获取选中的id
     getCheckedId(item) {
       const ids = [];
-      if (item.checked) {
+      if (item.checked && item.checked === true) {
         ids.push(item.id)
         if (item.children) {
           item.children.forEach((i, index, arr) => {

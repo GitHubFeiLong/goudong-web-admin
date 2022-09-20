@@ -1,8 +1,21 @@
 {
   "name": "goudong-web-admin",
   "version": "0.1.0",
-  "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
-  "author": "Pan <panfree23@gmail.com>",
+  "description": "goudong的后台管理项目",
+  "author": "cfl",
+  "keywords": [
+    "vue2",
+    "vue-router",
+    "axios",
+    "vue",
+    "admin",
+    "dashboard",
+    "element-ui",
+    "boilerplate",
+    "admin-template",
+    "management-system"
+  ],
+  "homepage": "https://github.com/GitHubFeiLong/goudong-web-admin",
   "scripts": {
     "dev": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
@@ -24,6 +37,7 @@
     "dropzone": "5.5.1",
     "echarts": "4.2.1",
     "element-ui": "2.13.2",
+    "eve": "git+https://github.com/adobe-webplatform/eve.git",
     "file-saver": "2.0.1",
     "fuse.js": "3.4.4",
     "js-cookie": "2.2.0",
@@ -33,6 +47,7 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
+    "raphael": "git+https://github.com/nhn/raphael.git",
     "screenfull": "4.2.0",
     "script-loader": "0.7.2",
     "sortablejs": "1.8.4",
@@ -85,15 +100,6 @@
     "node": ">=8.9",
     "npm": ">= 3.0.0"
   },
-  "keywords": [
-    "vue",
-    "admin",
-    "dashboard",
-    "element-ui",
-    "boilerplate",
-    "admin-template",
-    "management-system"
-  ],
   "license": "MIT",
   "lint-staged": {
     "src/**/*.{js,vue}": [

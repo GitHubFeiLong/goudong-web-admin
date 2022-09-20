@@ -62,6 +62,20 @@ export function getRoleById(id) {
   })
 }
 
+/**
+ * 修改角色权限
+ * @param id 角色id
+ * @param menuIds 菜单id
+ * @returns {*}
+ */
+export function updatePermissions(id, menuIds) {
+  return request({
+    url: `/api/user/base-role/permissions/${id}`,
+    method: 'post',
+    data: menuIds,
+  })
+}
+
 // export function edit
 
 export function getRoutes() {

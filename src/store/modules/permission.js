@@ -4,10 +4,19 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
+ * @deprecated 使用动态路由，由接口返回用户的菜单权限,使用 {@link hasPermissionByMenus}
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
+  } else {
+    return true
+  }
+}
+
+function hasPermissionByMenus(menus, route) {
+  if (!route.api && route.path) {
+    return menus.some(menu => route.path === menu.path);
   } else {
     return true
   }
@@ -23,7 +32,7 @@ export function filterAsyncRoutes(routes, roles) {
 
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
+    if (hasPermissionByMenus(roles, tmp)) {
       if (tmp.children) {
         tmp.children = filterAsyncRoutes(tmp.children, roles)
       }

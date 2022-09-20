@@ -11,7 +11,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  menus: [],
 }
 
 const mutations = {
@@ -29,6 +30,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_MENUS: (state, menus) => {
+    state.menus = menus;
   }
 }
 
@@ -55,14 +59,19 @@ const actions = {
           roles.push('匿名角色')
         }
 
+        const menus = []
+        user.menus.map((item, index, array) => {
+          menus.push({ path: item.path, api: item.api })
+        })
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)
+        commit('SET_MENUS', menus)
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
 
         // 计算用户有权访问的路由，动态添加路由
-        const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+        const accessRoutes = await store.dispatch('permission/generateRoutes', menus)
         router.addRoutes(accessRoutes)
 
         resolve(data.data)
@@ -86,8 +95,14 @@ const actions = {
         if (roles.length === 0) {
           roles.push('匿名角色')
         }
+        const menus = []
+        user.menus.map((item, index, array) => {
+          menus.push({ path: item.path, api: item.api })
+        })
+
         commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
         commit('SET_ROLES', roles)
+        commit('SET_MENUS', menus)
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
@@ -102,6 +117,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_MENUS', [])
         LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
         LocalStorageUtil.remove(USER_LOCAL_STORAGE)
         resetRouter()
@@ -122,6 +138,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_MENUS', [])
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
       LocalStorageUtil.remove(USER_LOCAL_STORAGE)
       resetRouter()
@@ -132,18 +149,18 @@ const actions = {
 
   // dynamically modify permissions
   async changeRoles({ commit, dispatch }, role) {
-    const token = role + '-token'
-
-    commit('SET_TOKEN', token)
-    const { roles } = await dispatch('getInfo')
-    resetRouter()
-    // generate accessible routes map based on roles
-    const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // dynamically add accessible routes
-    router.addRoutes(accessRoutes)
-
-    // reset visited views and cached views
-    dispatch('tagsView/delAllViews', null, { root: true })
+    // const token = role + '-token'
+    //
+    // commit('SET_TOKEN', token)
+    // const { roles } = await dispatch('getInfo')
+    // resetRouter()
+    // // generate accessible routes map based on roles
+    // const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
+    // // dynamically add accessible routes
+    // router.addRoutes(accessRoutes)
+    //
+    // // reset visited views and cached views
+    // dispatch('tagsView/delAllViews', null, { root: true })
   }
 }
 
