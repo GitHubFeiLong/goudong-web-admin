@@ -1,4 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import store from "@/store";
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -52,23 +53,24 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
-  }
+  },
 }
 
 const actions = {
   /**
    * 动态添加路由
    * @param commit
-   * @param roles
+   * @param menus
    * @returns {Promise<unknown>}
    */
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, menus) {
     return new Promise(resolve => {
       let accessedRoutes
+      const roles = store.getters.roles;
       if (roles.includes('ROLE_ADMIN')) {
         accessedRoutes = asyncRoutes || []
       } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        accessedRoutes = filterAsyncRoutes(asyncRoutes, menus)
       }
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

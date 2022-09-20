@@ -60,9 +60,12 @@ const actions = {
         }
 
         const menus = []
-        user.menus.map((item, index, array) => {
-          menus.push({ path: item.path, api: item.api })
-        })
+        if (user.menus) {
+          user.menus.map((item, index, array) => {
+            menus.push({ path: item.path, api: item.api })
+          })
+        }
+
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)
         commit('SET_MENUS', menus)
@@ -96,9 +99,11 @@ const actions = {
           roles.push('匿名角色')
         }
         const menus = []
-        user.menus.map((item, index, array) => {
-          menus.push({ path: item.path, api: item.api })
-        })
+        if (user.menus) {
+          user.menus.map((item, index, array) => {
+            menus.push({ path: item.path, api: item.api })
+          })
+        }
 
         commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
         commit('SET_ROLES', roles)

@@ -9,6 +9,7 @@
       ref="menuTree"
       :props="props"
       :data="menus"
+      :check-strictly="checkStrictly"
       :default-checked-keys="defaultCheckedKeys"
       default-expand-all
       node-key="id"
@@ -44,6 +45,7 @@ export default {
     return {
       visible: false,
       menus: [],
+      checkStrictly: true,
       defaultCheckedKeys: ["1572128238631784455"],
       props: {
         label: 'name',
@@ -58,12 +60,14 @@ export default {
         // 查询角色的信息及权限
         getRoleById(this.editRoleMenuInfo.id).then(response => {
           this.menus = response.data.data.permission;
-          // this.defaultCheckedKeys = [];
+          this.defaultCheckedKeys = [];
+          this.checkStrictly = true
           response.data.data.permission.map((item, index, array) => {
-            // this.defaultCheckedKeys.push(...this.getCheckedId(item))
+            this.defaultCheckedKeys.push(...this.getCheckedId(item))
             return item.id
           });
-          console.log(this.menus);
+          this.checkStrictly = false
+          // console.log(this.menus);
         })
       }
     },
@@ -81,12 +85,14 @@ export default {
       // 调用接口
       updatePermissions(this.editRoleMenuInfo.id, ids).then(response => {
         this.$message.success("修改成功");
+        this.close();
       })
     },
     close() {
       // 清理数据
       this.defaultCheckedKeys = []
       this.menus = []
+      this.checkStrictly = true
       this.$emit("update:editRoleMenuDialog", false)
     },
     // 获取选中的id
