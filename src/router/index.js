@@ -120,6 +120,10 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '*',
+    redirect: '/404'
+  }
   // ...vueElementAdminRouter
 ]
 

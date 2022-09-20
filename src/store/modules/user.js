@@ -88,7 +88,6 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo().then(response => {
-        console.log(response)
         const user = response.data.data
         const { username, avatar, nickname } = user
         const roles = []
