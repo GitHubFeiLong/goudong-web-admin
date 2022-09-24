@@ -84,9 +84,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          editRole(this.role).then(response => {
-            const data = response.data.data
-            console.log(data)
+          editRole(this.role).then(data => {
             this.$message.success("保存成功")
             // 关闭弹框
             this.close();

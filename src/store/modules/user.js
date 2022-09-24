@@ -41,13 +41,12 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(async response => {
-        const { data } = response
-        const { accessExpires, accessToken, refreshExpires, refreshToken } = data.data
+      login({ username: username.trim(), password: password }).then(async data => {
+        const { accessExpires, accessToken, refreshExpires, refreshToken } = data
         const token = new Token(accessToken, refreshToken, accessExpires, refreshExpires)
         LocalStorageUtil.set(TOKEN_LOCAL_STORAGE, token)
 
-        const user = data.data.user
+        const user = data.user
         LocalStorageUtil.set(USER_LOCAL_STORAGE, user)
         const { username, nickname } = user
         const roles = []
@@ -77,9 +76,7 @@ const actions = {
         const accessRoutes = await store.dispatch('permission/generateRoutes', menus)
         router.addRoutes(accessRoutes)
 
-        resolve(data.data)
-      }).catch(error => {
-        reject(error)
+        resolve(data)
       })
     })
   },
@@ -87,19 +84,18 @@ const actions = {
   // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo().then(response => {
-        const user = response.data.data
-        const { username, avatar, nickname } = user
+      getInfo().then(data => {
+        const { username, avatar, nickname } = data
         const roles = []
-        for (const key in user.roles) {
-          roles.push(user.roles[key].roleName)
+        for (const key in data.roles) {
+          roles.push(data.roles[key].roleName)
         }
         if (roles.length === 0) {
           roles.push('匿名角色')
         }
         const menus = []
-        if (user.menus) {
-          user.menus.map((item, index, array) => {
+        if (data.menus) {
+          data.menus.map((item, index, array) => {
             menus.push({ path: item.path, api: item.api })
           })
         }
@@ -110,7 +106,7 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
-        resolve()
+        resolve(data)
       })
     })
   },
@@ -131,8 +127,6 @@ const actions = {
         dispatch('tagsView/delAllViews', null, { root: true })
 
         resolve()
-      }).catch(error => {
-        reject(error)
       })
     })
   },
@@ -146,26 +140,10 @@ const actions = {
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
       LocalStorageUtil.remove(USER_LOCAL_STORAGE)
       resetRouter()
-      this.$store.dispatch('tagsView/delAllViews', null, { root: true })
+      // store.dispatch('tagsView/delAllViews', null, { root: true })
       resolve()
     })
   },
-
-  // dynamically modify permissions
-  async changeRoles({ commit, dispatch }, role) {
-    // const token = role + '-token'
-    //
-    // commit('SET_TOKEN', token)
-    // const { roles } = await dispatch('getInfo')
-    // resetRouter()
-    // // generate accessible routes map based on roles
-    // const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // // dynamically add accessible routes
-    // router.addRoutes(accessRoutes)
-    //
-    // // reset visited views and cached views
-    // dispatch('tagsView/delAllViews', null, { root: true })
-  }
 }
 
 export default {

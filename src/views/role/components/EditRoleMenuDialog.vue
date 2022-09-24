@@ -58,11 +58,11 @@ export default {
       this.visible = this.editRoleMenuDialog;
       if (this.visible) {
         // 查询角色的信息及权限
-        getRoleById(this.editRoleMenuInfo.id).then(response => {
-          this.menus = response.data.data.permission;
+        getRoleById(this.editRoleMenuInfo.id).then(data => {
+          this.menus = data.permission;
           this.defaultCheckedKeys = [];
           this.checkStrictly = true
-          response.data.data.permission.map((item, index, array) => {
+          data.permission.map((item, index, array) => {
             this.defaultCheckedKeys.push(...this.getCheckedId(item))
             return item.id
           });

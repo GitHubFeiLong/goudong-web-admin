@@ -69,9 +69,9 @@ export default {
     loadRole() {
       this.loading = true
       const page = { page: this.page, size: this.size, roleNameCn: this.roleNameCn }
-      pageRole(page).then(response => {
-        this.totalPage = Number(response.data.data.totalPage)
-        const content = response.data.data.content
+      pageRole(page).then(data => {
+        this.totalPage = Number(data.totalPage)
+        const content = data.content
         if (content && content.length > 0) {
           content.forEach((role, index, arr) => {
             this.roles.push({ value: role.id, label: role.roleNameCn })

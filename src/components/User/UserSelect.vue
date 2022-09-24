@@ -44,9 +44,10 @@ export default {
     loadUsername() {
       this.loading = true
       const page = { page: this.page, size: this.size, username: this.username }
-      pageUserByField(page).then(response => {
-        this.totalPage = Number(response.data.data.totalPage)
-        const content = response.data.data.content
+      pageUserByField(page).then(data => {
+        console.log("userselect", data)
+        this.totalPage = Number(data.totalPage)
+        const content = data.content
         if (content && content.length > 0) {
           // 将value使用逗号拼接起来，用于去重。
           const existsUsernames = this.usernames.map((item) => {

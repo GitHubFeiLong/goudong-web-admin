@@ -1,20 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import store from "@/store";
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- * @deprecated 使用动态路由，由接口返回用户的菜单权限,使用 {@link hasPermissionByMenus}
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
-}
-
 function hasPermissionByMenus(menus, route) {
   if (!route.api && route.path) {
     return menus.some(menu => route.path === menu.path);
@@ -26,16 +12,16 @@ function hasPermissionByMenus(menus, route) {
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
- * @param roles
+ * @param menus
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, menus) {
   const res = []
 
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermissionByMenus(roles, tmp)) {
+    if (hasPermissionByMenus(menus, tmp)) {
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
+        tmp.children = filterAsyncRoutes(tmp.children, menus)
       }
       res.push(tmp)
     }
@@ -65,6 +51,7 @@ const actions = {
    */
   generateRoutes({ commit }, menus) {
     return new Promise(resolve => {
+      console.log(asyncRoutes)
       let accessedRoutes
       const roles = store.getters.roles;
       if (roles.includes('ROLE_ADMIN')) {

@@ -13,6 +13,7 @@ export function isExternal(path) {
 /**
  * @param {string} str
  * @returns {Boolean}
+ * @deprecated
  */
 export function validUsername(str) {
   const valid_map = ['admin', 'editor']
@@ -130,6 +131,19 @@ export function isJSON(str) {
   })
 }
 
+/**
+ * 验证是否是日期
+ * @param date
+ * @returns {boolean}
+ */
+export function validateDate(date) {
+  // 2022-09-10 23:19:09
+  if (!isNaN(Date.parse(date))) {
+    return true;
+  }
+  return false;
+}
+
 // ~ 自定义element-ui 的校验规则
 // =====================================================================================================================
 /**
@@ -143,8 +157,7 @@ export function username(rule, value, callback) {
     return callback(new Error('请输入用户名'))
   }
 
-  checkUsername(value).then(response => {
-    const data = response.data.data
+  checkUsername(value).then(data => {
     if (data.length !== 0) {
       return callback(new Error('用户名已存在, 可以选择使用：' + data.join()))
     }
@@ -202,8 +215,7 @@ export function phone(rule, value, callback) {
     return callback(new Error('请输入格式正确的手机号'))
   }
 
-  checkPhone(value).then(response => {
-    const data = response.data.data
+  checkPhone(value).then(data => {
     if (!data) {
       return callback(new Error('手机号已被使用'))
     }
@@ -224,8 +236,7 @@ export function email(rule, value, callback) {
     return callback(new Error('请输入格式正确的邮箱地址'))
   }
 
-  checkEmail(value).then(response => {
-    const data = response.data.data
+  checkEmail(value).then(data => {
     if (!data) {
       return callback(new Error('邮箱地址已被使用'))
     }

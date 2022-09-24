@@ -168,16 +168,13 @@ export default {
       }
     },
     'avatar.fileList': function(newVal, oldVal) {
-      console.log("修改了")
     }
   },
   methods: {
     submitForm(formName) {
-      console.log("点击编辑按钮")
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          adminEditUser(this.user).then(response => {
-            const data = response.data.data
+          adminEditUser(this.user).then(data => {
             console.log(data)
             Message({
               message: '保存成功',
@@ -225,8 +222,8 @@ export default {
       document.getElementsByClassName("avatar-update-class")[0].getElementsByClassName("el-upload el-upload--picture-card")[0].classList.add("hidden")
     },
     // 上传成功回调
-    handleAvatarSuccess(response, file, fileList) {
-      this.user.avatar = response.data.fileLink
+    handleAvatarSuccess(data, file, fileList) {
+      this.user.avatar = data.data.fileLink
     },
     handlePictureCardPreview(file) {
       this.avatar.dialogImageUrl = file.url;

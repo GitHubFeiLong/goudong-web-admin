@@ -51,7 +51,7 @@ export function pageUserByField(page) {
  */
 export function pageUser(page) {
   return request({
-    url: '/api/user/base-user/page',
+    url: `/api/user/base-user/page`,
     method: 'get',
     params: page
   })

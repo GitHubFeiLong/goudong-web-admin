@@ -280,8 +280,7 @@ export default {
         startCreateTime: this.filter.startCreateTime,
         endCreateTime: this.filter.endCreateTime,
       }
-      pageUser(pageParam).then(response => {
-        const data = response.data.data
+      pageUser(pageParam).then(data => {
         const content = data.content
 
         // 修改分页组件
@@ -362,7 +361,7 @@ export default {
         this.$message.warning("删除预置用户失败")
         return
       }
-      deleteUserById(userId).then(response => {
+      deleteUserById(userId).then(data => {
         this.$message.success("删除用户成功")
         this.loadPageUser()
       })
@@ -380,6 +379,7 @@ export default {
         ids: this.checkUserIds.join(","), ...this.filter
       }
       exportExcelAPI(data).then(response => {
+        console.log(response)
         exportExcel(response)
       })
     }

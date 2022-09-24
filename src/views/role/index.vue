@@ -96,7 +96,7 @@ import waves from '@/directive/waves' // waves directive
 import { pageRole, removeRole } from '@/api/role'
 import { initMenuApi } from '@/api/menu'
 
-import goudongWebAdminRouter from "@/router/modules/goudong-web-admin-router";
+import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
 
 export default {
   name: 'RolePage',
@@ -145,8 +145,7 @@ export default {
         size: this.role.size,
         roleNameCn: this.filter.roleNameCn,
       }
-      pageRole(pageParam).then(response => {
-        const data = response.data.data
+      pageRole(pageParam).then(data => {
         const content = data.content
 
         // 修改分页组件
@@ -183,13 +182,14 @@ export default {
     // 推送菜单
     initMenu() {
       const menus = [];
-      goudongWebAdminRouter.forEach((item, index, arr) => {
+      console.log(goudongWebAdminResource)
+      goudongWebAdminResource.filter(f => !f.hidden).forEach((item, index, arr) => {
         const obj = this.generate(item);
         menus.push(obj)
       })
       console.log(menus);
 
-      initMenuApi(menus).then(response => {
+      initMenuApi(menus).then(data => {
         this.$message.success("推送成功")
       })
     },

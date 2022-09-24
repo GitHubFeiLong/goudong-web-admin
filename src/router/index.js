@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import Layout from '@/layout'
 
 /* Router Modules */
-import goudongWebAdminRouter from '@/router/modules/goudong-web-admin-router'
+import { goudongWebAdminRouters } from '@/router/modules/goudong-web-admin-router'
 import vueElementAdminRouter from '@/router/modules/vue-element-admin-router'
 
 Vue.use(Router)
@@ -120,10 +120,6 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '*',
-    redirect: '/404'
-  }
   // ...vueElementAdminRouter
 ]
 
@@ -132,9 +128,7 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = [
-  ...goudongWebAdminRouter,
-]
+export const asyncRoutes = goudongWebAdminRouters
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
