@@ -123,8 +123,12 @@ service.interceptors.response.use(response => {
   const { status, config } = response
   const result = response.data
 
-  // 响应码401，需要重新登录（或使用无感刷新token）
   if (status === 401) {
+    Message({
+      message: result.clientMessage,
+      type: 'error',
+      duration: 5 * 1000
+    })
     // 清空用户登录状态
     store.dispatch('user/resetToken')
     // 跳转到登录页
@@ -134,6 +138,13 @@ service.interceptors.response.use(response => {
 
   if (status < 200 || status >= 400) {
     // 设置响应为错误，
+    if (result && result.dataMap && !result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
+      Message({
+        message: result.clientMessage,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(result)
   }
 
