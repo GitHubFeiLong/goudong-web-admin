@@ -129,9 +129,7 @@ export const goudongWebAdminRouters = getRouters()
  */
 function getRouters() {
   // 复制
-  console.log(JSON.stringify(goudongWebAdminResource))
   const copy = deepCopy(goudongWebAdminResource)
-  console.log("copy", copy)
   const routers = copy.filter(menu => {
     // 有children
     if (menu.children) {
@@ -148,7 +146,6 @@ function getRouters() {
     return true
   })
 
-  console.log("routers", routers)
   return copy;
 }
 
