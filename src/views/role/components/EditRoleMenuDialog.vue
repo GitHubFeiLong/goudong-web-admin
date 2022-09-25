@@ -5,16 +5,19 @@
       <el-button size="medium" plain @click="reset">重置</el-button>
       <el-button size="medium" type="primary" plain @click="submit">提交</el-button>
     </div>
-    <el-tree
-      ref="menuTree"
-      :props="props"
-      :data="menus"
-      :check-strictly="checkStrictly"
-      :default-checked-keys="defaultCheckedKeys"
-      default-expand-all
-      node-key="id"
-      show-checkbox
-    />
+    <div class="edit-role-menu-dialog">
+      <el-tree
+        ref="menuTree"
+        class="my-tree"
+        :props="props"
+        :data="menus"
+        :check-strictly="checkStrictly"
+        :default-checked-keys="defaultCheckedKeys"
+        default-expand-all
+        node-key="id"
+        show-checkbox
+      />
+    </div>
   </el-dialog>
 </template>
 
@@ -46,7 +49,7 @@ export default {
       visible: false,
       menus: [],
       checkStrictly: true,
-      defaultCheckedKeys: ["1572128238631784455"],
+      defaultCheckedKeys: [],
       props: {
         label: 'name',
         children: 'children'
@@ -67,14 +70,16 @@ export default {
             return item.id
           });
           this.checkStrictly = false
-          // console.log(this.menus);
         })
       }
     },
   },
   methods: {
     reset() {
-      this.$refs.menuTree.setCheckedKeys(this.defaultCheckedKeys)
+      console.log(this.defaultCheckedKeys)
+      this.checkStrictly = true
+      this.$refs.menuTree.setCheckedKeys(this.defaultCheckedKeys, false)
+      this.checkStrictly = false
     },
     submit() {
       const halfCheckedKeys = this.$refs.menuTree.getHalfCheckedKeys();
@@ -108,20 +113,22 @@ export default {
       }
       return ids;
     },
-    demo(item) {
-      const obj = { label: item.name };
-      if (item.children) {
-        // 子元素
-        obj.children = [];
-        item.children.forEach((i, index, arr) => {
-          obj.children.push(this.demo(i));
-        })
-      }
-      return obj;
-    },
   },
 }
 </script>
 <style lang="scss" scoped>
+  .edit-role-menu-dialog{
+    height: 350px;
+    .my-tree{
+      overflow-y: auto;
+      height: 350px;
+      margin: 10px;
+      >>>.el-tree-node{
+        > .el-tree-node__children{
+          overflow-y: visible !important
+        }
+    }
 
+    }
+  }
 </style>

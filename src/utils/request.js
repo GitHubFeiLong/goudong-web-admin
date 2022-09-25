@@ -144,6 +144,8 @@ service.interceptors.response.use(response => {
         type: 'error',
         duration: 5 * 1000
       })
+
+      result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE] = true
     }
     return Promise.reject(result)
   }
