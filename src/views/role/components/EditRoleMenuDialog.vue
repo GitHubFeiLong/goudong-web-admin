@@ -67,19 +67,21 @@ export default {
           this.checkStrictly = true
           data.permission.map((item, index, array) => {
             this.defaultCheckedKeys.push(...this.getCheckedId(item))
-            return item.id
+            // return item.id
           });
           this.checkStrictly = false
+
+          this.reset()
         })
       }
     },
   },
   methods: {
     reset() {
-      console.log(this.defaultCheckedKeys)
-      this.checkStrictly = true
-      this.$refs.menuTree.setCheckedKeys(this.defaultCheckedKeys, false)
-      this.checkStrictly = false
+      this.$refs.menuTree.setCheckedKeys([]);
+      this.defaultCheckedKeys.forEach(value => {
+        this.$refs.menuTree.setChecked(value, true, false);
+      })
     },
     submit() {
       const halfCheckedKeys = this.$refs.menuTree.getHalfCheckedKeys();
