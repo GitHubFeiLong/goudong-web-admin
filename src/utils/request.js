@@ -64,7 +64,9 @@ const service = axios.create({
   // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
   transformResponse: [(data) => {
     if (typeof data === 'string' && data.startsWith('{')) {
-      return JSON.parse(data)
+      const parse = JSON.parse(data);
+      // console.log("parse =", parse)
+      return parse
     }
     return data
   }]
