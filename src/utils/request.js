@@ -160,11 +160,15 @@ service.interceptors.response.use(response => {
   // 返回data内的数据（去掉axios和后端的封装外层数据，只保留data）
   return Promise.resolve(result.data)
 }, error => {
-  console.log('err', error) // error 就是后端接口封装的对象
+  /*
+    后台返回5xx进入该函数内。
+   */
+  const data = error.response.data;// data 就是后端接口封装的对象
+  console.log('err', error, data)
   // 没有 doNotHandleErrorMessage 属性时，或 doNotHandleErrorMessage=false时 弹出提示信息
-  if (error && error.dataMap && !error.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
+  if (data && data.dataMap && !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
     Message({
-      message: error.clientMessage,
+      message: data.clientMessage,
       type: 'error',
       duration: 5 * 1000
     })
