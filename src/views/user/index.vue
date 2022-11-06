@@ -258,6 +258,9 @@ export default {
           .add(1, 'd')
           .subtract(1, 's')
           .format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
+      } else {
+        this.filter.startValidTime = undefined
+        this.filter.endValidTime = undefined
       }
 
       const createTime = this.filter.createTime
@@ -267,6 +270,9 @@ export default {
           .add(1, 'd')
           .subtract(1, 's')
           .format(this.$globalVariable.DATE_TIME_FORMATTER).toString()
+      } else {
+        this.filter.startCreateTime = undefined
+        this.filter.endCreateTime = undefined
       }
     },
     loadPageUser() {

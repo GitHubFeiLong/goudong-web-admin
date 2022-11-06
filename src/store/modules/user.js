@@ -77,7 +77,7 @@ const actions = {
         router.addRoutes(accessRoutes)
 
         resolve(data)
-      })
+      }).catch((reason) => reject())
     })
   },
 
