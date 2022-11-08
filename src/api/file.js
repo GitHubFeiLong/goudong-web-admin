@@ -12,3 +12,19 @@ export function simpleUpload(file) {
     data: file
   })
 }
+
+// ~ 导出
+// =====================================================================================================================
+/**
+ * 导出用户
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function exportUser(data) {
+  return request({
+    url: `/api/file/user/export/user`,
+    method: 'get',
+    params: data,
+    responseType: 'blob',
+  })
+}

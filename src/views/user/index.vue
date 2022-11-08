@@ -164,8 +164,9 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser, deleteUserById, exportExcelAPI } from '@/api/user'
+import { pageUser, deleteUserById } from '@/api/user'
 import { exportExcel } from "@/utils/export";
+import { exportUser } from "@/api/file";
 
 export default {
   name: 'UserPage',
@@ -384,7 +385,7 @@ export default {
       const data = {
         ids: this.checkUserIds.join(","), ...this.filter
       }
-      exportExcelAPI(data).then(response => {
+      exportUser(data).then(response => {
         console.log(response)
         exportExcel(response)
       })
