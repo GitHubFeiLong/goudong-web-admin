@@ -35,7 +35,11 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          await store.dispatch('user/getInfo')
+          await store.dispatch('user/getInfo').catch(reason => {
+            console.log(111)
+            store.dispatch('user/resetToken')
+            NProgress.done()
+          })
           // const roles = store.getters.roles
           const menus = store.getters.menus
           // generate accessible routes map based on roles

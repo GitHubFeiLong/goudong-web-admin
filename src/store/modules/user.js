@@ -107,6 +107,8 @@ const actions = {
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
         resolve(data)
+      }).catch(reason => {
+        reject()
       })
     })
   },

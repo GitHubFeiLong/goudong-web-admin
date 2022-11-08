@@ -138,8 +138,26 @@ service.interceptors.response.use(response => {
     return Promise.reject(result)
   }
 
-  if (status < 200 || status >= 400) {
-    // 设置响应为错误，
+  if (status >= 400) {
+    // 当定义blob 且失败时 返回json
+    if (config.responseType && config.responseType === 'blob' && result.type === 'application/json') {
+      // 创建一个FileReader实例
+      const reader = new FileReader();
+      // 读取文件,结果用字符串形式表示
+      reader.readAsText(response.data, 'utf-8');
+      // 读取完成后,**获取reader.result**
+      reader.onload = function() {
+        const json = JSON.parse(reader.result);
+        Message({
+          message: json.clientMessage,
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
+
+      return Promise.reject(result)
+    }
+
     if (result && result.dataMap && !result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
       Message({
         message: result.clientMessage,
