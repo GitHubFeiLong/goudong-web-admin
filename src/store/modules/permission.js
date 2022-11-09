@@ -60,6 +60,7 @@ const actions = {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, menus)
       }
       commit('SET_ROUTES', accessedRoutes)
+      console.log(accessedRoutes)
       resolve(accessedRoutes)
     })
   }

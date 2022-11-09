@@ -2,22 +2,7 @@
 <template>
   <div class="app-container">
     <!--  查询条件  -->
-    <div class="filter-container">
-      <span class="filter-item-first-condition">角色名称: </span>
-      <el-input v-model="filter.roleNameCn" class="filter-item" style="width: 200px;" placeholder="请输入角色名称" />
-      <!-- 操作菜单  -->
-      <el-button
-        class="filter-item filter-btn-first"
-        icon="el-icon-search"
-        type="primary"
-        @click="searchFunc"
-      >
-        查询
-      </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="addRole">
-        新增
-      </el-button>
-    </div>
+    <div class="filter-empty-container" />
     <!-- 表格  -->
     <el-table
       ref="table"
@@ -43,9 +28,21 @@
       </el-table-column>
       <el-table-column
         fixed
-        label="角色"
+        label="菜单名称"
         min-width="300"
         prop="roleNameCn"
+      />
+      <el-table-column
+        label="URI"
+        min-width="300"
+        prop="remark"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="请求方式"
+        min-width="300"
+        prop="remark"
+        show-overflow-tooltip
       />
       <el-table-column
         label="备注"

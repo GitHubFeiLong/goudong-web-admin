@@ -111,6 +111,23 @@ export const goudongWebAdminResource = [
           }
         ]
       },
+      {
+        path: '/user/menu',
+        component: () => import('@/views/menu/index'),
+        name: '菜单列表',
+        meta: {
+          title: '菜单列表'
+        },
+        children: [
+          {
+            name: '查询',
+            api: true, // 是否是接口
+            path: '/api/user/base-menu/page',
+            method: 'get',
+            hidden: true,
+          }
+        ]
+      }
     ]
   },
   // 必须放在最后 404
