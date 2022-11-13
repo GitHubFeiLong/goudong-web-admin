@@ -215,9 +215,17 @@ export default {
     },
     // 删除角色
     deleteRole(id) {
-      removeRole(id).then(response => {
-        this.$message.success("删除成功")
-        this.loadPageRole()
+      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeRole(id).then(response => {
+          this.$message.success("删除成功")
+          this.loadPageRole()
+        })
+      }).catch(() => {
+        this.$message.info("已取消删除");
       })
     },
     // 设置权限

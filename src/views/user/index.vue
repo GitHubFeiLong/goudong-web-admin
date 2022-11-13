@@ -368,9 +368,17 @@ export default {
         this.$message.warning("删除预置用户失败")
         return
       }
-      deleteUserById(userId).then(data => {
-        this.$message.success("删除用户成功")
-        this.loadPageUser()
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteUserById(userId).then(data => {
+          this.$message.success("删除用户成功")
+          this.loadPageUser()
+        })
+      }).catch(() => {
+        this.$message.info("已取消删除");
       })
     },
     // 复选框勾选事件

@@ -12,3 +12,14 @@ export function initMenuApi(data) {
     data
   })
 }
+
+/**
+ * 获取所有菜单
+ * @returns {*}
+ */
+export function listMenuApi() {
+  return request({
+    url: `/api/user/base-menu/tree`,
+    method: 'get'
+  })
+}

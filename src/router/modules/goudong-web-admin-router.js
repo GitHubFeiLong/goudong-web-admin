@@ -122,7 +122,7 @@ export const goudongWebAdminResource = [
           {
             name: '查询',
             api: true, // 是否是接口
-            path: '/api/user/base-menu/page',
+            path: '/api/user/base-menu/tree',
             method: 'get',
             hidden: true,
           }
