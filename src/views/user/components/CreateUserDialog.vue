@@ -11,6 +11,9 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="user.email" clearable />
       </el-form-item>
+      <el-form-item label="登录密码" prop="password">
+        <el-input v-model="user.password" clearable />
+      </el-form-item>
       <el-form-item label="角色" prop="roleIds">
         <RoleSelect ref="roleSelectRef" :role-multiple="roleSelect.roleMultiple" @getSelectRoleIds="getSelectRoleIds" />
       </el-form-item>
@@ -43,6 +46,7 @@ export default {
         username: '',
         phone: '',
         email: '',
+        password: '',
         roleIds: [],
       },
       rules: {
@@ -54,6 +58,9 @@ export default {
         ],
         email: [
           { required: true, validator: validate.email, trigger: 'blur' }
+        ],
+        password: [
+          { required: true, trigger: 'blur', message: '请输入登录密码' }
         ],
         roleIds: [
           { type: 'array', required: true, message: '请至少选择一个角色', trigger: 'blur' }

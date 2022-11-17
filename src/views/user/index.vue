@@ -3,7 +3,7 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">用户账号: </span>
-      <UsernameSelect class="filter-item" @getUsername="getUsername" />
+      <UsernameSelect ref="UsernameSelect" class="filter-item" @getUsername="getUsername" />
       <span class="filter-item-condition">有效日期: </span>
       <el-date-picker
         v-model="filter.validTime"
@@ -30,10 +30,7 @@
         unlink-panels
         value-format="yyyy-MM-dd"
       />
-
-      <!-- 操作菜单  -->
       <el-button
-        v-waves
         class="filter-item filter-btn-first"
         icon="el-icon-search"
         type="primary"
@@ -41,21 +38,27 @@
       >
         查询
       </el-button>
-      <!-- @click="addUser"-->
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="createUserDialog=true">
+      <!--不加icon会小一个像素的高度-->
+      <el-button class="filter-item filter-btn" icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+    </div>
+    <!--顶部操作栏-->
+    <div class="el-table-tool">
+      <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
         新增
       </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-download" type="primary" @click="exportExcel">
+      <el-button class="el-button--small" icon="el-icon-download" type="primary" @click="exportExcel">
         导出
       </el-button>
     </div>
     <!-- 表格  -->
     <el-table
       ref="table"
+      v-loading="isLoading"
       style="width: 100%"
       :data="user.users"
       :height="tableHeight"
       :row-class-name="tableRowClassName"
+      :header-cell-style="{background:'#FAFAFA', color:'#000'}"
       border
       @selection-change="selectionChangeFunc"
     >
@@ -79,47 +82,90 @@
         label="用户名"
         min-width="100"
         prop="username"
+        sortable
       />
       <el-table-column
         label="角色"
-        min-width="120"
+        min-width="150"
         prop="roleNameCn"
+        sortable
         show-overflow-tooltip
-      />
+      >
+        <template v-slot="scope">
+          <span v-for="item in scope.row.roleNameCn.split(',')" :key="item">
+            <el-tag size="small">{{ item }}</el-tag>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="手机号"
         min-width="90"
         prop="phone"
+        sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="邮箱"
         min-width="120"
         prop="email"
+        sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="昵称"
         min-width="120"
         prop="nickname"
+        sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="账号有效期"
-        min-width="150"
+        min-width="115"
         prop="validTime"
+        sortable
       />
       <el-table-column
         label="创建时间"
-        min-width="150"
+        min-width="115"
         prop="createTime"
+        sortable
       />
       <el-table-column
         label="备注"
-        min-width="300"
+        min-width="200"
         prop="remark"
         show-overflow-tooltip
       />
+      <el-table-column
+        label="状态"
+        min-width="45"
+        prop="enabled"
+        align="center"
+      >
+        <template v-slot="scope">
+          <el-switch
+            v-model="scope.row.enabled"
+            :active-value="false"
+            :inactive-value="true"
+            @change="changeEnabled(scope.row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="操作"
+        min-width="165"
+        align="center"
+      >
+        <template v-slot="scope">
+          <div class="el-link-parent">
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editUser(scope.row)"><i class="el-icon-edit" />修改</a>
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="resetPassword(scope.row)"><i class="el-icon-key" />重置密码</a>
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--danger" @click="deleteUser(scope.row)"><i class="el-icon-delete" />删除</a>
+          </div>
+        </template>
+      </el-table-column>
+      <!--隐藏-->
       <el-table-column
         v-if="false"
         label="角色id集合"
@@ -132,20 +178,11 @@
         min-width="300"
         prop="avatar"
       />
-      <el-table-column
-        fixed="right"
-        label="操作"
-        min-width="150"
-      >
-        <template v-slot="scope">
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editUser(scope.row)">编辑</el-button>
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <!-- 分页控件 -->
     <el-pagination
       :current-page="user.page"
+      :pager-count="user.pagerCount"
       :page-size="user.size"
       :page-sizes="user.pageSizes"
       :total="user.total"
@@ -164,7 +201,7 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser, deleteUserById } from '@/api/user'
+import { pageUser, deleteUserById, resetPasswordApi, changeEnabledApi } from '@/api/user'
 import { exportExcel } from "@/utils/export";
 import { exportUser } from "@/api/file";
 
@@ -221,11 +258,13 @@ export default {
       editUserDialog: false,
       // 被编辑的用户信息
       editUserInfo: undefined,
+      isLoading: false,
       // 表格中的用户
       user: {
         users: [],
         page: 1,
         size: this.$globalVariable.PAGE_SIZES[0],
+        pagerCount: this.$globalVariable.PAGER_COUNT,
         total: 0,
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
@@ -246,10 +285,25 @@ export default {
     getUsername(ev) {
       this.filter.username = ev
     },
+    // 点击查询按钮
     searchFunc() {
-      // 点击查询按钮
       this.user.page = 1
       this.loadPageUser()
+    },
+    // 点击重置按钮
+    resetSearchFilter() {
+      // 清空子组件（用户名下拉）值
+      this.$refs.UsernameSelect.clear();
+      // 赋默认值
+      this.filter = {
+        username: undefined,
+        validTime: undefined,
+        createTime: undefined,
+        startValidTime: undefined,
+        endValidTime: undefined,
+        startCreateTime: undefined,
+        endCreateTime: undefined,
+      };
     },
     filterTimeHandler() {
       const validTime = this.filter.validTime
@@ -277,6 +331,7 @@ export default {
       }
     },
     loadPageUser() {
+      this.isLoading = true;
       this.filterTimeHandler();
       const pageParam = {
         page: this.user.page,
@@ -318,7 +373,11 @@ export default {
             column['roleIds'] = item.roles.map(m => m.id)
           }
           this.user.users.push(column)
+
+          this.isLoading = false;
         })
+      }).catch(() => {
+        this.isLoading = false;
       })
     },
     tableRowClassName({ row, rowIndex }) {
@@ -360,21 +419,51 @@ export default {
       this.editUserInfo = row;
       this.editUserDialog = true;
     },
+    resetPassword(row) {
+      const userId = row.id;
+      if (userId <= 100) {
+        this.$message.error("不能操作预置用户")
+        return
+      }
+      this.$confirm('此操作将重置该用户密码, 是否继续?', '重置密码', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        resetPasswordApi(userId).then(data => {
+          this.$message.success("重置密码成功")
+        })
+      }).catch(() => {
+        this.$message.info("已取消重置密码");
+      })
+    },
     closeEditUserDialog() {
       this.editUserDialog = false;
     },
-    deleteUser(userId) {
+    // 切换激活状态
+    changeEnabled(row) {
+      const userId = row.id;
       if (userId <= 100) {
-        this.$message.warning("删除预置用户失败")
+        this.$message.error("不能操作预置用户")
         return
       }
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+      changeEnabledApi(userId).then(data => {
+        this.$message.success("修改成功")
+      })
+    },
+    deleteUser(row) {
+      const userId = row.id;
+      if (userId <= 100) {
+        this.$message.error("不能操作预置用户")
+        return
+      }
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '删除', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         deleteUserById(userId).then(data => {
-          this.$message.success("删除用户成功")
+          this.$message.success("删除成功")
           this.loadPageUser()
         })
       }).catch(() => {

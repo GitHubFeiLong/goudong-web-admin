@@ -82,3 +82,23 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+// 文字
+.el-link-parent{
+  display: inline-block;
+  .el-link{
+    &:nth-child(n+2){
+      margin-left: 10px;
+    }
+    // 图标后面加一个空格
+    i[class^="el-icon"]{
+      &::after{
+        width: 5px;
+        display: inline-block;
+        content: " ";
+      }
+    }
+  }
+
+}
+

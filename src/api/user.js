@@ -142,3 +142,27 @@ export function deleteUserById(userId) {
     method: 'delete'
   })
 }
+
+/**
+ * 根据id重置用户密码
+ * @param userId 用户id
+ * @returns {*}
+ */
+export function resetPasswordApi(userId) {
+  return request({
+    url: `/api/user/base-user/reset-password/${userId}`,
+    method: 'put'
+  })
+}
+
+/**
+ * 根据id切换用户激活状态
+ * @param userId 用户id
+ * @returns {*}
+ */
+export function changeEnabledApi(userId) {
+  return request({
+    url: `/api/user/base-user/change-enabled/${userId}`,
+    method: 'put'
+  })
+}

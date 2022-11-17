@@ -5,6 +5,7 @@ import Cookies from 'js-cookie'
 import loadMore from "@/directive/select";
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import Element from 'element-ui'
+import 'element-ui/packages/theme-chalk/src/common/var.scss'
 import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
 import '@/styles/table.scss' // global css

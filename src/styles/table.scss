@@ -1,4 +1,54 @@
+@import 'src/styles/element-variables';
+@import 'element-ui/packages/theme-chalk/src/common/var.scss';
 // 关于表格相关的自定义样式
+.filter-container {
+  padding: 10px;
+  background-color: $--app-container-background-color;
+
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
+
+  .filter-item-first-condition {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px 10px 10px 0px;
+  }
+
+  .filter-item-condition {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0px 10px 10px 40px;
+  }
+
+  .filter-btn-first {
+    margin: 0px 10px 10px 20px;
+  }
+
+  .filter-btn {
+    margin: 0px 10px 10px 10px;
+  }
+}
+
+.filter-empty-container {
+  height: 56px;
+}
+
+.el-table-tool{
+  width: 100%;
+  height: 52px;
+  padding: 9px 17px;
+  border-top: 1px solid $--border-color-lighter;
+  border-left: 1px solid $--border-color-lighter;
+  border-right: 1px solid $--border-color-lighter;
+  background: $--my-table-header-background-color;
+  .el-button{
+
+  }
+}
+// 表格
 .el-table {
   .warning-row {
     //background: oldlace!important;
@@ -11,12 +61,42 @@
   .el-table__fixed, .el-table__fixed-right{
     height: 100% !important; //设置高优先，以覆盖内联样式
   }
+  .el-table__body-wrapper{
+    .el-table__body{
+      tbody{
+        .el-table__row{
+          .cell{
+            .el-tag{
+              // 第二个元素开始
+              &:nth-child(n+1){
+                margin-left: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
 
 // 分页组件
 .el-pagination {
-  text-align: right;
-  margin-top: 20px;
+  text-align: center;
+  height: 43px;
+  padding-top: 15px !important;
+  background-color: $--app-container-background-color;
+  .el-pager{
+    li {
+      min-width: 28px;
+      height: 28px;
+    }
+    li[class~="active"] {
+      background-color: $--color-primary;
+      color: $--color-white;
+      border-radius: 50%;
+    }
+  }
 }
 
 .el-table--border th:first-child .cell, .el-table--border td:first-child .cell{

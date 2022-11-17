@@ -11,6 +11,7 @@
       filterable
       placeholder="请输入用户名"
       @change="change"
+      @clear="clear"
     >
       <el-option
         v-for="item in usernames"
@@ -68,7 +69,12 @@ export default {
     change(username) {
       // 给父组件传递值
       this.$emit('getUsername', username)
-      console.log(username)
+    },
+    clear() {
+      // 去掉框中的值
+      this.username = undefined;
+      // 给父组件传递值
+      this.$emit('getUsername', undefined)
     },
     loadMore: function() {
       // 总页数大于当前页，请求下一页数据
