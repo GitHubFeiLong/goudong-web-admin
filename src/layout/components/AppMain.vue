@@ -1,5 +1,6 @@
 <template>
   <section class="app-main">
+    <el-backtop target=".app-main" :right="27" :bottom="40" />
     <div class="app-container-parent">
       <transition name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
@@ -26,17 +27,40 @@ export default {
 
 <style lang="scss" scoped>
 @import 'src/styles/element-variables';
+@import 'element-ui/packages/theme-chalk/src/common/var.scss';
 .app-main {
-  /* 50= navbar  50  */
-  min-height: calc(100vh - 50px);
+  /* 84 = navbar + tags-view = 50 + 34 */
+  height: calc(100vh - 84px);
   width: 100%;
-  position: relative;
-  overflow: hidden;
+  position: absolute;
   background-color: $--app-main-background-color;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  /* 两个滚动条交接处 -- x轴和y轴 */
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(97, 184, 179, 0.1);
+    background: $--scrollbar-background-color;
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(87, 175, 187, 0.1);
+    border-radius: 10px;
+    background: #ededed;
+  }
   .app-container-parent{
     border-radius: 6px;
     background-color: $--app-container-background-color;
     margin: 15px;
+    overflow: hidden;
   }
 }
 
@@ -45,11 +69,6 @@ export default {
 }
 
 .hasTagsView {
-  .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
-  }
-
   .fixed-header+.app-main {
     padding-top: 84px;
   }

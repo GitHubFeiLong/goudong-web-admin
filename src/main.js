@@ -8,6 +8,7 @@ import Element from 'element-ui'
 import 'element-ui/packages/theme-chalk/src/common/var.scss'
 import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
+import '@/styles/dialog.scss' // global css
 import '@/styles/table.scss' // global css
 import App from './App'
 import store from './store'

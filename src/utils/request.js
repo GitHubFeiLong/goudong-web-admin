@@ -181,8 +181,26 @@ service.interceptors.response.use(response => {
   /*
     后台返回5xx进入该函数内。
    */
-  const data = error.response.data;// data 就是后端接口封装的对象
-  console.log('err', error, data)
+  const response = error.response;
+  const data = response.data;// data 就是后端接口封装的对象
+  console.log('err', error, response, data)
+  if (response.config.responseType && response.config.responseType === 'blob' && response.data.type === 'application/json') {
+    // 创建一个FileReader实例
+    const reader = new FileReader();
+    // 读取文件,结果用字符串形式表示
+    reader.readAsText(response.data, 'utf-8');
+    // 读取完成后,**获取reader.result**
+    reader.onload = function() {
+      const json = JSON.parse(reader.result);
+      Message({
+        message: json.clientMessage,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
+    return Promise.reject(error)
+  }
+
   // 没有 doNotHandleErrorMessage 属性时，或 doNotHandleErrorMessage=false时 弹出提示信息
   if (data && data.dataMap && !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
     Message({

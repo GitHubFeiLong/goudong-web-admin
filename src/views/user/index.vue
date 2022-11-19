@@ -43,23 +43,70 @@
     </div>
     <!--顶部操作栏-->
     <div class="el-table-tool">
-      <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
-        新增
-      </el-button>
-      <el-button class="el-button--small" icon="el-icon-download" type="primary" @click="exportExcel">
-        导出
-      </el-button>
+      <div class="left-tool">
+        <el-button size="small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
+          新增
+        </el-button>
+        <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteUsers">
+          删除
+        </el-button>
+        <el-button class="el-button--small" icon="el-icon-upload2" @click="importUserDialog=true">
+          导入
+        </el-button>
+        <el-button class="el-button--small" icon="el-icon-download" @click="exportExcel">
+          导出
+        </el-button>
+      </div>
+      <div class="right-tool">
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="刷新" placement="top">
+          <div class="right-tool-btn" @click="loadPageUser">
+            <i class="el-icon-refresh-right" />
+          </div>
+        </el-tooltip>
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="密度" placement="top">
+          <el-dropdown trigger="click" @command="changeElTableSizeCommand">
+            <div class="right-tool-btn">
+              <i class="el-icon-s-operation" />
+            </div>
+            <el-dropdown-menu slot="dropdown" size="small">
+              <el-dropdown-item :class="elDropdownItemClass[0]" command="0,medium">默认</el-dropdown-item>
+              <el-dropdown-item :class="elDropdownItemClass[1]" command="1,small">中等</el-dropdown-item>
+              <el-dropdown-item :class="elDropdownItemClass[2]" command="2,mini">紧凑</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-tooltip>
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="列设置" placement="top">
+          <div class="right-tool-btn">
+            <i class="el-icon-setting" />
+          </div>
+          <!--          <el-tree
+            :data="data"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            ref="tree"
+            highlight-current
+            :props="defaultProps">
+          </el-tree>-->
+        </el-tooltip>
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="全屏" placement="top">
+          <div class="right-tool-btn">
+            <i class="el-icon-full-screen" />
+          </div>
+        </el-tooltip>
+      </div>
     </div>
     <!-- 表格  -->
     <el-table
       ref="table"
       v-loading="isLoading"
-      style="width: 100%"
-      :data="user.users"
-      :height="tableHeight"
-      :row-class-name="tableRowClassName"
-      :header-cell-style="{background:'#FAFAFA', color:'#000'}"
       border
+      :data="user.users"
+      row-key="id"
+      :row-class-name="tableRowClassName"
+      :header-cell-style="{background:'#FAFAFA', color:'#000', height: '30px',}"
+      :header-row-class-name="EL_TABLE.size"
+      :size="EL_TABLE.size"
       @selection-change="selectionChangeFunc"
     >
       <el-table-column
@@ -70,7 +117,6 @@
       />
       <el-table-column
         fixed
-        label="序号"
         min-width="55"
       >
         <template v-slot="scope">
@@ -92,7 +138,7 @@
         show-overflow-tooltip
       >
         <template v-slot="scope">
-          <span v-for="item in scope.row.roleNameCn.split(',')" :key="item">
+          <span v-for="item in scope.row.roleNameCn" :key="item">
             <el-tag size="small">{{ item }}</el-tag>
           </span>
         </template>
@@ -138,7 +184,7 @@
       />
       <el-table-column
         label="状态"
-        min-width="45"
+        min-width="50"
         prop="enabled"
         align="center"
       >
@@ -191,6 +237,24 @@
       @current-change="handleCurrentChange"
     />
 
+    <!--导入-->
+    <el-dialog title="导入用户" :visible.sync="importUserDialog" custom-class="el-dialog-import-table">
+      <el-upload
+        class="el-dialog-import-table-upload"
+        drag
+        action="/api/file/upload-group/upload-user"
+        :multiple="false"
+        :before-upload="beforeAvatarUpload"
+        :on-success="handleAvatarSuccess"
+        :on-progress="handleProgress"
+        :on-change="handleChange"
+        :on-error="handleError"
+      >
+        <i class="el-icon-upload" />
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip">只能上传xls、xlsx文件，<a class="a-download-template" @click="downloadImportUserTemplate">下载模板</a></div>
+      </el-upload>
+    </el-dialog>
     <!-- 新增用户弹框 -->
     <CreateUserDialog :create-user-dialog.sync="createUserDialog" />
 
@@ -201,9 +265,10 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser, deleteUserById, resetPasswordApi, changeEnabledApi } from '@/api/user'
+import { pageUser, deleteUserById, resetPasswordApi, changeEnabledApi, deleteUserByIdsApi } from '@/api/user'
 import { exportExcel } from "@/utils/export";
-import { exportUser } from "@/api/file";
+import { exportUserApi } from "@/api/file";
+import { isNotEmpty, isTrue } from "@/utils/assertUtil";
 
 export default {
   name: 'UserPage',
@@ -215,7 +280,6 @@ export default {
   },
   data() {
     return {
-      tableHeight: this.$globalVariable.TABLE_HEIGHT,
       filter: {
         username: undefined,
         validTime: undefined,
@@ -252,6 +316,8 @@ export default {
           }
         }]
       },
+      // 导入用户
+      importUserDialog: false,
       // 新增用户 子组件新增用户 弹框显示变量
       createUserDialog: false,
       // 修改用户 子组件弹框 弹框显示变量
@@ -259,6 +325,11 @@ export default {
       // 被编辑的用户信息
       editUserInfo: undefined,
       isLoading: false,
+      elDropdownItemClass: [undefined, undefined, undefined],
+      EL_TABLE: {
+        // 显示大小
+        size: 'medium'
+      },
       // 表格中的用户
       user: {
         users: [],
@@ -269,7 +340,14 @@ export default {
         totalPage: 0,
         pageSizes: this.$globalVariable.PAGE_SIZES
       },
-      checkUserIds: []
+      // 复选框选中的用户
+      checkUserIds: [],
+      // 表格属性
+      /* tableAttr: {
+        columns:[
+          {}
+        ]
+      }*/
     }
   },
   mounted() {
@@ -369,14 +447,12 @@ export default {
           }
 
           if (item.roles && item.roles.length > 0) {
-            column['roleNameCn'] = item.roles.map(m => m.roleNameCn).join()
+            column['roleNameCn'] = item.roles.map(m => m.roleNameCn)
             column['roleIds'] = item.roles.map(m => m.id)
           }
           this.user.users.push(column)
-
-          this.isLoading = false;
         })
-      }).catch(() => {
+      }).finally(() => {
         this.isLoading = false;
       })
     },
@@ -399,6 +475,21 @@ export default {
       }
       // 其它不显示颜色
       return ''
+    },
+    changeElTableSizeCommand(val) {
+      const args = val.split(",");
+      const idx = Number(args[0]);
+      console.log(args)
+      this.elDropdownItemClass.map((value, index, array) => {
+        if (index === idx) {
+          array[index] = "el-dropdown-item--click";
+        } else {
+          array[index] = undefined;
+        }
+      })
+      console.log(this.elDropdownItemClass)
+      this.elDropdownItemClass[args[0]]
+      this.EL_TABLE.size = args[1];
     },
     addUser() {
       this.$router.push({ path: '/user/create-user', query: this.otherQuery })
@@ -451,6 +542,25 @@ export default {
         this.$message.success("修改成功")
       })
     },
+    // 批量删除用户
+    deleteUsers() {
+      const ids = this.checkUserIds;
+      isNotEmpty(ids, () => this.$message.warning("请勾选需要删除的用户"))
+        .then(() => {
+          this.$confirm('此操作将永久删除所选用户, 是否继续?', '删除', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteUserByIdsApi({ ids: this.checkUserIds.join(",") }).then(data => {
+              this.$message.success("删除成功")
+              this.loadPageUser()
+            })
+          }).catch(() => {
+            this.$message.info("已取消删除");
+          })
+        }).catch(() => {});
+    },
     deleteUser(row) {
       const userId = row.id;
       if (userId <= 100) {
@@ -475,6 +585,10 @@ export default {
       const ids = users.map(m => m.id)
       this.checkUserIds = ids
     },
+    // 下载模板
+    downloadImportUserTemplate() {
+      this.$message.info("下载模板")
+    },
     // 导出用户
     exportExcel() {
       this.filterTimeHandler();
@@ -482,12 +596,15 @@ export default {
       const data = {
         ids: this.checkUserIds.join(","), ...this.filter
       }
-      exportUser(data).then(response => {
+      exportUserApi(data).then(response => {
         console.log(response)
         exportExcel(response)
       })
     }
   }
-
 }
 </script>
+
+<style lang="scss">
+
+</style>

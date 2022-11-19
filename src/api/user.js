@@ -144,6 +144,19 @@ export function deleteUserById(userId) {
 }
 
 /**
+ * 根据id批量删除用户
+ * @param ids 用户id集合
+ * @returns {*}
+ */
+export function deleteUserByIdsApi(data) {
+  return request({
+    url: `/api/user/base-user/ids`,
+    params: data,
+    method: 'delete'
+  })
+}
+
+/**
  * 根据id重置用户密码
  * @param userId 用户id
  * @returns {*}

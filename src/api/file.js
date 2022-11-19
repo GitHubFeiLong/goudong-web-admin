@@ -20,7 +20,7 @@ export function simpleUpload(file) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function exportUser(data) {
+export function exportUserApi(data) {
   return request({
     url: `/api/file/user/export/user`,
     method: 'get',

@@ -9,12 +9,12 @@ import Layout from '@/layout'
 export const goudongWebAdminResource = [
   {
     path: '/user',
-    name: '用户管理',
+    name: '系统管理',
     component: Layout,
     redirect: '/user/page',
     alwaysShow: true, // will always show the root menu
     meta: {
-      title: '用户管理',
+      title: '系统管理',
       icon: 'peoples',
       roles: ['ROLE_ADMIN'] // you can set roles in root nav
     },
@@ -22,9 +22,9 @@ export const goudongWebAdminResource = [
       {
         path: '/usr/page',
         component: () => import('@/views/user/index'),
-        name: '用户列表', // 使用name属性，才有面包屑
+        name: '用户管理', // 使用name属性，才有面包屑
         meta: {
-          title: '用户列表',
+          title: '用户管理',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         },
         children: [
@@ -68,9 +68,9 @@ export const goudongWebAdminResource = [
       {
         path: '/user/role',
         component: () => import('@/views/role/index'),
-        name: '角色列表', // 使用name属性，才有面包屑
+        name: '角色管理', // 使用name属性，才有面包屑
         meta: {
-          title: '角色列表',
+          title: '角色管理',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
         },
         children: [
@@ -114,9 +114,9 @@ export const goudongWebAdminResource = [
       {
         path: '/user/menu',
         component: () => import('@/views/menu/index'),
-        name: '菜单列表',
+        name: '菜单管理',
         meta: {
-          title: '菜单列表'
+          title: '菜单管理'
         },
         children: [
           {
