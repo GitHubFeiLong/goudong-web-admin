@@ -179,3 +179,15 @@ export function changeEnabledApi(userId) {
     method: 'put'
   })
 }
+
+/**
+ * 根据id切换用户锁定状态
+ * @param userId 用户id
+ * @returns {*}
+ */
+export function changeLockedApi(userId) {
+  return request({
+    url: `/api/user/base-user/change-locked/${userId}`,
+    method: 'put'
+  })
+}

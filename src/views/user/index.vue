@@ -44,7 +44,7 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button size="small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
+        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
           新增
         </el-button>
         <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteUsers">
@@ -131,16 +131,22 @@
         sortable
       />
       <el-table-column
-        label="角色"
-        min-width="150"
-        prop="roleNameCn"
+        label="昵称"
+        min-width="120"
+        prop="nickname"
         sortable
         show-overflow-tooltip
+      />
+      <el-table-column
+        label="性别"
+        min-width="50"
+        prop="sex"
+        sortable
       >
         <template v-slot="scope">
-          <span v-for="item in scope.row.roleNameCn" :key="item">
-            <el-tag size="small">{{ item }}</el-tag>
-          </span>
+          <span v-if="scope.row.sex == 1">男</span>
+          <span v-else-if="scope.row.sex === 2">女</span>
+          <span v-else-if="scope.row.sex === 0">未知</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -158,12 +164,18 @@
         show-overflow-tooltip
       />
       <el-table-column
-        label="昵称"
-        min-width="120"
-        prop="nickname"
+        label="角色"
+        min-width="150"
+        prop="roleNameCn"
         sortable
         show-overflow-tooltip
-      />
+      >
+        <template v-slot="scope">
+          <span v-for="item in scope.row.roleNameCn" :key="item">
+            <el-tag size="small">{{ item }}</el-tag>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="账号有效期"
         min-width="115"
@@ -183,7 +195,7 @@
         show-overflow-tooltip
       />
       <el-table-column
-        label="状态"
+        label="激活"
         min-width="50"
         prop="enabled"
         align="center"
@@ -191,12 +203,32 @@
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.enabled"
-            :active-value="false"
-            :inactive-value="true"
+            :active-value="true"
+            :inactive-value="false"
+            :disabled="scope.row.id <= 100"
             @change="changeEnabled(scope.row)"
           />
         </template>
       </el-table-column>
+      <el-table-column
+        label="锁定"
+        min-width="50"
+        prop="enabled"
+        align="center"
+      >
+        <template v-slot="scope">
+          <el-switch
+            v-model="scope.row.locked"
+            :active-value="true"
+            :inactive-value="false"
+            :disabled="scope.row.id <= 100"
+            active-color="#F56C6C"
+            inactive-color="#C0CCDA"
+            @change="changeLocked(scope.row)"
+          />
+        </template>
+      </el-table-column>
+
       <el-table-column
         fixed="right"
         label="操作"
@@ -241,14 +273,14 @@
     <el-dialog title="导入用户" :visible.sync="importUserDialog" custom-class="el-dialog-import-table">
       <el-upload
         class="el-dialog-import-table-upload"
+        action="/api/file/user/import/user"
         drag
-        action="/api/file/upload-group/upload-user"
+        :show-file-list="false"
         :multiple="false"
-        :before-upload="beforeAvatarUpload"
-        :on-success="handleAvatarSuccess"
-        :on-progress="handleProgress"
-        :on-change="handleChange"
-        :on-error="handleError"
+        :before-upload="beforeUploadUserExcel"
+        :on-success="uploadUserExcelSuccess"
+        :on-error="uploadUserExcelError"
+        :headers="headers"
       >
         <i class="el-icon-upload" />
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -265,10 +297,20 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageUser, deleteUserById, resetPasswordApi, changeEnabledApi, deleteUserByIdsApi } from '@/api/user'
+import {
+  pageUser,
+  deleteUserById,
+  resetPasswordApi,
+  changeEnabledApi,
+  deleteUserByIdsApi,
+  changeLockedApi
+} from '@/api/user'
 import { exportExcel } from "@/utils/export";
-import { exportUserApi } from "@/api/file";
+import { exportUserApi, exportUserTemplateApi } from "@/api/file";
 import { isNotEmpty, isTrue } from "@/utils/assertUtil";
+import { beforeUploadExcel } from "@/utils/updateUtil";
+import LocalStorageUtil from "@/utils/LocalStorageUtil";
+import { BEARER } from "@/constant/HttpHeaderConst";
 
 export default {
   name: 'UserPage',
@@ -325,7 +367,7 @@ export default {
       // 被编辑的用户信息
       editUserInfo: undefined,
       isLoading: false,
-      elDropdownItemClass: [undefined, undefined, undefined],
+      elDropdownItemClass: ['el-dropdown-item--click', undefined, undefined],
       EL_TABLE: {
         // 显示大小
         size: 'medium'
@@ -348,10 +390,15 @@ export default {
           {}
         ]
       }*/
+
+      headers: {}, // 请求头
     }
   },
   mounted() {
-    this.tableHeight = this.$globalVariable.TABLE_HEIGHT
+    // 请求头
+    this.headers = {
+      Authorization: BEARER + LocalStorageUtil.getAccessToken()
+    }
     // 优先加载表格数据
     this.loadPageUser()
     // 强制渲染，解决表格 固定列后，列错位问题
@@ -435,15 +482,7 @@ export default {
         // 添加到数据集合
         content.forEach((item, index, arr) => {
           const column = {
-            id: item.id,
-            username: item.username,
-            phone: item.phone,
-            email: item.email,
-            nickname: item.nickname,
-            validTime: item.validTime,
-            createTime: item.createTime,
-            remark: item.remark,
-            avatar: item.avatar,
+            ...item,
           }
 
           if (item.roles && item.roles.length > 0) {
@@ -476,6 +515,7 @@ export default {
       // 其它不显示颜色
       return ''
     },
+    // 修改表格大小
     changeElTableSizeCommand(val) {
       const args = val.split(",");
       const idx = Number(args[0]);
@@ -495,21 +535,25 @@ export default {
       this.$router.push({ path: '/user/create-user', query: this.otherQuery })
       // this.$router.push({ path: '/user/page/create-user' })
     },
+    // 更改每页显示多少条
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
       this.user.size = val
       this.loadPageUser()
     },
+    // 修改当前页码
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.user.page = val
       this.loadPageUser()
     },
+    // 编辑用户
     editUser(row) {
       console.log(row, 'row')
       this.editUserInfo = row;
       this.editUserDialog = true;
     },
+    // 充值密码
     resetPassword(row) {
       const userId = row.id;
       if (userId <= 100) {
@@ -542,6 +586,17 @@ export default {
         this.$message.success("修改成功")
       })
     },
+    // 切换锁定状态
+    changeLocked(row) {
+      const userId = row.id;
+      if (userId <= 100) {
+        this.$message.error("不能操作预置用户")
+        return
+      }
+      changeLockedApi(userId).then(data => {
+        this.$message.success("修改成功")
+      })
+    },
     // 批量删除用户
     deleteUsers() {
       const ids = this.checkUserIds;
@@ -561,6 +616,7 @@ export default {
           })
         }).catch(() => {});
     },
+    // 删除单条用户
     deleteUser(row) {
       const userId = row.id;
       if (userId <= 100) {
@@ -587,19 +643,35 @@ export default {
     },
     // 下载模板
     downloadImportUserTemplate() {
-      this.$message.info("下载模板")
+      exportUserTemplateApi();
+    },
+    // 导入用户之前
+    beforeUploadUserExcel(file) {
+      beforeUploadExcel(file);
+    },
+    // 导入用户成功
+    uploadUserExcelSuccess(data, file, fileList) {
+      console.log("上传成功")
+    },
+    // 上传失败
+    uploadUserExcelError(err, file, fileList) {
+      // 获取失败的信息
+      const errMessage = JSON.parse(err["message"]);
+      if (errMessage.clientMessage) {
+        this.$message.error(errMessage.clientMessage)
+      } else {
+        this.$message.error("上传失败，请稍后再试")
+      }
     },
     // 导出用户
     exportExcel() {
       this.filterTimeHandler();
       // 如果勾选了就导出勾选的
       const data = {
-        ids: this.checkUserIds.join(","), ...this.filter
+        ...this.filter,
+        ids: this.checkUserIds.join(",")
       }
-      exportUserApi(data).then(response => {
-        console.log(response)
-        exportExcel(response)
-      })
+      exportUserApi(data);
     }
   }
 }

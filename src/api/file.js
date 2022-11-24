@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import { exportExcel } from "@/utils/export";
 
 /**
  * 上传单文件
@@ -13,8 +14,23 @@ export function simpleUpload(file) {
   })
 }
 
-// ~ 导出
+// ~ 用户管理
 // =====================================================================================================================
+/**
+ * 导出用户模板
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function exportUserTemplateApi() {
+  return request({
+    url: `/api/file/user/template/user`,
+    method: 'get',
+    responseType: 'blob',
+  }).then(response => {
+    exportExcel(response)
+  })
+}
+
 /**
  * 导出用户
  * @param data
@@ -26,5 +42,7 @@ export function exportUserApi(data) {
     method: 'get',
     params: data,
     responseType: 'blob',
+  }).then(response => {
+    exportExcel(response)
   })
 }

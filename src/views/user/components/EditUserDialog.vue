@@ -204,7 +204,6 @@ export default {
       console.log("fileList:", fileList.length > 1)
     },
     beforeAvatarUpload(file) {
-      console.log(file)
       const typeSuccess = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 

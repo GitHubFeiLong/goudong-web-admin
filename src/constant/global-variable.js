@@ -9,9 +9,13 @@ const PAGE_SIZES = [10, 20, 50, 300]
 // 分页控件中间显示的页码数量
 const PAGER_COUNT = 7
 
+// 导入excel时，超过指定大小就使用异步的方式
+const ASYNC_IMPORT_FILE_SIZE = 100;
+
 export default {
   TABLE_HEIGHT,
   DATE_TIME_FORMATTER,
   PAGE_SIZES,
   PAGER_COUNT,
+  ASYNC_IMPORT_FILE_SIZE
 }
