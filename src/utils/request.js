@@ -179,11 +179,13 @@ service.interceptors.response.use(response => {
   return Promise.resolve(result.data)
 }, error => {
   /*
-    后台返回5xx进入该函数内。
+    1.后台返回5xx进入该函数内。
+    2.代理为进入后台 Proxy error: Could not proxy request /api/oauth2/authentication/login?username=admin&password=admin from localhost:9999 to http://localhost:10000/ (ECONNRESET).
    */
   const response = error.response;
   const data = response.data;// data 就是后端接口封装的对象
   console.log('err', error, response, data)
+  // 下载文件时出现错误
   if (response.config.responseType && response.config.responseType === 'blob' && response.data.type === 'application/json') {
     // 创建一个FileReader实例
     const reader = new FileReader();
@@ -201,14 +203,33 @@ service.interceptors.response.use(response => {
     return Promise.reject(error)
   }
 
+  // 5xx异常
   // 没有 doNotHandleErrorMessage 属性时，或 doNotHandleErrorMessage=false时 弹出提示信息
-  if (data && data.dataMap && !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
+  if (data && data.clientMessage && data.dataMap && !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
     Message({
       message: data.clientMessage,
       type: 'error',
       duration: 5 * 1000
     })
+    return Promise.reject(error)
   }
+
+  if (typeof data === 'string' && data.indexOf("Proxy error: Could not proxy request") === 0) {
+    // 代理为进入后台
+    Message({
+      message: '服务器繁忙，请稍后再试',
+      type: 'error',
+      duration: 5 * 1000
+    })
+    return Promise.reject(error)
+  }
+
+  Message({
+    message: data,
+    type: 'error',
+    duration: 5 * 1000
+  })
+
   return Promise.reject(error)
 })
 

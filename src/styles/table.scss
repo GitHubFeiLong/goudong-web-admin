@@ -4,7 +4,6 @@
 .filter-container {
   padding: 10px 10px 20px 10px;
   background-color: $--app-container-background-color;
-  height: 70px;
   .filter-item {
     display: inline-block;
     vertical-align: middle;
@@ -43,18 +42,19 @@
 
 .el-table-tool{
   width: 100%;
-  height: 52px;
   padding: 9px 17px;
   border-top: 1px solid $--border-color-lighter;
   border-left: 1px solid $--border-color-lighter;
   border-right: 1px solid $--border-color-lighter;
   background: $--my-table-header-background-color;
+  position: relative;
   .left-tool{
     display: inline-block;
   }
   .right-tool{
     display: inline-block;
-    float: right;
+    right: 17px;
+    position: absolute;
     .right-tool-btn-tooltip{
       &:not(:nth-last-child(1)){
         margin-right: 10px;
