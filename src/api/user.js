@@ -1,10 +1,24 @@
 import request from '@/utils/request'
+import * as aes from '@/utils/aes'
+import * as rsa from '@/utils/rsa'
+import { X_AES_KEY } from '@/constant/HttpHeaderConst'
 
 export function login(data) {
+  // 获取aesKey
+  const aesKey = aes.generateKey();
+  // 加密用户名和密码
+  const username = aes.encrypt(data.username, aesKey);
+  const password = aes.encrypt(data.password, aesKey);
+  // 将aes密钥使用rsa公钥加密
+  const aesKeyRsaEncrypt = rsa.encrypt(aesKey);
+  console.log(username, password)
   return request({
-    url: `/api/oauth2/authentication/login?username=${data.username}&password=${data.password}`,
+    url: `/api/oauth2/authentication/login?username=${username}&password=${password}`,
     // url: `/vue-element-admin/user/login`,
-    method: 'post'
+    method: 'post',
+    headers: {
+      [X_AES_KEY]: aesKeyRsaEncrypt
+    }
   })
 }
 
@@ -53,7 +67,7 @@ export function pageUser(page) {
   return request({
     url: `/api/user/base-user/page`,
     method: 'get',
-    params: page
+    params: page,
   })
 }
 

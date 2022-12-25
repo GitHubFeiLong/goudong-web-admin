@@ -312,6 +312,9 @@ import { beforeUploadExcel } from "@/utils/updateUtil";
 import LocalStorageUtil from "@/utils/LocalStorageUtil";
 import { BEARER } from "@/constant/HttpHeaderConst";
 
+import * as aes from '@/utils/aes'
+import { encrypt } from "@/utils/aes";
+
 export default {
   name: 'UserPage',
   directives: { waves },
