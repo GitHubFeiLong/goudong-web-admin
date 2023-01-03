@@ -205,7 +205,8 @@ service.interceptors.response.use(response => {
 
   // 5xx异常
   // 没有 doNotHandleErrorMessage 属性时，或 doNotHandleErrorMessage=false时 弹出提示信息
-  if (data && data.clientMessage && data.dataMap && !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
+  const xx5 = data && data.clientMessage && (data.dataMap === null || data.dataMap === undefined || !data.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE])
+  if (xx5) {
     Message({
       message: data.clientMessage,
       type: 'error',
