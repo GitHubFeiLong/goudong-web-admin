@@ -75,11 +75,11 @@
             </el-dropdown-menu>
           </el-dropdown>
         </el-tooltip>
-        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="列设置" placement="top">
+        <!--        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="列设置" placement="top">
           <div class="right-tool-btn">
             <i class="el-icon-setting" />
           </div>
-          <!--          <el-tree
+          &lt;!&ndash;          <el-tree
             :data="data"
             show-checkbox
             default-expand-all
@@ -87,13 +87,13 @@
             ref="tree"
             highlight-current
             :props="defaultProps">
-          </el-tree>-->
+          </el-tree>&ndash;&gt;
         </el-tooltip>
         <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="全屏" placement="top">
           <div class="right-tool-btn">
             <i class="el-icon-full-screen" />
           </div>
-        </el-tooltip>
+        </el-tooltip>-->
       </div>
     </div>
     <!-- 表格  -->
@@ -103,6 +103,7 @@
       border
       :data="user.users"
       row-key="id"
+      style="width: 100%"
       :row-class-name="tableRowClassName"
       :header-cell-style="{background:'#FAFAFA', color:'#000', height: '30px',}"
       :header-row-class-name="EL_TABLE.size"
@@ -110,14 +111,15 @@
       @selection-change="selectionChangeFunc"
     >
       <el-table-column
-        min-width="55"
+        width="55"
         type="selection"
         header-align="center"
         align="center"
       />
       <el-table-column
         fixed
-        min-width="55"
+        width="40"
+        align="center"
       >
         <template v-slot="scope">
           {{ (user.page - 1) * user.size + (scope.$index + 1) }}
@@ -126,21 +128,22 @@
       <el-table-column
         fixed
         label="用户名"
-        min-width="100"
+        width="75"
         prop="username"
         sortable
       />
       <el-table-column
         label="昵称"
-        min-width="120"
+        width="100"
         prop="nickname"
         sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="性别"
-        min-width="50"
+        width="80"
         prop="sex"
+        align="center"
         sortable
       >
         <template v-slot="scope">
@@ -151,21 +154,21 @@
       </el-table-column>
       <el-table-column
         label="手机号"
-        min-width="90"
+        width="130"
         prop="phone"
         sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="邮箱"
-        min-width="120"
+        width="180"
         prop="email"
         sortable
         show-overflow-tooltip
       />
       <el-table-column
         label="角色"
-        min-width="150"
+        width="120"
         prop="roleNameCn"
         sortable
         show-overflow-tooltip
@@ -178,25 +181,28 @@
       </el-table-column>
       <el-table-column
         label="账号有效期"
-        min-width="115"
+        width="170"
         prop="validTime"
+        show-overflow-tooltip
         sortable
       />
       <el-table-column
         label="创建时间"
-        min-width="115"
+        width="170"
         prop="createTime"
+        show-overflow-tooltip
         sortable
       />
       <el-table-column
         label="备注"
-        min-width="200"
+        width="180"
         prop="remark"
         show-overflow-tooltip
       />
       <el-table-column
+        fixed="right"
         label="激活"
-        min-width="50"
+        width="80"
         prop="enabled"
         align="center"
       >
@@ -211,9 +217,10 @@
         </template>
       </el-table-column>
       <el-table-column
+        fixed="right"
         label="锁定"
-        min-width="50"
-        prop="enabled"
+        width="80"
+        prop="locked"
         align="center"
       >
         <template v-slot="scope">
@@ -232,7 +239,7 @@
       <el-table-column
         fixed="right"
         label="操作"
-        min-width="165"
+        width="230"
         align="center"
       >
         <template v-slot="scope">
@@ -247,13 +254,13 @@
       <el-table-column
         v-if="false"
         label="角色id集合"
-        min-width="300"
+        width="300"
         prop="roleIds"
       />
       <el-table-column
         v-if="false"
         label="头像"
-        min-width="300"
+        width="300"
         prop="avatar"
       />
     </el-table>
