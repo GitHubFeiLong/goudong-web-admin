@@ -7,11 +7,11 @@ export function login(data) {
   // 获取aesKey
   const aesKey = aes.generateKey();
   // 加密用户名和密码
-  // /const username = aes.encrypt(data.username, aesKey);
-  // /const password = aes.encrypt(data.password, aesKey);
+  const username = aes.encrypt(data.username, aesKey);
+  const password = aes.encrypt(data.password, aesKey);
 
-  const username = data.username;
-  const password = data.password;
+  // const username = data.username;
+  // const password = data.password;
   // 将aes密钥使用rsa公钥加密
   const aesKeyRsaEncrypt = rsa.encrypt(aesKey);
   console.log(username, password)
@@ -19,9 +19,9 @@ export function login(data) {
     url: `/api/oauth2/authentication/login?username=${username}&password=${password}`,
     // url: `/vue-element-admin/user/login`,
     method: 'post',
-    // headers: {
-    //   [X_AES_KEY]: aesKeyRsaEncrypt
-    // }
+    headers: {
+      [X_AES_KEY]: aesKeyRsaEncrypt
+    }
   })
 }
 
