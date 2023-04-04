@@ -195,7 +195,7 @@
       />
       <el-table-column
         label="备注"
-        width="180"
+        min-width="180"
         prop="remark"
         show-overflow-tooltip
       />
