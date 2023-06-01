@@ -4,6 +4,10 @@
     <div class="filter-container">
       <span class="filter-item-first-condition">角色名称: </span>
       <RoleNameSelect ref="RoleNameSelect" class="filter-item" @getRoleName="getRoleName" />
+      <span class="filter-item-condition">角色标识: </span>
+      <el-input v-model="filter.roleName" class="filter-item filter-item-input" placeholder="请输入" />
+      <span class="filter-item-condition">备注: </span>
+      <el-input v-model="filter.remark" class="filter-item filter-item-input" placeholder="请输入" />
       <!-- 操作菜单  -->
       <el-button
         class="filter-item filter-btn-first"
@@ -100,15 +104,24 @@
       </el-table-column>
       <el-table-column
         fixed
-        label="角色"
+        label="角色名称"
         min-width="300"
         prop="roleNameCn"
+        sortable
       />
       <el-table-column
         fixed
-        label="用户"
-        min-width="100"
-        prop="users"
+        label="角色标识"
+        min-width="300"
+        prop="roleName"
+        sortable
+      />
+      <el-table-column
+        fixed
+        label="用户数量"
+        min-width="80"
+        prop="userNumbers"
+        sortable
       />
       <el-table-column
         label="备注"
@@ -120,6 +133,7 @@
         label="创建时间"
         min-width="150"
         prop="createTime"
+        sortable
       />
       <el-table-column
         fixed="right"
@@ -127,9 +141,11 @@
         min-width="150"
       >
         <template v-slot="scope">
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editRole(scope.row)">编辑</el-button>
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="deleteRole(scope.row.id)">删除</el-button>
-          <el-button v-if="Number(scope.row.id) > 100" type="text" size="small" @click="editRoleMenu(scope.row)">权限</el-button>
+          <div class="el-link-parent">
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editRole(scope.row)"><i class="el-icon-edit" />编辑</a>
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editRoleMenu(scope.row)"><i class="el-icon-finished" />权限</a>
+            <a v-if="Number(scope.row.id) > 100 && scope.row.userNumbers == 0" class="el-link el-link--danger" @click="deleteRole(scope.row.id)"><i class="el-icon-delete" />删除</a>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -154,12 +170,11 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import { pageRole, removeRole } from '@/api/role'
+import { deleteRoleByIdsApi, pageRole, removeRole } from '@/api/role'
 import { initMenuApi } from '@/api/menu'
 
 import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
 import { isNotEmpty } from "@/utils/assertUtil";
-import { deleteUserByIdsApi } from "@/api/user";
 
 export default {
   name: 'RolePage',
@@ -183,7 +198,9 @@ export default {
         pageSizes: this.$globalVariable.PAGE_SIZES
       },
       filter: {
-        roleNameCn: undefined
+        roleNameCn: undefined,
+        roleName: undefined,
+        remark: undefined,
       },
       // 复选框选中的用户
       checkRoleIds: [],
@@ -227,6 +244,8 @@ export default {
         page: this.role.page,
         size: this.role.size,
         roleNameCn: this.filter.roleNameCn,
+        roleName: this.filter.roleName,
+        remark: this.filter.remark,
       }
       pageRole(pageParam).then(data => {
         const content = data.content
@@ -244,7 +263,9 @@ export default {
         content.forEach((item, index, arr) => {
           const column = {
             id: item.id,
+            roleName: item.roleName,
             roleNameCn: item.roleNameCn,
+            userNumbers: item.userNumbers,
             remark: item.remark,
             createTime: item.createTime,
           }
@@ -324,7 +345,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            deleteUserByIdsApi({ ids: this.checkRoleIds.join(",") }).then(data => {
+            deleteRoleByIdsApi({ ids: this.checkRoleIds.join(",") }).then(data => {
               this.$message.success("删除成功")
               this.loadPageUser()
             })

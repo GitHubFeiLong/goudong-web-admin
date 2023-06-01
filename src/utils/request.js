@@ -158,13 +158,16 @@ service.interceptors.response.use(response => {
       return Promise.reject(result)
     }
 
-    if (result && result.dataMap && !result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
+    // 4xx异常弹窗
+    if (result) {
       Message({
         message: result.clientMessage,
         type: 'error',
         duration: 5 * 1000
       })
+    }
 
+    if (result && result.dataMap && !result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE]) {
       result.dataMap[DO_NOT_HANDLE_ERROR_MESSAGE] = true
     }
     return Promise.reject(result)

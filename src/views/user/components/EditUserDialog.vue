@@ -18,10 +18,13 @@
         <el-input v-model="user.nickname" clearable />
       </el-form-item>
       <el-form-item label="性别" prop="sex">
-        <el-select v-model="user.sex" placeholder="请选择性别">
-          <el-option label="未知" value="0" />
-          <el-option label="男" value="1" />
-          <el-option label="女" value="2" />
+        <el-select v-model="user.sex" placeholder="请选择性别" @change="$forceUpdate()">
+          <el-option
+            v-for="item in sexOption"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
@@ -70,6 +73,7 @@
 <script>
 import { adminEditUser } from '@/api/user'
 import { Message } from "element-ui"
+import { SEX_DROP_DOWN_OPTION } from "@/constant/commons";
 
 export default {
   name: 'EditUserDialog',
@@ -134,7 +138,9 @@ export default {
         dialogImageUrl: '',
         dialogVisible: false,
         fileList: [], // 已上传的文件列表
-      }
+      },
+      // 性别下拉
+      sexOption: SEX_DROP_DOWN_OPTION
     };
   },
   watch: {
@@ -151,11 +157,14 @@ export default {
           roleIds: this.editUserInfo.roleIds,
           roleNameCn: this.editUserInfo.roleNameCn,
           nickname: this.editUserInfo.nickname,
-          sex: this.editUserInfo.sex === 0 ? '未知' : (this.editUserInfo.sex === 1 ? '男' : '女'),
           avatar: this.editUserInfo.avatar,
           validTime: this.editUserInfo.validTime,
           remark: this.editUserInfo.remark,
         }
+
+        // 设置性别
+        this.user.sex = this.sexOption[this.editUserInfo.sex].value
+
         // 设置头像默认值
         if (this.user.avatar) {
           this.avatar.fileList = [{ name: '头像', url: this.user.avatar }]
@@ -169,7 +178,6 @@ export default {
           roleNameCn: '',
           nickname: '',
           avatar: '',
-          sex: 0,
           validTime: new Date(),
           remark: '',
         };

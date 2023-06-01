@@ -49,7 +49,13 @@ export function removeRole(id) {
     method: 'delete',
   })
 }
-
+export function deleteRoleByIdsApi(ids) {
+  return request({
+    url: `/api/user/base-role/ids`,
+    params: ids,
+    method: 'delete'
+  })
+}
 /**
  * 查询角色以及角色的权限
  * @param id

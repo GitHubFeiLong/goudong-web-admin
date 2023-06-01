@@ -148,9 +148,9 @@
         sortable
       >
         <template v-slot="scope">
-          <span v-if="scope.row.sex == 1">男</span>
-          <span v-else-if="scope.row.sex === 2">女</span>
-          <span v-else-if="scope.row.sex === 0">未知</span>
+          <span v-if="scope.row.sex == 1">男性</span>
+          <span v-else-if="scope.row.sex === 2">女性</span>
+          <span v-else>未知</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -245,7 +245,7 @@
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editUser(scope.row)"><i class="el-icon-edit" />修改</a>
+            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editUser(scope.row)"><i class="el-icon-edit" />编辑</a>
             <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="resetPassword(scope.row)"><i class="el-icon-key" />重置密码</a>
             <a v-if="Number(scope.row.id) > 100" class="el-link el-link--danger" @click="deleteUser(scope.row)"><i class="el-icon-delete" />删除</a>
           </div>
