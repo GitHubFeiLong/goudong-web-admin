@@ -76,6 +76,18 @@ export function updatePermissions(id, menuIds) {
   })
 }
 
+/**
+ * 分页查询角色名称
+ * @param page 分页参数
+ * @returns {*}
+ */
+export function pageRoleByField(page) {
+  return request({
+    url: `/api/user/base-role/page/name`,
+    method: 'get',
+    data: page,
+  })
+}
 // export function edit
 
 export function getRoutes() {

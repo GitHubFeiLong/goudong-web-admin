@@ -118,7 +118,8 @@
       />
       <el-table-column
         fixed
-        width="40"
+        label="序号"
+        width="50"
         align="center"
       >
         <template v-slot="scope">

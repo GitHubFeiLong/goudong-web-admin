@@ -3,7 +3,7 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">角色名称: </span>
-      <el-input v-model="filter.roleNameCn" class="filter-item" style="width: 200px;" placeholder="请输入角色名称" />
+      <RoleNameSelect ref="RoleNameSelect" class="filter-item" @getRoleName="getRoleName" />
       <!-- 操作菜单  -->
       <el-button
         class="filter-item filter-btn-first"
@@ -13,20 +13,75 @@
       >
         查询
       </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="initMenu">
-        初始菜单
-      </el-button>
-      <el-button class="filter-item filter-btn" icon="el-icon-edit" type="primary" @click="addRole">
-        新增
-      </el-button>
+      <!--不加icon会小一个像素的高度-->
+      <el-button class="filter-item filter-btn" icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+    </div>
+    <!--顶部操作栏-->
+    <div class="el-table-tool">
+      <div class="left-tool">
+        <el-button class="el-button--small" icon="el-icon-edit" type="primary" @click="initMenu">初始菜单</el-button>
+        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="addRole">新增</el-button>
+        <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteRoles">删除</el-button>
+        <el-button class="el-button--small" icon="el-icon-upload2">导入</el-button>
+        <el-button class="el-button--small" icon="el-icon-download">导出</el-button>
+        <!--        <el-button class="el-button&#45;&#45;small" icon="el-icon-upload2" @click="importUserDialog=true">
+          导入
+        </el-button>
+        <el-button class="el-button&#45;&#45;small" icon="el-icon-download" @click="exportExcel">
+          导出
+        </el-button>-->
+      </div>
+      <div class="right-tool">
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="刷新" placement="top">
+          <div class="right-tool-btn" @click="searchFunc">
+            <i class="el-icon-refresh-right" />
+          </div>
+        </el-tooltip>
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="密度" placement="top">
+          <el-dropdown trigger="click" @command="changeElTableSizeCommand">
+            <div class="right-tool-btn">
+              <i class="el-icon-s-operation" />
+            </div>
+            <el-dropdown-menu slot="dropdown" size="small">
+              <el-dropdown-item :class="elDropdownItemClass[0]" command="0,medium">默认</el-dropdown-item>
+              <el-dropdown-item :class="elDropdownItemClass[1]" command="1,small">中等</el-dropdown-item>
+              <el-dropdown-item :class="elDropdownItemClass[2]" command="2,mini">紧凑</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-tooltip>
+        <!--         <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="列设置" placement="top">
+          <div class="right-tool-btn">
+            <i class="el-icon-setting" />
+          </div>
+          &lt;!&ndash;          <el-tree
+            :data="data"
+            show-checkbox
+            default-expand-all
+            node-key="id"
+            ref="tree"
+            highlight-current
+            :props="defaultProps">
+          </el-tree>&ndash;&gt;
+        </el-tooltip>
+        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="全屏" placement="top">
+          <div class="right-tool-btn">
+            <i class="el-icon-full-screen" />
+          </div>
+        </el-tooltip>-->
+      </div>
     </div>
     <!-- 表格  -->
     <el-table
       ref="table"
+      v-loading="isLoading"
       style="width: 100%"
       :data="role.roles"
-      :height="tableHeight"
+      row-key="id"
       border
+      :header-cell-style="{background:'#FAFAFA', color:'#000', height: '30px',}"
+      :header-row-class-name="EL_TABLE.size"
+      :size="EL_TABLE.size"
+      @selection-change="selectionChangeFunc"
     >
       <el-table-column
         min-width="55"
@@ -48,6 +103,12 @@
         label="角色"
         min-width="300"
         prop="roleNameCn"
+      />
+      <el-table-column
+        fixed
+        label="用户"
+        min-width="100"
+        prop="users"
       />
       <el-table-column
         label="备注"
@@ -97,10 +158,13 @@ import { pageRole, removeRole } from '@/api/role'
 import { initMenuApi } from '@/api/menu'
 
 import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
+import { isNotEmpty } from "@/utils/assertUtil";
+import { deleteUserByIdsApi } from "@/api/user";
 
 export default {
   name: 'RolePage',
   components: {
+    RoleNameSelect: () => import('@/components/Role/RoleNameSelect'),
     CreateRoleDialog: () => import('@/views/role/components/CreateRoleDialog'),
     EditRoleDialog: () => import('@/views/role/components/EditRoleDialog'),
     EditRoleMenuDialog: () => import('@/views/role/components/EditRoleMenuDialog'),
@@ -108,7 +172,7 @@ export default {
   directives: { waves },
   data() {
     return {
-      tableHeight: this.$globalVariable.TABLE_HEIGHT,
+      isLoading: false,
       // 表格中的角色
       role: {
         roles: [],
@@ -121,25 +185,44 @@ export default {
       filter: {
         roleNameCn: undefined
       },
+      // 复选框选中的用户
+      checkRoleIds: [],
       createRoleDialog: false, // 创建角色弹窗
       editRoleDialog: false, // 编辑角色弹窗
       editRoleInfo: undefined, // 编辑角色弹窗的数据
       editRoleMenuDialog: false, // 编辑角色权限弹窗
       editRoleMenuInfo: {}, // 编辑角色权限弹窗的数据
+      elDropdownItemClass: ['el-dropdown-item--click', undefined, undefined],
+      EL_TABLE: {
+        // 显示大小
+        size: 'medium'
+      },
     }
   },
   mounted() {
-    this.tableHeight = this.$globalVariable.TABLE_HEIGHT
     // 优先加载表格数据
     this.loadPageRole()
   },
   methods: {
+    getRoleName(ev) {
+      this.filter.roleNameCn = ev
+    },
     searchFunc() {
       // 点击查询按钮
       this.role.page = 1
       this.loadPageRole()
     },
+    // 点击重置按钮
+    resetSearchFilter() {
+      // 清空子组件（用户名下拉）值
+      this.$refs.RoleNameSelect.clear();
+      // 赋默认值
+      this.filter = {
+        roleNameCn: undefined
+      };
+    },
     loadPageRole() {
+      this.isLoading = true;
       const pageParam = {
         page: this.role.page,
         size: this.role.size,
@@ -167,7 +250,30 @@ export default {
           }
           this.role.roles.push(column)
         })
+      }).finally(() => {
+        this.isLoading = false;
       })
+    },
+    // 复选框勾选事件
+    selectionChangeFunc(roles) {
+      const ids = roles.map(m => m.id)
+      this.checkRoleIds = ids
+    },
+    // 修改表格大小
+    changeElTableSizeCommand(val) {
+      const args = val.split(",");
+      const idx = Number(args[0]);
+      console.log(args)
+      this.elDropdownItemClass.map((value, index, array) => {
+        if (index === idx) {
+          array[index] = "el-dropdown-item--click";
+        } else {
+          array[index] = undefined;
+        }
+      })
+      console.log(this.elDropdownItemClass)
+      this.elDropdownItemClass[args[0]]
+      this.EL_TABLE.size = args[1];
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -207,6 +313,25 @@ export default {
     // 新增角色
     addRole() {
       this.createRoleDialog = true
+    },
+    // 批量删除用户
+    deleteRoles() {
+      const ids = this.checkRoleIds;
+      isNotEmpty(ids, () => this.$message.warning("请勾选需要删除的角色"))
+        .then(() => {
+          this.$confirm('此操作将永久删除所选角色, 是否继续?', '删除', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteUserByIdsApi({ ids: this.checkRoleIds.join(",") }).then(data => {
+              this.$message.success("删除成功")
+              this.loadPageUser()
+            })
+          }).catch(() => {
+            this.$message.info("已取消删除");
+          })
+        }).catch(() => {});
     },
     // 修改角色
     editRole(row) {

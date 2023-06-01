@@ -17,6 +17,13 @@
       <el-form-item label="昵称" prop="nickname">
         <el-input v-model="user.nickname" clearable />
       </el-form-item>
+      <el-form-item label="性别" prop="sex">
+        <el-select v-model="user.sex" placeholder="请选择性别">
+          <el-option label="未知" value="0" />
+          <el-option label="男" value="1" />
+          <el-option label="女" value="2" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="头像" prop="avatar">
         <el-upload
           class="avatar-update-class"
@@ -96,6 +103,7 @@ export default {
         roleIds: [],
         roleNameCn: '',
         nickname: '',
+        sex: 0,
         avatar: '',
         validTime: new Date(),
         remark: '',
@@ -143,6 +151,7 @@ export default {
           roleIds: this.editUserInfo.roleIds,
           roleNameCn: this.editUserInfo.roleNameCn,
           nickname: this.editUserInfo.nickname,
+          sex: this.editUserInfo.sex === 0 ? '未知' : (this.editUserInfo.sex === 1 ? '男' : '女'),
           avatar: this.editUserInfo.avatar,
           validTime: this.editUserInfo.validTime,
           remark: this.editUserInfo.remark,
@@ -160,6 +169,7 @@ export default {
           roleNameCn: '',
           nickname: '',
           avatar: '',
+          sex: 0,
           validTime: new Date(),
           remark: '',
         };
