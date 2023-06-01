@@ -234,9 +234,7 @@ export default {
       // 清空子组件（用户名下拉）值
       this.$refs.RoleNameSelect.clear();
       // 赋默认值
-      this.filter = {
-        roleNameCn: undefined
-      };
+      this.filter = {};
     },
     loadPageRole() {
       this.isLoading = true;
