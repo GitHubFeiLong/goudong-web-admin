@@ -3,11 +3,11 @@
     <!--  查询条件  -->
     <div class="filter-container">
       <span class="filter-item-first-condition">角色名称: </span>
-      <RoleNameSelect ref="RoleNameSelect" class="filter-item" @getRoleName="getRoleName" />
+      <RoleNameSelect ref="RoleNameSelect" class="filter-item" clearable @getRoleName="getRoleName" />
       <span class="filter-item-condition">角色标识: </span>
-      <el-input v-model="filter.roleName" class="filter-item filter-item-input" placeholder="请输入" />
+      <el-input v-model="filter.roleName" class="filter-item filter-item-input" clearable placeholder="请输入" />
       <span class="filter-item-condition">备注: </span>
-      <el-input v-model="filter.remark" class="filter-item filter-item-input" placeholder="请输入" />
+      <el-input v-model="filter.remark" class="filter-item filter-item-input" clearable placeholder="请输入" />
       <!-- 操作菜单  -->
       <el-button
         class="filter-item filter-btn-first"
@@ -53,25 +53,6 @@
             </el-dropdown-menu>
           </el-dropdown>
         </el-tooltip>
-        <!--         <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="列设置" placement="top">
-          <div class="right-tool-btn">
-            <i class="el-icon-setting" />
-          </div>
-          &lt;!&ndash;          <el-tree
-            :data="data"
-            show-checkbox
-            default-expand-all
-            node-key="id"
-            ref="tree"
-            highlight-current
-            :props="defaultProps">
-          </el-tree>&ndash;&gt;
-        </el-tooltip>
-        <el-tooltip class="right-tool-btn-tooltip" effect="dark" content="全屏" placement="top">
-          <div class="right-tool-btn">
-            <i class="el-icon-full-screen" />
-          </div>
-        </el-tooltip>-->
       </div>
     </div>
     <!-- 表格  -->
@@ -138,7 +119,7 @@
       <el-table-column
         fixed="right"
         label="操作"
-        min-width="150"
+        min-width="180"
       >
         <template v-slot="scope">
           <div class="el-link-parent">
