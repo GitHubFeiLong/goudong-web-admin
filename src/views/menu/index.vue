@@ -78,6 +78,7 @@ export default {
     load() {
       listMenuApi().then(data => {
         this.menus = data;
+        this.$store.dispatch('menu/setAllMenus', data);
       })
     },
     expandedTree(flag) { // 展开或收缩菜单tree

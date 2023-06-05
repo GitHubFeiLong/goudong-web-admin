@@ -1,34 +1,45 @@
 <!--新增菜单的弹框-->
 <template>
-  <el-dialog title="新增菜单" width="800px" :visible.sync="visible" @close="close">
-    <el-form ref="addMenuForm" :model="menu" :rules="rules" label-width="80px" :inline="true">
-      <el-form-item label="上级菜单" prop="parentId">
+  <el-dialog title="新增菜单" width="700px" :visible.sync="visible" @close="close">
+    <el-form ref="addMenuForm" :model="menu" :rules="rules" label-width="100px" :inline="true" label-position="right">
+      <el-form-item label="上级菜单:" prop="parentId">
         <!--  选择器选项以树形控件展示  -->
-        <el-select ref="selectParentMenu" v-model="form.id" placeholder="请选择上级菜单">
-          <el-option :key="form.id" :value="form.id" :label="form.label" hidden />
+        <el-select ref="selectParentMenu" v-model="parentMenu.id" placeholder="请选择上级菜单">
+          <el-option :key="parentMenu.id" :value="parentMenu.id" :label="parentMenu.name" hidden />
           <el-tree
-            :data="data"
-            :props="defaultProps"
+            :data="menuData"
+            :props="menuProps"
             node-key="id"
             accordion
             highlight-current
-            @node-click="handleNodeClick"
+            @node-click="handleMenuNodeClick"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="菜单类型" prop="remark">
+      <el-form-item label="菜单类型:" prop="remark">
         <el-radio-group v-model="menu.remark">
           <el-radio :label="0">接口</el-radio>
           <el-radio :label="1">菜单</el-radio>
           <el-radio :label="2">按钮</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="菜单名称" prop="remark">
-        <el-input v-model="menu.remark" clearable />
+      <el-form-item label="菜单名称:" prop="remark">
+        <el-input v-model="menu.remark" clearable placeholder="请输入菜单名称" />
       </el-form-item>
-
+      <el-form-item label="菜单图标:" prop="remark">
+        <el-select v-model="menu.icon" placeholder="请选择活动区域">
+          <el-option
+            v-for="item in icons"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+      </el-form-item>
+      <!--分隔符-->
+      <div class="cutting-line el-divider el-divider--horizontal" />
       <el-form-item label="路由地址" prop="remark">
-        <el-input v-model="menu.remark" clearable />
+        <el-input v-model="menu.remark" placeholder="请输入路由地址" clearable />
       </el-form-item>
       <el-form-item label="请求方式" prop="remark">
         <el-input v-model="menu.remark" clearable />
@@ -51,6 +62,8 @@
 
 <script>
 
+import { EL_ICONS } from "@/constant/commons";
+
 export default {
   name: 'CreateMenuDialog',
   props: {
@@ -65,62 +78,23 @@ export default {
   },
   data() {
     return {
-      data: [{
-        label: '一级 1',
-        children: [{
-          label: '二级 1-1',
-          children: [{
-            label: '三级 1-1-1'
-          }]
-        }]
-      }, {
-        label: '一级 2',
-        children: [{
-          label: '二级 2-1',
-          children: [{
-            label: '三级 2-1-1'
-          }]
-        }, {
-          label: '二级 2-2',
-          children: [{
-            label: '三级 2-2-1'
-          }]
-        }]
-      }, {
-        label: '一级 3',
-        children: [{
-          label: '二级 3-1',
-          children: [{
-            label: '三级 3-1-1'
-          }]
-        }, {
-          label: '二级 3-2',
-          children: [{
-            label: '三级 3-2-1'
-          }]
-        }]
-      }],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      /* props: {
+      menuData: undefined,
+      menuProps: {
         label: 'name',
         children: 'children'
-      },*/
-      form: {
-        id: '',
-        value: ''
       },
+      parentMenu: {
+        id: '',
+        name: ''
+      },
+      icons: [],
       visible: false,
       menu: {
         parentId: undefined,
+        icon: '',
         remark: '',
       },
       rules: {
-        parentId: [
-          { required: true, min: 1, max: 64, message: '角色名称限制1~64字符', trigger: 'blur' },
-        ],
         remark: [
           { required: false, max: 255, message: '备注限制最多255字符', triangle: 'blur' }
         ]
@@ -130,15 +104,23 @@ export default {
   watch: {
     createMenuDialog() {
       this.visible = this.createMenuDialog;
+      if (this.visible) {
+        this.menuData = this.$store.getters.allMenus;
+
+        if (this.icons.length === 0) {
+          this.icons = EL_ICONS
+        }
+      }
     },
   },
   methods: {
-    handleNodeClick(data) {
+    handleMenuNodeClick(data) {
       console.log(data)
-      this.form = {
-        id: data.label,
-        value: data.label
+      this.parentMenu = {
+        id: data.id,
+        name: data.name
       }
+      this.menu.parentId = data.id
       // 使 input 失去焦点，并隐藏下拉框
       this.$refs.selectParentMenu.blur()
     },
@@ -164,4 +146,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 
+.cutting-line{
+  margin: 8px 0 30px 0;
+}
 </style>
