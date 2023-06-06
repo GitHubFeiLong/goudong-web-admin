@@ -300,7 +300,17 @@ export default {
       })
     },
     generate(item) {
-      const obj = { name: item.name, path: item.path, api: item.api, method: item.method };
+      const obj = {
+        name: item.name,
+        path: item.path,
+        api: item.api,
+        method: item.method,
+        type: item.type,
+        openModel: item.openModel,
+        sortNum: item.sortNum,
+        hide: item.hidden
+      }
+
       if (item.children) {
         // 子元素
         obj.children = [];

@@ -114,18 +114,18 @@ export function validateUrlNotAuthentication(url) {
  * @param str
  */
 export function isJSON(str) {
-  return new Promise(() => {
+  return new Promise((resolve, reject) => {
     if (typeof str === 'string') {
       try {
         const obj = JSON.parse(str)
         if (typeof obj === 'object' && obj) {
-          return true
+          resolve(true);
         } else {
-          return false
+          resolve(false);
         }
       } catch (e) {
         console.error('error：' + str + '!!!' + e)
-        return false
+        resolve(false);
       }
     }
   })

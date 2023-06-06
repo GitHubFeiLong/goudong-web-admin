@@ -13,6 +13,10 @@ export const goudongWebAdminResource = [
     component: Layout,
     redirect: '/user/page',
     alwaysShow: true, // will always show the root menu
+    type: 1,
+    openModel: 0,
+    sortNum: 1,
+    hidden: false,
     meta: {
       title: '系统管理',
       icon: 'peoples',
@@ -23,6 +27,10 @@ export const goudongWebAdminResource = [
         path: '/usr/page',
         component: () => import('@/views/user/index'),
         name: '用户管理', // 使用name属性，才有面包屑
+        type: 1,
+        openModel: 0,
+        sortNum: 2,
+        hidden: false,
         meta: {
           title: '用户管理',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
@@ -34,6 +42,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-user/page',
             method: 'get',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '新增',
@@ -41,6 +52,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-user/simple-create-user',
             method: 'post',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '导出',
@@ -48,6 +62,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-user/export',
             method: 'get',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             path: '/api/user/base-user/admin/user',
@@ -55,6 +72,9 @@ export const goudongWebAdminResource = [
             name: '编辑',
             method: 'put',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             path: '/api/user/base-user/*',
@@ -62,6 +82,9 @@ export const goudongWebAdminResource = [
             name: '删除',
             method: 'delete',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
         ]
       },
@@ -69,6 +92,10 @@ export const goudongWebAdminResource = [
         path: '/user/role',
         component: () => import('@/views/role/index'),
         name: '角色管理', // 使用name属性，才有面包屑
+        type: 1,
+        openModel: 0,
+        sortNum: 2,
+        hidden: false,
         meta: {
           title: '角色管理',
           roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
@@ -80,6 +107,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-role/page',
             method: 'get',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '新增',
@@ -87,6 +117,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-role',
             method: 'post',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '编辑',
@@ -94,6 +127,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-role',
             method: 'put',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '删除',
@@ -101,6 +137,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-role/*',
             method: 'delete',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           },
           {
             name: '权限',
@@ -108,6 +147,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-role/permissions/*',
             method: 'post',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           }
         ]
       },
@@ -115,6 +157,10 @@ export const goudongWebAdminResource = [
         path: '/user/menu',
         component: () => import('@/views/menu/index'),
         name: '菜单管理',
+        type: 1,
+        openModel: 0,
+        sortNum: 3,
+        hidden: false,
         meta: {
           title: '菜单管理'
         },
@@ -125,6 +171,9 @@ export const goudongWebAdminResource = [
             path: '/api/user/base-menu/tree',
             method: 'get',
             hidden: true,
+            type: 0,
+            openModel: 0,
+            sortNum: 10,
           }
         ]
       }
