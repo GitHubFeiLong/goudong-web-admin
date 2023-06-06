@@ -53,8 +53,12 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="菜单图标:" prop="remark">
-            <el-select v-model="menu.icon" placeholder="请选择菜单图标" class="icon-input" prefix-icon="el-icon-search" :class="iconInputClass" clearable>
-
+            <el-select v-model="menu.icon" placeholder="请选择菜单图标" class="icon-input" clearable>
+              <template #prefix>
+                <span style="padding-left: 5px; ">
+                  <i :class="menu.icon" />
+                </span>
+              </template>
               <el-option
                 v-for="item in icons"
                 :key="item"
@@ -216,19 +220,17 @@ export default {
       this.visible = this.createMenuDialog;
       if (this.visible) {
         this.menuData = this.$store.getters.allMenus;
-
+        console.log(1)
+        // var dom = document.getElementsByClassName('icon-input')[0];
+        // var input = dom.getElementsByTagName('input');
+        // input.style['padding-left'] = '15px';
         if (this.icons.length === 0) {
           this.icons = EL_ICONS
         }
       }
     },
     'menu.icon'() {
-      console.log(11)
-      if (this.menu.icon === '') {
-        this.iconInputClass = 'default-icon-input-class'
-      } else {
-        this.iconInputClass = 'icon-input-class';
-      }
+
     }
   },
   methods: {
@@ -289,12 +291,7 @@ export default {
 .cutting-line{
   margin: 8px 0 30px 0;
 }
-.el-input--medium .el-input__inner{
-  //width: 300px !important;
-}
-.icon-input{
-  width: 202px;
-}
+
 .question{
   display: inline-block;
   position: absolute;
@@ -310,17 +307,6 @@ export default {
   .el-select{
     width: 230px;
   }
-}
-.default-icon-input-class{
-  .el-input--prefix .el-input__inner{
-    padding-left: 15px !important;
-  }
-}
-.icon-input-class{
-  input {
-    padding-left: 30px;
-  }
-
 }
 
 </style>
