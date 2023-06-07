@@ -197,6 +197,9 @@ function getRouters() {
   // 复制
   const copy = deepCopy(goudongWebAdminResource)
   const routers = copy.filter(menu => {
+    if (menu.type === 0) {
+      return false
+    }
     // 有children
     if (menu.children) {
       // 修改children，过滤掉 api
@@ -205,9 +208,6 @@ function getRouters() {
         menu.children = undefined
       }
       return true
-    }
-    if (menu.api) {
-      return false
     }
     return true
   })
@@ -242,7 +242,7 @@ function deepCopy(source) {
 function filterChildren(menus) {
   return menus.filter(menu => {
     // api的过滤掉
-    if (menu.api) {
+    if (menu.type === 0) {
       return false
     }
     // 有children

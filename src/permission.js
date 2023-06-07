@@ -27,6 +27,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       // 当有角色，且已经根据角色添加过路由了就放行，否则需要去计算路由
+      console.log(123)
       const hasRoles = store.getters.roles && store.getters.roles.length > 0 && store.getters.permission_routes && store.getters.permission_routes.length > 0
       if (hasRoles) {
         next()

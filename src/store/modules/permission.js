@@ -2,7 +2,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
 import store from "@/store";
 
 function hasPermissionByMenus(menus, route) {
-  if (!route.api && route.path) {
+  if (route.type !== 0 && route.path) {
     return menus.some(menu => route.path === menu.path);
   } else {
     return true

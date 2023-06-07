@@ -1,10 +1,3 @@
-import { getInfo, login, logout } from '@/api/user'
-import { router, resetRouter } from '@/router'
-import LocalStorageUtil from '@/utils/LocalStorageUtil'
-import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst.js'
-import Token from '@/pojo/Token'
-import defaultAvatarPng from '@/assets/png/default-avatar.png'
-import store from "@/store";
 
 const state = {
   allMenus: [],

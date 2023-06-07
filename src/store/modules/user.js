@@ -61,7 +61,24 @@ const actions = {
         const menus = []
         if (user.menus) {
           user.menus.map((item, index, array) => {
-            menus.push({ path: item.path, api: item.api })
+            // menus.push({
+            //   path: item.path, api: item.api
+            // })
+            const metadata = item.metadata ? item.metadata : {
+              title: item.title,
+              icon: item.icon,
+            };
+            const component = item.path.startWith('@') ? () => import(item.path) : undefined;
+            menus.push({
+              id: item.id,
+              parentId: item.parentId,
+              path: item.path,
+              name: item.name,
+              alwaysShow: !item.hide,
+              component,
+              meta: metadata,
+              permissionId: item.permissionId,
+            })
           })
         }
 

@@ -28,8 +28,7 @@
           >
             <template v-slot="{ node, data }">
               <span>
-                <i v-if="data.api" class="el-icon-link" />
-                <i v-else class="el-icon-folder" />
+                <i :class="data.icon" />
                 <span class="el-tree-node-span">{{ data.name }}</span>
               </span>
             </template>
@@ -48,6 +47,7 @@
 
 <script>
 import { listMenuApi } from "@/api/menu";
+import { excludeApi } from "@/utils/tree";
 
 export default {
   name: 'MenuPage',
@@ -78,9 +78,13 @@ export default {
     load() {
       listMenuApi().then(data => {
         this.menus = data;
-        this.$store.dispatch('menu/setAllMenus', data);
+
+        // 将菜单中的接口过滤
+        const arr2 = excludeApi(this.menus)
+        this.$store.dispatch('menu/setAllMenus', arr2);
       })
     },
+
     expandedTree(flag) { // 展开或收缩菜单tree
       const nodes = this.$refs.menuTree.store.nodesMap;
       console.log(nodes)

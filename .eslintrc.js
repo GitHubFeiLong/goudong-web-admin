@@ -190,7 +190,7 @@ module.exports = {
     'wrap-iife': [2, 'any'],
     'yield-star-spacing': [2, 'both'],
     'yoda': [2, 'never'],
-    'prefer-const': 2,
+    'prefer-const': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'object-curly-spacing': [1, 'always', {
       objectsInObjects: false
