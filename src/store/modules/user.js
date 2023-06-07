@@ -59,28 +59,38 @@ const actions = {
         }
 
         const menus = []
+        console.log(1)
         if (user.menus) {
           user.menus.map((item, index, array) => {
             // menus.push({
             //   path: item.path, api: item.api
             // })
             const metadata = item.metadata ? item.metadata : {
-              title: item.title,
+              title: item.name,
               icon: item.icon,
             };
-            const component = item.path.startWith('@') ? () => import(item.path) : undefined;
+            // 内链
+            let component;
+            if (item.openModel === 0 && item.type === 1) {
+              component = () => import('@/views' + item.path);
+            }
             menus.push({
               id: item.id,
               parentId: item.parentId,
               path: item.path,
               name: item.name,
               alwaysShow: !item.hide,
-              component,
+              component: component,
               meta: metadata,
               permissionId: item.permissionId,
+              type: item.type,
+              openModel: item.openModel,
+              hide: item.hide,
             })
           })
         }
+
+        console.log(menus)
 
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)

@@ -54,16 +54,38 @@ const actions = {
       console.log(asyncRoutes)
       let accessedRoutes
       const roles = store.getters.roles;
-      if (roles.includes('ROLE_ADMIN')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, menus)
-      }
+      // 将扁平的转成tree，只显示展示的菜单
+      const menu1 = menus.filter(item => {
+        return item.type === 1 && !item.hide;
+      })
+      console.log(1);
+      // 转tree
+      accessedRoutes = ArrayToTree(menu1);
+      // if (roles.includes('ROLE_ADMIN')) {
+      //   accessedRoutes = asyncRoutes || []
+      // } else {
+      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, menus)
+      // }
       commit('SET_ROUTES', accessedRoutes)
       console.log(accessedRoutes)
       resolve(accessedRoutes)
     })
   }
+}
+
+function ArrayToTree(arr, pid = 0) {
+  // 判断是否是数组 不是数组就返回 []
+  if (!Array.isArray(arr) || !arr.length) return [];
+  let newArr = []
+  arr.forEach(item => {
+    // 判断 当前item.pid 和 传入的pid 是否相等，相等就push 进去
+    if (item.parentId === pid) {
+      newArr.push({
+        ...item, children: ArrayToTree(arr, item.id)
+      })
+    }
+  })
+  return newArr
 }
 
 export default {
