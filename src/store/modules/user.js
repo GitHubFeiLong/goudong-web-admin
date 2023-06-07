@@ -35,7 +35,8 @@ const mutations = {
     state.menus = menus;
   }
 }
-
+import Layout from '@/layout'
+import { loadView } from "@/utils/tree";
 const actions = {
   // 登录
   login({ commit }, userInfo) {
@@ -59,20 +60,17 @@ const actions = {
         }
 
         const menus = []
-        console.log(1)
         if (user.menus) {
           user.menus.map((item, index, array) => {
-            // menus.push({
-            //   path: item.path, api: item.api
-            // })
             const metadata = item.metadata ? item.metadata : {
               title: item.name,
               icon: item.icon,
             };
             // 内链
-            let component;
+            let componentStr;
             if (item.openModel === 0 && item.type === 1) {
-              component = () => import('@/views' + item.path);
+              // component = () => import('@/views' + item.path);
+              // componentStr = (resolve) => require([`@/views${item.path}`]);
             }
             menus.push({
               id: item.id,
@@ -80,7 +78,7 @@ const actions = {
               path: item.path,
               name: item.name,
               alwaysShow: !item.hide,
-              component: component,
+              component: loadView(item.path),
               meta: metadata,
               permissionId: item.permissionId,
               type: item.type,
@@ -107,7 +105,6 @@ const actions = {
       }).catch((reason) => reject())
     })
   },
-
   // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
@@ -123,7 +120,29 @@ const actions = {
         const menus = []
         if (data.menus) {
           data.menus.map((item, index, array) => {
-            menus.push({ path: item.path, api: item.api })
+            const metadata = item.metadata ? item.metadata : {
+              title: item.name,
+              icon: item.icon,
+            };
+            // 内链
+            let componentStr;
+            if (item.openModel === 0 && item.type === 1) {
+              // component = () => import('@/views' + item.path);
+              // componentStr = (resolve) => require([`@/views${item.path}`]);
+            }
+            menus.push({
+              id: item.id,
+              parentId: item.parentId,
+              path: item.path,
+              name: item.name,
+              alwaysShow: !item.hide,
+              // component: loadView(item.path),
+              meta: item.metadata,
+              permissionId: item.permissionId,
+              type: item.type,
+              openModel: item.openModel,
+              hide: item.hide,
+            })
           })
         }
 

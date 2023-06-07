@@ -11,7 +11,6 @@ export const goudongWebAdminResource = [
     path: '/user',
     name: '系统管理',
     component: Layout,
-    redirect: '/user/page',
     alwaysShow: true, // will always show the root menu
     type: 1,
     openModel: 0,
@@ -24,7 +23,7 @@ export const goudongWebAdminResource = [
     },
     children: [
       {
-        path: '/usr/page',
+        path: '/usr/index',
         component: () => import('@/views/user/index'),
         name: '用户管理', // 使用name属性，才有面包屑
         type: 1,
@@ -189,6 +188,27 @@ export const goudongWebAdminResource = [
  */
 export const goudongWebAdminRouters = getRouters()
 
+export function getRouters1(tree) {
+  // 复制
+  const copy = deepCopy(tree)
+  const routers = copy.filter(menu => {
+    if (menu.type === 0) {
+      return false
+    }
+    // 有children
+    if (menu.children) {
+      // 修改children，过滤掉 api
+      menu.children = filterChildren(menu.children)
+      if (menu.children.length === 0) {
+        menu.children = undefined
+      }
+      return true
+    }
+    return true
+  })
+
+  return copy;
+}
 /**
  * 对所有资源中的api进行过滤，只返回路由资源
  * @returns {T[]}

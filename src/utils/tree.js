@@ -14,6 +14,15 @@ export function excludeApi(menus) {
   return arr2;
 }
 
+export function loadView(view) {
+  if (view === '/user/index') {
+    // 路由懒加载
+    return resolve => require([`@/views/${view}`], resolve)
+    // return () => import(`@/views${view}`);
+  }
+  return null;
+}
+
 /**
  * 排除子节点api
  * @param children
@@ -30,3 +39,4 @@ function excludeChildrenApi(children, arr2) {
     })
   }
 }
+
