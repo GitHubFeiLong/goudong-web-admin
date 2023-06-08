@@ -1,7 +1,12 @@
 import { getInfo, login, logout } from '@/api/user'
 import { router, resetRouter } from '@/router'
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
-import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst.js'
+import {
+  PERMISSION_BUTTONS_LOCAL_STORAGE,
+  PERMISSION_ROUTES_LOCAL_STORAGE,
+  TOKEN_LOCAL_STORAGE,
+  USER_LOCAL_STORAGE
+} from '@/constant/LocalStorageConst.js'
 import Token from '@/pojo/Token'
 import defaultAvatarPng from '@/assets/png/default-avatar.png'
 import store from "@/store";
@@ -13,6 +18,8 @@ const state = {
   introduction: '',
   roles: [],
   menus: [],
+  permission_routes: [], // 权限路由tree
+  permission_buttons: [], // 权限按钮集合
 }
 
 const mutations = {
@@ -31,12 +38,11 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_MENUS: (state, menus) => {
-    state.menus = menus;
-  }
+  SET_PERMISSION_ROUTES: (state, permission_routes) => { state.permission_routes = permission_routes; },
+  SET_PERMISSION_BUTTONS: (state, permission_buttons) => { state.permission_buttons = permission_buttons; },
 }
 import Layout from '@/layout'
-import { loadView } from "@/utils/tree";
+import { arrayToTree, loadView } from "@/utils/tree";
 const actions = {
   // 登录
   login({ commit }, userInfo) {
@@ -59,46 +65,53 @@ const actions = {
           roles.push('匿名角色')
         }
 
-        const menus = []
+        // 处理动态路由，将其保存树节点
+        console.log(123)
+        let permission_routes = [] // 权限路由信息
+        let permission_buttons = [] // 权限按钮
         if (user.menus) {
+          // 循环所有
           user.menus.map((item, index, array) => {
-            const metadata = item.metadata ? item.metadata : {
-              title: item.name,
-              icon: item.icon,
-            };
-            // 内链
-            let componentStr;
-            if (item.openModel === 0 && item.type === 1) {
-              // component = () => import('@/views' + item.path);
-              // componentStr = (resolve) => require([`@/views${item.path}`]);
+            const metadata = item.metadata ? JSON.parse(item.metadata) : {};
+            if (item.type === 1) { // 菜单
+              permission_routes.push({
+                id: item.id,
+                parentId: item.parentId,
+                path: item.path,
+                name: item.name,
+                alwaysShow: item.parentId == null ? !item.hide : undefined,
+                component: item.path,
+                meta: metadata,
+                sortNum: item.sortNum,
+                openModel: item.openModel
+              })
+            } else if (item.type === 2) { // 按钮
+              permission_buttons.push({
+                permissionId: item.permissionId
+              })
             }
-            menus.push({
-              id: item.id,
-              parentId: item.parentId,
-              path: item.path,
-              name: item.name,
-              alwaysShow: !item.hide,
-              component: loadView(item.path),
-              meta: metadata,
-              permissionId: item.permissionId,
-              type: item.type,
-              openModel: item.openModel,
-              hide: item.hide,
-            })
           })
         }
-
-        console.log(menus)
+        // 路由先排序
+        permission_routes.sort(function(a, b) {
+          return (a.sortNum - b.sortNum);
+        });
+        // 路由数组转tree
+        permission_routes = arrayToTree(permission_routes, null);
+        // 设置到本地缓存
+        LocalStorageUtil.set(PERMISSION_ROUTES_LOCAL_STORAGE, permission_routes)
+        LocalStorageUtil.set(PERMISSION_BUTTONS_LOCAL_STORAGE, permission_buttons)
 
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)
-        commit('SET_MENUS', menus)
+        commit('SET_PERMISSION_ROUTES', permission_routes)
+        commit('SET_PERMISSION_BUTTONS', permission_buttons)
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
 
         // 计算用户有权访问的路由，动态添加路由
-        const accessRoutes = await store.dispatch('permission/generateRoutes', menus)
+        const accessRoutes = await store.dispatch('permission/generateRoutes', permission_routes)
         router.addRoutes(accessRoutes)
 
         resolve(data)
@@ -148,7 +161,7 @@ const actions = {
 
         commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
         commit('SET_ROLES', roles)
-        commit('SET_MENUS', menus)
+        // commit('SET_MENUS', menus)
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)
@@ -165,9 +178,10 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
-        commit('SET_MENUS', [])
         LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
         LocalStorageUtil.remove(USER_LOCAL_STORAGE)
+        LocalStorageUtil.remove(PERMISSION_ROUTES_LOCAL_STORAGE)
+        LocalStorageUtil.remove(PERMISSION_BUTTONS_LOCAL_STORAGE)
         resetRouter()
 
         // reset visited views and cached views
@@ -184,9 +198,10 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
-      commit('SET_MENUS', [])
       LocalStorageUtil.remove(TOKEN_LOCAL_STORAGE)
       LocalStorageUtil.remove(USER_LOCAL_STORAGE)
+      LocalStorageUtil.remove(PERMISSION_ROUTES_LOCAL_STORAGE)
+      LocalStorageUtil.remove(PERMISSION_BUTTONS_LOCAL_STORAGE)
       resetRouter()
       // store.dispatch('tagsView/delAllViews', null, { root: true })
       resolve()

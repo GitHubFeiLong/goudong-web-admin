@@ -1,3 +1,5 @@
+import Layout from "@/layout";
+
 /**
  * 菜单排除api
  */
@@ -12,6 +14,33 @@ export function excludeApi(menus) {
     }
   })
   return arr2;
+}
+
+/**
+ * 数组转tree
+ * @param arr
+ * @param parentId
+ * @returns {*[]}
+ */
+export function arrayToTree(arr, parentId) {
+  // 新数组
+  const newArr = []
+  if (Array.isArray(arr)) {
+    arr.forEach(item => {
+      // eslint-disable-next-line eqeqeq
+      if (item.parentId == parentId) {
+        const obj = {
+          ...item,
+          children: arrayToTree(arr, item.id)
+        }
+        if (obj.children.length === 0) {
+          obj.children = undefined
+        }
+        newArr.push(obj)
+      }
+    })
+  }
+  return newArr
 }
 
 export function loadView(view) {

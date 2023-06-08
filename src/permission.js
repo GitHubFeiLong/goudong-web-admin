@@ -42,9 +42,9 @@ router.beforeEach(async(to, from, next) => {
             NProgress.done()
           })
           // const roles = store.getters.roles
-          const menus = store.getters.menus
+          const permission_routes = store.getters.permission_routes
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', menus)
+          const accessRoutes = await store.dispatch('permission/generateRoutes', permission_routes)
 
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)

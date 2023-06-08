@@ -195,6 +195,6 @@ module.exports = {
     'object-curly-spacing': [1, 'always', {
       objectsInObjects: false
     }],
-    'array-bracket-spacing': [1, 'never']
+    'array-bracket-spacing': [1, 'never'],
   }
 }
