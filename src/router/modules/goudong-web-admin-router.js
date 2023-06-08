@@ -1,6 +1,7 @@
 /** 自定义的菜单路由配置 **/
 
 import Layout from '@/layout'
+import { treeToArr } from "@/utils/tree";
 
 /**
  * 所有资源
@@ -23,7 +24,7 @@ export const goudongWebAdminResource = [
     },
     children: [
       {
-        path: '/usr/index',
+        path: '/user/index',
         component: () => import('@/views/user/index'),
         name: '用户管理', // 使用name属性，才有面包屑
         type: 1,
@@ -88,7 +89,7 @@ export const goudongWebAdminResource = [
         ]
       },
       {
-        path: '/user/role',
+        path: '/role/index',
         component: () => import('@/views/role/index'),
         name: '角色管理', // 使用name属性，才有面包屑
         type: 1,
@@ -153,7 +154,7 @@ export const goudongWebAdminResource = [
         ]
       },
       {
-        path: '/user/menu',
+        path: '/menu/index',
         component: () => import('@/views/menu/index'),
         name: '菜单管理',
         type: 1,
@@ -183,32 +184,33 @@ export const goudongWebAdminResource = [
 ]
 
 /**
+ * 所有组件
+ */
+export const goudongWebAdminComponent = getComponents()
+
+/**
+ * 将
+ */
+function getComponents() {
+  let newArr = []
+  treeToArr(goudongWebAdminResource, newArr) // 转成一维数组
+  const components = [] // 所有组件（解决动态引入组件有错误）
+  newArr.forEach(item => {
+    let obj = {
+      path: item.path,
+      component: item.component
+    }
+    components.push(obj)
+  })
+  return components;
+}
+
+/**
  * 路由资源
  * @type {T[]}
  */
-export const goudongWebAdminRouters = getRouters()
+// export const goudongWebAdminRouters = getRouters()
 
-export function getRouters1(tree) {
-  // 复制
-  const copy = deepCopy(tree)
-  const routers = copy.filter(menu => {
-    if (menu.type === 0) {
-      return false
-    }
-    // 有children
-    if (menu.children) {
-      // 修改children，过滤掉 api
-      menu.children = filterChildren(menu.children)
-      if (menu.children.length === 0) {
-        menu.children = undefined
-      }
-      return true
-    }
-    return true
-  })
-
-  return copy;
-}
 /**
  * 对所有资源中的api进行过滤，只返回路由资源
  * @returns {T[]}

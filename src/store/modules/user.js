@@ -41,8 +41,7 @@ const mutations = {
   SET_PERMISSION_ROUTES: (state, permission_routes) => { state.permission_routes = permission_routes; },
   SET_PERMISSION_BUTTONS: (state, permission_buttons) => { state.permission_buttons = permission_buttons; },
 }
-import Layout from '@/layout'
-import { arrayToTree, loadView } from "@/utils/tree";
+import { arrayToTree } from "@/utils/tree";
 const actions = {
   // 登录
   login({ commit }, userInfo) {
@@ -80,7 +79,6 @@ const actions = {
                 path: item.path,
                 name: item.name,
                 alwaysShow: item.parentId == null ? !item.hide : undefined,
-                component: item.path,
                 meta: metadata,
                 sortNum: item.sortNum,
                 openModel: item.openModel
@@ -130,38 +128,9 @@ const actions = {
         if (roles.length === 0) {
           roles.push('匿名角色')
         }
-        const menus = []
-        if (data.menus) {
-          data.menus.map((item, index, array) => {
-            const metadata = item.metadata ? item.metadata : {
-              title: item.name,
-              icon: item.icon,
-            };
-            // 内链
-            let componentStr;
-            if (item.openModel === 0 && item.type === 1) {
-              // component = () => import('@/views' + item.path);
-              // componentStr = (resolve) => require([`@/views${item.path}`]);
-            }
-            menus.push({
-              id: item.id,
-              parentId: item.parentId,
-              path: item.path,
-              name: item.name,
-              alwaysShow: !item.hide,
-              // component: loadView(item.path),
-              meta: item.metadata,
-              permissionId: item.permissionId,
-              type: item.type,
-              openModel: item.openModel,
-              hide: item.hide,
-            })
-          })
-        }
 
         commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
         commit('SET_ROLES', roles)
-        // commit('SET_MENUS', menus)
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)

@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import getPageTitle from '@/utils/get-page-title'
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
+import { PERMISSION_ROUTES_LOCAL_STORAGE } from "@/constant/LocalStorageConst";
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -42,7 +43,7 @@ router.beforeEach(async(to, from, next) => {
             NProgress.done()
           })
           // const roles = store.getters.roles
-          const permission_routes = store.getters.permission_routes
+          const permission_routes = LocalStorageUtil.get(PERMISSION_ROUTES_LOCAL_STORAGE)
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', permission_routes)
 

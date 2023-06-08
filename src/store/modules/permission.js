@@ -1,6 +1,8 @@
 import { constantRoutes } from '@/router'
 import Layout from "@/layout";
-import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
+import {
+  goudongWebAdminComponent,
+} from "@/router/modules/goudong-web-admin-router";
 
 function hasPermissionByMenus(menus, route) {
   if (route.type !== 0 && route.path) {
@@ -52,15 +54,10 @@ const actions = {
    */
   generateRoutes({ commit }, permission_routes) {
     return new Promise(resolve => {
-      // let accessedRoutes = []
-      // // const roles = store.getters.roles;
       // 循环设置组件
       permissionRoutesComponent(permission_routes);
       commit('SET_ROUTES', permission_routes)
       resolve(permission_routes)
-
-      // commit('SET_ROUTES', goudongWebAdminResource)
-      // resolve(goudongWebAdminResource)
     })
   }
 }
@@ -74,11 +71,7 @@ function permissionRoutesComponent(permission_routes) {
     if (item.parentId === null || item.parentId === undefined) {
       item.component = Layout
     } else {
-      console.log('@/views' + item.component)
-      // item.component = () => import('@/views' + item.component)
-      item.component = () => require('/src/views' + item.component);
-      // item.component = () => import('@/views/user/index')
-      // item.component = (resolve) => require([`@/views${item.component}`], resolve)
+      item.component = goudongWebAdminComponent.find(c => item.path === c.path).component
     }
     if (item.children && item.children.length > 0) {
       permissionRoutesComponent(item.children)
