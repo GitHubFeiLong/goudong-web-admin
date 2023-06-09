@@ -29,7 +29,7 @@ router.beforeEach(async(to, from, next) => {
       // determine whether the user has obtained his permission roles through getInfo
       // 当有角色，且已经根据角色添加过路由了就放行，否则需要去计算路由
       console.log(123)
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0 && store.getters.permission_routes && store.getters.permission_routes.length > 0
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
       } else {
@@ -38,17 +38,20 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           await store.dispatch('user/getInfo').catch(reason => {
-            console.log(111)
+            console.log("获取当前用户异常，重定向登录页")
             store.dispatch('user/resetToken')
             NProgress.done()
           })
           // const roles = store.getters.roles
-          const permission_routes = LocalStorageUtil.get(PERMISSION_ROUTES_LOCAL_STORAGE)
-          // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', permission_routes)
+          const permissionRoutes = LocalStorageUtil.get(PERMISSION_ROUTES_LOCAL_STORAGE)
+          console.log("permissionRoutes", permissionRoutes)
+          if (permissionRoutes) {
+            // generate accessible routes map based on roles
+            const accessRoutes = await store.dispatch('permission/generateRoutes', permissionRoutes)
 
-          // dynamically add accessible routes
-          router.addRoutes(accessRoutes)
+            // dynamically add accessible routes
+            router.addRoutes(accessRoutes)
+          }
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record

@@ -44,10 +44,10 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
+        <el-button v-permission="'abc'" class="el-button--small" icon="el-icon-plus" type="primary" @click="createUserDialog=true">
           新增
         </el-button>
-        <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteUsers">
+        <el-button v-permission="'abc'" class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteUsers">
           删除
         </el-button>
         <el-button class="el-button--small" icon="el-icon-upload2" @click="importUserDialog=true">

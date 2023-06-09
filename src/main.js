@@ -22,6 +22,8 @@ import * as filters from './filters' // global filters
 import globalVariable from '@/constant/global-variable'
 
 import moment from 'moment'
+import { none } from "html-webpack-plugin/lib/chunksorter";
+import checkPermission from "@/utils/permission";
 moment.locale('zh-cn')
 
 /**
@@ -50,7 +52,17 @@ Object.keys(filters).forEach(key => {
 Vue.config.productionTip = false
 
 // 全局指令
-
+Vue.directive('permission', {
+  // 或事件监听器应用前调用
+  inserted(el, binding) {
+    const value = binding.value;
+    if (!checkPermission(value)) {
+      console.log("匹配")
+      // 没有权限 移除Dom元素
+      el.parentNode && el.parentNode.removeChild(el)
+    }
+  },
+})
 // 挂载变量到vue上
 Vue.prototype.$globalVariable = globalVariable
 // 挂在mount
@@ -59,5 +71,6 @@ new Vue({
   el: '#app',
   router,
   store,
+
   render: h => h(App)
 })

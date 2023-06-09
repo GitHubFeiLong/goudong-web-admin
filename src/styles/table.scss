@@ -54,6 +54,11 @@
   position: relative;
   .left-tool{
     display: inline-block;
+    button {
+      padding: 9px 15px;
+      margin-left: 0px;
+      margin-right: 10px;
+    }
   }
   .right-tool{
     display: inline-block;

@@ -18,7 +18,6 @@ const state = {
   introduction: '',
   roles: [],
   menus: [],
-  permission_routes: [], // 权限路由tree
   permission_buttons: [], // 权限按钮集合
 }
 
@@ -38,7 +37,6 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_PERMISSION_ROUTES: (state, permission_routes) => { state.permission_routes = permission_routes; },
   SET_PERMISSION_BUTTONS: (state, permission_buttons) => { state.permission_buttons = permission_buttons; },
 }
 import { arrayToTree } from "@/utils/tree";
@@ -102,7 +100,6 @@ const actions = {
 
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)
-        commit('SET_PERMISSION_ROUTES', permission_routes)
         commit('SET_PERMISSION_BUTTONS', permission_buttons)
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
@@ -110,6 +107,7 @@ const actions = {
 
         // 计算用户有权访问的路由，动态添加路由
         const accessRoutes = await store.dispatch('permission/generateRoutes', permission_routes)
+
         router.addRoutes(accessRoutes)
 
         resolve(data)
@@ -120,6 +118,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo().then(data => {
+        console.log("getInfo")
         const { username, avatar, nickname } = data
         const roles = []
         for (const key in data.roles) {
