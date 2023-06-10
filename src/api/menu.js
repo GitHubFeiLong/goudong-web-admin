@@ -23,3 +23,11 @@ export function listMenuApi() {
     method: 'get'
   })
 }
+
+export function addMenuApi(data) {
+  return request({
+    url: `/api/user/base-menu`,
+    method: 'post',
+    data
+  })
+}

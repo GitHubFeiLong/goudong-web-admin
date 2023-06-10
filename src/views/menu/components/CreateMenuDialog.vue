@@ -142,6 +142,7 @@
 
 import { EL_ICONS } from "@/constant/commons";
 import { isJSON } from "@/utils/validate";
+import { addMenuApi, initMenuApi } from "@/api/menu";
 export default {
   name: 'CreateMenuDialog',
   props: {
@@ -152,6 +153,11 @@ export default {
       default: function() {
         return false;
       }
+    },
+    // 父组件刷新菜单数据
+    refreshMenu: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -292,6 +298,13 @@ export default {
     },
     submitForm() {
       console.log(this.menu)
+      let data = { ...this.menu };
+      data.method = JSON.stringify(this.menu.method);
+      addMenuApi(data).then(data => {
+        this.$message.success("添加成功");
+        this.refreshMenu();
+        this.close();
+      })
     },
     close() {
       this.$emit("update:createMenuDialog", false)

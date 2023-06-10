@@ -41,7 +41,7 @@
     </el-container>
 
     <!--  新增菜单弹窗  -->
-    <CreateMenuDialog :create-menu-dialog.sync="createMenuDialog" />
+    <CreateMenuDialog :create-menu-dialog.sync="createMenuDialog" :refresh-menu="load" />
   </div>
 </template>
 
@@ -84,7 +84,6 @@ export default {
         this.$store.dispatch('menu/setAllMenus', arr2);
       })
     },
-
     expandedTree(flag) { // 展开或收缩菜单tree
       const nodes = this.$refs.menuTree.store.nodesMap;
       console.log(nodes)
@@ -115,24 +114,6 @@ export default {
     addMenu() { // 新增菜单
       this.createMenuDialog = true
     },
-    rightClick(MouseEvent, object, Node, element) { // 鼠标右击触发事件
-      this.menuVisible = false // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
-      this.menuVisible = true // 显示模态窗口，跳出自定义菜单栏
-      var menu = document.querySelector('#menu')
-      // menu.style.left = MouseEvent.clientX - 10 + 'px'
-      document.addEventListener('click', this.foo) // 给整个document添加监听鼠标事件，点击任何位置执行foo方法
-      menu.style.top = MouseEvent.clientY - 115 + 'px'
-      console.log('右键被点击的event:', MouseEvent)
-      console.log('右键被点击的object:', object)
-      console.log('右键被点击的value:', Node)
-      console.log('右键被点击的element:', element)
-      console.log('鼠标点击了树形结构图')
-    },
-    foo() { // 取消鼠标监听事件 菜单栏
-      this.menuVisible = false
-      document.removeEventListener('click', this.foo) // 要及时关掉监听，不关掉的是一个坑，不信你试试，虽然前台显示的时候没有啥毛病，加一个alert你就知道了
-    },
-
   }
 }
 </script>
