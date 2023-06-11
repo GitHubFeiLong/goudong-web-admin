@@ -2,44 +2,51 @@
   <div class="app-container">
     <!--  查询条件  -->
     <div class="filter-container">
-      <span class="filter-item-first-condition">用户账号: </span>
-      <UsernameSelect ref="UsernameSelect" class="filter-item" @getUsername="getUsername" />
-      <span class="filter-item-condition">有效日期: </span>
-      <el-date-picker
-        v-model="filter.validTime"
-        :picker-options="pickerOptions"
-        align="center"
-        class="filter-item"
-        end-placeholder="结束日期"
-        range-separator="至"
-        start-placeholder="开始日期"
-        type="daterange"
-        unlink-panels
-        value-format="yyyy-MM-dd"
-      />
-      <span class="filter-item-condition">创建日期: </span>
-      <el-date-picker
-        v-model="filter.createTime"
-        :picker-options="pickerOptions"
-        align="center"
-        class="filter-item"
-        end-placeholder="结束日期"
-        range-separator="至"
-        start-placeholder="开始日期"
-        type="daterange"
-        unlink-panels
-        value-format="yyyy-MM-dd"
-      />
-      <el-button
-        class="filter-item filter-btn-first"
-        icon="el-icon-search"
-        type="primary"
-        @click="searchFunc"
-      >
-        查询
-      </el-button>
-      <!--不加icon会小一个像素的高度-->
-      <el-button class="filter-item filter-btn" icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+      <div class="filter-item">
+        <span class="filter-item-label">用户账号: </span>
+        <UsernameSelect ref="UsernameSelect" @getUsername="getUsername" />
+      </div>
+      <div class="filter-item">
+        <span class="filter-item-label">有效日期: </span>
+        <el-date-picker
+          v-model="filter.validTime"
+          :picker-options="pickerOptions"
+          align="center"
+          end-placeholder="结束日期"
+          range-separator="至"
+          start-placeholder="开始日期"
+          type="daterange"
+          unlink-panels
+          value-format="yyyy-MM-dd"
+        />
+      </div>
+      <div class="filter-item">
+        <span class="filter-item-label">创建日期: </span>
+        <el-date-picker
+          v-model="filter.createTime"
+          :picker-options="pickerOptions"
+          align="center"
+          end-placeholder="结束日期"
+          range-separator="至"
+          start-placeholder="开始日期"
+          type="daterange"
+          unlink-panels
+          value-format="yyyy-MM-dd"
+        />
+      </div>
+      <div class="filter-item">
+        <el-button
+          icon="el-icon-search"
+          type="primary"
+          @click="searchFunc"
+        >
+          查询
+        </el-button>
+      </div>
+      <div class="filter-item">
+        <!--不加icon会小一个像素的高度-->
+        <el-button icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+      </div>
     </div>
     <!--顶部操作栏-->
     <div class="el-table-tool">
@@ -322,6 +329,7 @@ import { BEARER } from "@/constant/HttpHeaderConst";
 
 import * as aes from '@/utils/aes'
 import { encrypt } from "@/utils/aes";
+import { DATE_PICKER_DEFAULT_OPTIONS } from "@/constant/commons";
 
 export default {
   name: 'UserPage',
@@ -342,33 +350,7 @@ export default {
         startCreateTime: undefined,
         endCreateTime: undefined,
       },
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
+      pickerOptions: DATE_PICKER_DEFAULT_OPTIONS,
       // 导入用户
       importUserDialog: false,
       // 新增用户 子组件新增用户 弹框显示变量

@@ -295,3 +295,43 @@ export const EL_ICONS = [
   "el-icon-ice-cream-square",
   "el-icon-ice-cream-round"
 ]
+
+/**
+ * app应用的状态
+ */
+export const APP_STATUS_ARRAY = [
+  { label: '待审核', value: 0 },
+  { label: '已通过', value: 1 },
+  { label: '未通过', value: 2 }
+];
+
+/**
+ * 日期组件的显示样式
+ */
+export const DATE_PICKER_DEFAULT_OPTIONS = {
+  shortcuts: [{
+    text: '最近一周',
+    onClick(picker) {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '最近一个月',
+    onClick(picker) {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+      picker.$emit('pick', [start, end])
+    }
+  }, {
+    text: '最近三个月',
+    onClick(picker) {
+      const end = new Date()
+      const start = new Date()
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+      picker.$emit('pick', [start, end])
+    }
+  }]
+}

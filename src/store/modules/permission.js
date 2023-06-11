@@ -3,6 +3,8 @@ import Layout from "@/layout";
 import {
   goudongWebAdminComponent,
 } from "@/router/modules/goudong-web-admin-router";
+import vueElementAdminRouter from "@/router/modules/vue-element-admin-router";
+import componentsRouter from "@/router/modules/components";
 
 function hasPermissionByMenus(menus, route) {
   if (route.type !== 0 && route.path) {
@@ -41,7 +43,7 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes)
+    state.routes = constantRoutes.concat(vueElementAdminRouter).concat(routes)
   },
 }
 
@@ -57,6 +59,7 @@ const actions = {
       // 循环设置组件
       permissionRoutesComponent(permission_routes);
       commit('SET_ROUTES', permission_routes)
+      // permission_routes = permission_routes.concat(vueElementAdminRouter).concat(componentsRouter)
       resolve(permission_routes)
     })
   }
@@ -71,7 +74,12 @@ function permissionRoutesComponent(permission_routes) {
     if (item.parentId === null || item.parentId === undefined) {
       item.component = Layout
     } else {
-      item.component = goudongWebAdminComponent.find(c => item.path === c.path).component
+      item.component = goudongWebAdminComponent.find(c => {
+        if (c.componentPath) {
+          return c.componentPath === item.componentPath
+        }
+        return item.path === c.path
+      }).component
     }
     if (item.children && item.children.length > 0) {
       permissionRoutesComponent(item.children)

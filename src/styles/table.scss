@@ -1,13 +1,19 @@
 @import 'src/styles/element-variables';
 @import 'element-ui/packages/theme-chalk/src/common/var.scss';
 // 关于表格相关的自定义样式
-.filter-container {
+.filter-container-1 {
   padding: 10px 10px 20px 10px;
   background-color: $--app-container-background-color;
-  .filter-item {
+
+  .filter--item {
     display: inline-block;
     vertical-align: middle;
     margin-bottom: 10px;
+  }
+  .filter-item {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
   }
 
   .filter-item-first-condition {
@@ -35,6 +41,20 @@
   }
 }
 
+.filter-container {
+  padding: 10px 0px 20px 0px;
+  background-color: $--app-container-background-color;
+  .filter-item {
+    display: inline-block;
+    margin-right: 23px;
+    .filter-item-label{
+      line-height: 36px;
+    }
+    .el-input,.el-select {
+      width: 230px;
+    }
+  }
+}
 .filter-empty-container {
   height: 56px;
 }

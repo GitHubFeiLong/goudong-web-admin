@@ -4,177 +4,194 @@ import Layout from '@/layout'
 import { treeToArr } from "@/utils/tree";
 
 /**
- * 所有资源
- * @type {[{redirect: string, path: string, component: {components: {TagsView: {components: {ScrollPane: {data(): {left: number}, computed: {scrollWrapper(): *}, methods: {emitScroll(): void, handleScroll(*): void, moveToTarget(*): void}, name: string, beforeDestroy(): void, mounted(): void}}, data(): {visible: boolean, top: number, left: number, affixTags: [], selectedTag: {}}, computed: {routes(): *, visitedViews(): *}, watch: {visible(*): void, $route(): void}, methods: {refreshSelectedTag(*): void, openMenu(*, *): void, closeSelectedTag(*): void, moveToCurrentTag(): void, toLastView(*, *): void, isAffix(*): void, initTags(): void, handleScroll(): void, filterAffixTags(*, *=): [], isActive(*): boolean, closeMenu(): void, addTags(): boolean, closeAllTags(*): void, closeOthersTags(): void}, mounted(): void}, AppMain: {computed: {cachedViews(): *, key(): *}, name: string}, Navbar: {components: {Hamburger: {methods: {toggleClick(): void}, name: string, props: {isActive: {default: boolean, type: Boolean | BooleanConstructor}}}, Screenfull: {data(): {isFullscreen: boolean}, methods: {init(): void, change(): void, destroy(): void, click(): (boolean|undefined)}, name: string, beforeDestroy(): void, mounted(): void}, SizeSelect: {data(): {sizeOptions: [{label: string, value: string},{label: string, value: string},{label: string, value: string},{label: string, value: string}]}, computed: {size(): *}, methods: {refreshView(): void, handleSetSize(*): void}}, Search: {data(): {searchPool: [], fuse: *, search: string, options: [], show: boolean}, computed: {routes(): *}, watch: {routes(): void, searchPool(*): void, show(*): void}, methods: {generateRoutes(*, *=, *=): [], change(*): void, initFuse(*): void, querySearch(*): void, click(): void, close(): void}, name: string, mounted(): void}, Breadcrumb: {data(): {levelList: null}, watch: {$route(*): void}, created(): void, methods: {pathCompile(*): string, handleLink(*): void, isDashboard(*): boolean, getBreadcrumb(): void}}, ErrorLog: {data(): {dialogTableVisible: boolean}, computed: {errorLogs(): *}, methods: {clearAll(): void}, name: string}}, computed: {[p: string]: () => any}, methods: {logout(): Promise<void>, toggleSideBar(): void}}, RightPanel: {data(): {show: boolean}, computed: {theme(): *}, watch: {show(*): void}, methods: {addEventClick(): void, closeSidebar(*): void, insertToBody(): void}, name: string, beforeDestroy(): void, mounted(): void, props: {buttonTop: {default: number, type: Number | NumberConstructor}, clickNotClose: {default: boolean, type: Boolean | BooleanConstructor}}}, Settings: {components: {ThemePicker: {data(): {chalk: string, theme: string}, computed: {defaultTheme(): *}, watch: {defaultTheme: {handler: function(*, *): void, immediate: boolean}, theme(*): Promise<void>}, methods: {updateStyle(*, *, *): *, getThemeCluster(*): [*], getCSSString(*, *): Promise<unknown>}}}, data(): {}, computed: {fixedHeader: {set(*): void, get(): *}, sidebarLogo: {set(*): void, get(): *}, tagsView: {set(*): void, get(): *}}, methods: {themeChange(*): void}}, Sidebar: {components: {SidebarItem: {components: {Item: {functional: boolean, name: string, render(*, *): [], props: {icon: {default: string, type: String | StringConstructor}, title: {default: string, type: String | StringConstructor}}}, AppLink: {computed: {isExternal(): Boolean, type(): (string)}, methods: {linkProps(*): ({rel: string, href: *, target: string})}, props: {to: {type: String | StringConstructor, required: boolean}}}}, mixins: [{computed: {device(): *}, methods: {fixBugIniOS(): void}, mounted(): void}], data(): {}, methods: {hasOneShowingChild(*=, *): (boolean), resolvePath(*): (*)}, name: string, props: {item: {type: Object | ObjectConstructor, required: boolean}, isNest: {default: boolean, type: Boolean | BooleanConstructor}, basePath: {default: string, type: String | StringConstructor}}}, Logo: {data(): {logo: string, title: string}, name: string, props: {collapse: {type: Boolean | BooleanConstructor, required: boolean}}}}, computed: {[p: string]: () => any, showLogo(): *, variables(): *, activeMenu(): (default.computed.$route.meta.activeMenu), isCollapse(): void}}}, mixins: [{watch: {$route(*): void}, methods: {$_resizeHandler(): void, $_isMobile(): boolean}, beforeMount(): void, beforeDestroy(): void, mounted(): void}], computed: {[p: string]: () => any, classObj(): {hideSidebar, mobile: boolean, withoutAnimation: default.computed.sidebar.withoutAnimation, openSidebar: default.computed.sidebar.opened}}, methods: {handleClickOutside(): void}, name: string}, children: [{path: string, component: (function(): Promise<{readonly default?: {components: {UsernameSelect: function(): Promise<{readonly default?: {data(): {size: number, totalPage: *, usernames: [], page: number, loading: boolean, username: *}, methods: {loadUsername(): void, loadMore: function(): void, change(*): void}, mounted(): void}}>, CreateUserDialog: function(): Promise<{readonly default?: {components: {RoleSelect: function(): *}, data(): {visible: boolean, rules: {roleIds: [{trigger: string, type: string, message: string, required: boolean}], phone: [{validator: function(*, *, *): (*|undefined), trigger: string, required: boolean}], email: [{validator: function(*, *, *): (*|undefined), trigger: string, required: boolean}], username: [{validator: function(*, *, *): (*|undefined), trigger: string, required: boolean}]}, roleSelect: {roleMultiple: boolean}, user: {roleIds: [], phone: string, email: string, username: string}}, watch: {createUserDialog(): void}, methods: {getSelectRoleIds(*): void, submitForm(*): void, resetForm(*): void, close(): void}, name: string, props: {createUserDialog: {default: boolean, type: Boolean | BooleanConstructor, required: boolean}}}}>, EditUserDialog: function(): Promise<{readonly default?: {components: {RoleSelect: function(): *}, data(): {visible: boolean, rules: {roleIds: [{trigger: string, type: string, message: string, required: boolean}], phone: [{required: boolean}], validTime: [{trigger: string, message: string, required: boolean}], email: [{required: boolean}], username: [{required: boolean}]}, roleSelect: {roleMultiple: boolean, roles: []}, avatar: {avatarAction: string, dialogVisible: boolean, dialogImageUrl: string, fileList: []}, user: {roleIds: [], roleNameCn: string, phone: string, nickname: string, validTime: Date, remark: string, id: string, avatar: string, email: string, username: string}}, watch: {"avatar.fileList": function(*, *): void, editUserDialog(): void}, methods: {getSelectRoleIds(*): void, handleProgress(*, *, *): void, submitForm(*): void, handleChange(*, *): void, handleError(*, *, *): void, handlePictureCardPreview(*): void, beforeAvatarUpload(*): void, close(): void, handleAvatarSuccess(*, *, *): void, handleRemove(*, *): void}, name: string, props: {editUserInfo: {default: function(): {}, type: Object | ObjectConstructor, required: boolean}, editUserDialog: {default: function(): boolean, type: Boolean | BooleanConstructor, required: boolean}}}}>}, data(): {filter: {startValidTime: *, createTime: *, validTime: *, startCreateTime: *, endCreateTime: *, username: *, endValidTime: *}, editUserInfo: *, editUserDialog: boolean, createUserDialog: boolean, pickerOptions: {shortcuts: [{onClick(*): void, text: string},{onClick(*): void, text: string},{onClick(*): void, text: string}]}, checkUserIds: [], tableHeight: *, user: {total: number, pageSizes: *, size: number, totalPage: number, page: number, users: []}}, directives: {waves: {bind(*, *): void, unbind(*): void, update(*, *): void}}, methods: {filterTimeHandler(): void, addUser(): void, editUser(*): void, selectionChangeFunc(*): void, closeEditUserDialog(): void, searchFunc(): void, getUsername(*): void, exportExcel(): void, handleSizeChange(*): void, deleteUser(*): void, tableRowClassName({row: *, rowIndex: *}): (string), handleCurrentChange(*): void, loadPageUser(): void}, name: string, mounted(): void}}>), children: [{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean}], meta: {roles: string[], title: string}, name: string},{path: string, component: (function(): Promise<{readonly default?: {components: {EditRoleDialog: function(): Promise<{readonly default?: {data(): {visible: boolean, role: {roleNameCn: string, remark: string}, rules: {roleNameCn: [{min: number, max: number, trigger: string, message: string, required: boolean}], remark: [{max: number, message: string, required: boolean, triangle: string}]}}, watch: {editRoleDialog(): void}, methods: {submitForm(*): void, resetForm(*): void, close(): void}, name: string, props: {editRoleInfo: {default: function(): {}, type: Object | ObjectConstructor, required: boolean}, editRoleDialog: {default: function(): boolean, type: Boolean | BooleanConstructor, required: boolean}}}}>, EditRoleMenuDialog: function(): Promise<{readonly default?: {data(): {visible: boolean, defaultCheckedKeys: [string], menus: [], checkStrictly: boolean, props: {children: string, label: string}}, watch: {editRoleMenuDialog(): void}, methods: {submit(): void, reset(): void, getCheckedId(*): *, close(): void, demo(*): *}, name: string, props: {editRoleMenuInfo: {default: function(): {}, type: Object | ObjectConstructor, required: boolean}, editRoleMenuDialog: {default: function(): boolean, type: Boolean | BooleanConstructor, required: boolean}}}}>, CreateRoleDialog: function(): Promise<{readonly default?: {data(): {visible: boolean, role: {roleNameCn: string, remark: string}, rules: {roleNameCn: [{min: number, max: number, trigger: string, message: string, required: boolean}], remark: [{max: number, message: string, required: boolean, triangle: string}]}}, watch: {createRoleDialog(): void}, methods: {submitForm(*): void, resetForm(*): void, close(): void}, name: string, props: {createRoleDialog: {default: function(): boolean, type: Boolean | BooleanConstructor, required: boolean}}}}>}, data(): {filter: {roleNameCn: *}, editRoleMenuInfo: {}, editRoleInfo: *, role: {total: number, pageSizes: *, size: *, totalPage: number, roles: [], page: number}, editRoleMenuDialog: boolean, createRoleDialog: boolean, editRoleDialog: boolean, tableHeight: *}, directives: {waves: {bind(*, *): void, unbind(*): void, update(*, *): void}}, methods: {initMenu(): void, loadPageRole(): void, handleSizeChange(*): void, searchFunc(): void, editRole(*): void, generate(*): {path: *, method: *, name: *, api: *}, deleteRole(*): void, handleCurrentChange(*): void, addRole(): void, editRoleMenu(*): void}, name: string, mounted(): void}}>), children: [{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean},{path: string, method: string, hidden: boolean, name: string, api: boolean}], meta: {roles: string[], title: string}, name: string}], meta: {roles: string[], icon: string, title: string}, name: string, alwaysShow: boolean}]}
+ * 预先定义好的所有资源
+ * <pre>
+ *   {
+ *     name: "菜单名称，使用name属性，才有面包屑",
+ *     type: "菜单类型（0：接口；1：菜单；2：按钮）",
+ *     openModel: "打开方式（0：内链；1：外链）",
+ *     path: "前端路由或接口地址,路由打开的地址栏地址 前期P{@code path}也指向组件地址，后期可能加字段区分",
+ *     component: "前端的组件",
+ *     componentPath: "前端的组件地址，不传使用path做组件地址",
+ *     permissionId: "权限标识，唯一，通常children是在当前基础上累加",
+ *     alwaysShow: "在左侧菜单目录是否显示（true：显示，false：隐藏）",
+ *     meta: {
+ *        title: '系统管理 // 左侧菜单栏标题',
+ *        icon: 'peoples // 图标',
+ *     },
+ *     children: [] // 子元素
+ *   }
+ * </pre>
  */
 export const goudongWebAdminResource = [
   {
-    path: '/user',
     name: '系统管理',
-    component: Layout,
-    alwaysShow: true, // will always show the root menu
     type: 1,
     openModel: 0,
-    sortNum: 1,
-    hidden: false,
+    path: '/user',
+    component: () => import('@/layout'),
+    componentPath: '@/layout',
+    permissionId: 'sys',
+    alwaysShow: true, // will always show the root menu
     meta: {
       title: '系统管理',
       icon: 'peoples',
-      roles: ['ROLE_ADMIN'] // you can set roles in root nav
     },
     children: [
       {
-        path: '/user/index',
-        component: () => import('@/views/user/index'),
         name: '用户管理', // 使用name属性，才有面包屑
         type: 1,
         openModel: 0,
-        sortNum: 2,
-        hidden: false,
+        path: '/user/index',
+        component: () => import('@/views/user/index'),
+        componentPath: '@/views/user/index',
+        permissionId: 'sys:user',
         meta: {
           title: '用户管理',
-          roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
+          icon: 'peoples',
         },
         children: [
           {
-            name: '查询',
-            api: true, // 是否是接口
+            name: '查询用户',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-user/page',
-            method: 'get',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["GET"]',
+            permissionId: 'sys:user:query',
           },
           {
-            name: '新增',
-            api: true, // 是否是接口
+            name: '新增用户',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-user/simple-create-user',
-            method: 'post',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["POST"]',
+            permissionId: 'sys:user:add',
           },
           {
-            name: '导出',
-            api: true, // 是否是接口
+            name: '导出用户',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-user/export',
-            method: 'get',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["GET"]',
+            permissionId: 'sys:user:export',
           },
           {
+            name: '编辑用户',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-user/admin/user',
-            api: true, // 是否是接口
-            name: '编辑',
-            method: 'put',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["PUT"]',
+            permissionId: 'sys:user:edit',
           },
           {
-            path: '/api/user/base-user/*',
-            api: true, // 是否是接口
-            name: '删除',
-            method: 'delete',
-            hidden: true,
-            type: 0,
+            name: '删除用户',
+            type: 2,
             openModel: 0,
-            sortNum: 10,
+            path: '/api/user/base-user/*',
+            method: '["DELETE"]',
+            permissionId: 'sys:user:delete',
           },
         ]
       },
       {
-        path: '/role/index',
-        component: () => import('@/views/role/index'),
-        name: '角色管理', // 使用name属性，才有面包屑
+        name: '角色管理',
         type: 1,
         openModel: 0,
-        sortNum: 2,
-        hidden: false,
+        path: '/role/index',
+        component: () => import('@/views/role/index'),
+        componentPath: '@/views/role/index',
+        permissionId: 'sys:role',
         meta: {
           title: '角色管理',
-          roles: ['ROLE_ADMIN'] // or you can only set roles in sub nav
+          icon: 'peoples',
         },
         children: [
           {
-            name: '查询',
-            api: true, // 是否是接口
+            name: '查询角色',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-role/page',
-            method: 'get',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["GET"]',
+            permissionId: 'sys:role:query',
           },
           {
-            name: '新增',
-            api: true, // 是否是接口
+            name: '新增角色',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-role',
-            method: 'post',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["POST"]',
+            permissionId: 'sys:role:add',
           },
           {
-            name: '编辑',
-            api: true, // 是否是接口
+            name: '编辑角色',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-role',
-            method: 'put',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["PUT"]',
+            permissionId: 'sys:role:edit',
           },
           {
-            name: '删除',
-            api: true, // 是否是接口
+            name: '删除角色',
+            type: 2,
+            openModel: 0,
             path: '/api/user/base-role/*',
-            method: 'delete',
-            hidden: true,
-            type: 0,
-            openModel: 0,
-            sortNum: 10,
+            method: '["DELETE"]',
+            permissionId: 'sys:role:delete',
           },
           {
-            name: '权限',
-            api: true, // 是否是接口
-            path: '/api/user/base-role/permissions/*',
-            method: 'post',
-            hidden: true,
-            type: 0,
+            name: '分配权限',
+            type: 2,
             openModel: 0,
-            sortNum: 10,
+            path: '/api/user/base-role/permissions/*',
+            method: '["POST"]',
+            permissionId: 'sys:role:permission',
           }
         ]
       },
       {
-        path: '/menu/index',
-        component: () => import('@/views/menu/index'),
         name: '菜单管理',
         type: 1,
         openModel: 0,
-        sortNum: 3,
-        hidden: false,
+        path: '/menu/index',
+        component: () => import('@/views/menu/index'),
+        componentPath: '@/views/menu/index',
+        permissionId: 'sys:menu',
         meta: {
-          title: '菜单管理'
+          title: '菜单管理',
+          icon: 'peoples',
         },
         children: [
           {
-            name: '查询',
-            api: true, // 是否是接口
-            path: '/api/user/base-menu/tree',
-            method: 'get',
-            hidden: true,
-            type: 0,
+            name: '查询菜单',
+            type: 2,
             openModel: 0,
-            sortNum: 10,
-          }
+            path: '/api/user/base-menu/tree',
+            method: '["GET"]',
+            permissionId: 'sys:menu:query',
+          },
+        ]
+      },
+      {
+        name: '应用管理',
+        type: 1,
+        openModel: 0,
+        path: '/app/index',
+        component: () => import('@/views/app/index'),
+        componentPath: '@/views/app/index',
+        permissionId: 'sys:app',
+        meta: {
+          title: '应用管理',
+          icon: 'peoples',
+        },
+        children: [
+          {
+            name: '查询应用',
+            type: 2,
+            openModel: 0,
+            path: '/api/oauth2/base-app',
+            method: '["GET"]',
+            permissionId: 'sys:app:query',
+          },
         ]
       }
     ]

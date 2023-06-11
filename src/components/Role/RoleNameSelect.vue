@@ -4,7 +4,7 @@
     <el-select
       v-model="roleName"
       v-load-more="loadMore"
-      style="width: 200px;"
+      style="width: 230px;"
       :loading="loading"
       allow-create
       clearable

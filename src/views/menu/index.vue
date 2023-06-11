@@ -22,9 +22,10 @@
             :data="menus"
             :filter-node-method="filterNode"
             :expand-on-click-node="false"
+            :highlight-current="highlightCurrent"
             default-expand-all
             node-key="id"
-            @node-contextmenu="rightClick"
+            @node-click="menuNodeClick"
           >
             <template v-slot="{ node, data }">
               <span>
@@ -34,8 +35,8 @@
             </template>
           </el-tree>
         </el-aside>
-        <el-main>
-          <div class="menu-detail-header">角色管理</div>
+        <el-main class="detail">
+          <DetailMenu v-show="selectMenu.menuFullName !== ''" :select-menu="selectMenu" />
         </el-main>
       </el-container>
     </el-container>
@@ -53,6 +54,7 @@ export default {
   name: 'MenuPage',
   components: {
     CreateMenuDialog: () => import('@/views/menu/components/CreateMenuDialog'),
+    DetailMenu: () => import('@/views/menu/components/DetailMenu'),
   },
   data() {
     return {
@@ -62,7 +64,11 @@ export default {
         label: 'name',
         children: 'children'
       },
-      menuVisible: false,
+      highlightCurrent: true, // 高亮显示  不让背景消失
+      selectMenu: { // 当前选中的菜单
+        menuFullName: ''
+      },
+      // menuVisible: false,
       createMenuDialog: false, // 创建菜单弹窗
     }
   },
@@ -111,6 +117,22 @@ export default {
         this.getReturnNode(node.parent, _array, value);
       }
     },
+    menuNodeClick(data, node) { // 菜单节点被点击
+      console.log(data)
+      console.log(node)
+      this.selectMenu = { ...data }
+      this.selectMenu.menuFullName = this.getMenuAllName(node)
+    },
+    getMenuAllName(node) {
+      if (node) {
+        if (node.level !== 1) {
+          return this.getMenuAllName(node.parent) + " / " + node.data.name
+        } else {
+          return node.data.name;
+        }
+      }
+      return ""
+    },
     addMenu() { // 新增菜单
       this.createMenuDialog = true
     },
@@ -124,7 +146,6 @@ export default {
     padding: 20px 20px;
     border-bottom: 1px solid $borderColor;
   }
-
   .app-inner-container {
     min-height: calc(100vh - 126px);
     padding: 0 20px;
@@ -141,34 +162,6 @@ export default {
           display: inline-block;
           margin-left: 5px;
         }
-      }
-    }
-    .option{
-      width: 100px;
-      height: 100px;
-      left: 85px;
-      position: absolute;
-      top: 62px;
-      .menu__item {
-        display: block;
-        line-height: 20px;
-        text-align: center;
-        margin-top: 10px;
-        border-radius: 5px;
-      }
-      .menu {
-        height: 100%;
-        width: 100%;
-        position: relative;
-        border-radius: 5px;
-        border: 1px solid #999999;
-        background-color: #f4f4f4;
-        padding: 0px 2px;
-      }
-      li:hover {
-        background-color: #1790ff;
-        color: white;
-        cursor: pointer;
       }
     }
   }

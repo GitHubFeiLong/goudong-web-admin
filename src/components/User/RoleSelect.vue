@@ -9,7 +9,7 @@
       filterable
       :multiple="roleMultiple === true"
       placeholder="请输入角色名称"
-      style="width: 200px;"
+      style="width: 230px;"
       @change="change"
     >
       <el-option

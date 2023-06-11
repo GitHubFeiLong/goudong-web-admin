@@ -2,23 +2,31 @@
   <div class="app-container">
     <!--  查询条件  -->
     <div class="filter-container">
-      <span class="filter-item-first-condition">角色名称: </span>
-      <RoleNameSelect ref="RoleNameSelect" class="filter-item" clearable @getRoleName="getRoleName" />
-      <span class="filter-item-condition">角色标识: </span>
-      <el-input v-model="filter.roleName" class="filter-item filter-item-input" clearable placeholder="请输入" />
-      <span class="filter-item-condition">备注: </span>
-      <el-input v-model="filter.remark" class="filter-item filter-item-input" clearable placeholder="请输入" />
-      <!-- 操作菜单  -->
-      <el-button
-        class="filter-item filter-btn-first"
-        icon="el-icon-search"
-        type="primary"
-        @click="searchFunc"
-      >
-        查询
-      </el-button>
-      <!--不加icon会小一个像素的高度-->
-      <el-button class="filter-item filter-btn" icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+      <div class="filter-item">
+        <span class="filter-item-label">角色名称: </span>
+        <RoleNameSelect ref="RoleNameSelect" clearable @getRoleName="getRoleName" />
+      </div>
+      <div class="filter-item">
+        <span class="filter-item-label">角色标识: </span>
+        <el-input v-model="filter.roleName" clearable placeholder="请输入" />
+      </div>
+      <div class="filter-item">
+        <span class="filter-item-label">备注: </span>
+        <el-input v-model="filter.remark" clearable placeholder="请输入" />
+      </div>
+      <div class="filter-item">
+        <el-button
+          icon="el-icon-search"
+          type="primary"
+          @click="searchFunc"
+        >
+          查询
+        </el-button>
+      </div>
+      <div class="filter-item">
+        <!--不加icon会小一个像素的高度-->
+        <el-button icon="el-icon-setting" @click="resetSearchFilter">重置</el-button>
+      </div>
     </div>
     <!--顶部操作栏-->
     <div class="el-table-tool">
@@ -302,13 +310,26 @@ export default {
     generate(item) {
       const obj = {
         name: item.name,
-        path: item.path,
-        api: item.api,
-        method: item.method,
         type: item.type,
         openModel: item.openModel,
-        sortNum: item.sortNum,
-        hide: item.hidden
+        path: item.path,
+        permissionId: item.permissionId,
+        method: item.method,
+        metadata: item.meta,
+      }
+      if (item.meta) {
+        if (item.meta.icon) {
+          obj.icon = item.meta.icon
+        }
+        if (!item.meta.title) {
+          obj.metadata.title = obj.name
+        }
+
+        obj.metadata = JSON.stringify(obj.metadata)
+      }
+      // 菜单（组件）未单独配置组件路由
+      if (item.type === 1 && !item.componentPath) {
+        obj.componentPath = item.path
       }
 
       if (item.children) {

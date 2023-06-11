@@ -53,7 +53,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="菜单图标:" prop="remark" :class="iconInputClass">
-            <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" clearable>
+            <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" :disabled="menu.type === 2" clearable>
               <template #prefix>
                 <span style="padding-left: 5px; color: #606266 ">
                   <i :class="menu.icon" />
@@ -92,7 +92,7 @@
               multiple
               collapse-tags
               placeholder="请选择请求方式"
-              :disabled="menu.type !== 0"
+              :disabled="menu.type === 1"
             >
               <el-option
                 v-for="item in methods"
@@ -107,7 +107,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="排序号:" prop="sortNum">
-            <el-input-number v-model="menu.sortNum" controls-position="right" :min="1" :max="99999" />
+            <el-input-number v-model="menu.sortNum" :disabled="menu.type === 2" controls-position="right" :min="1" :max="99999" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -239,20 +239,26 @@ export default {
       }
     },
     'menu.type'() {
-      if (this.menu.type !== 0) {
-        this.menu.method = undefined
-        this.menu.metadata = undefined
-        this.menu.hide = false
-        this.routePath = {
-          label: '路由地址:',
-          placeholder: '请输入路由地址'
-        }
-      } else {
-        this.menu.hide = true
-        this.routePath = {
-          label: '接口地址:',
-          placeholder: '请输入接口地址'
-        }
+      switch (this.menu.type) {
+        case 0:
+          this.menu.hide = true
+          this.routePath = {
+            label: '接口地址:',
+            placeholder: '请输入接口地址'
+          }
+          break;
+        case 1:
+          this.menu.method = undefined
+          this.menu.metadata = undefined
+          this.menu.hide = false
+          this.routePath = {
+            label: '路由地址:',
+            placeholder: '请输入路由地址'
+          }
+          break;
+        default:
+          this.menu.icon = ''
+          break;
       }
     },
     'menu.icon'() {
