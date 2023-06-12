@@ -192,6 +192,30 @@ export const goudongWebAdminResource = [
             method: '["GET"]',
             permissionId: 'sys:app:query',
           },
+          {
+            name: '申请应用',
+            type: 2,
+            openModel: 0,
+            path: '/api/oauth2/base-app',
+            method: '["POST"]',
+            permissionId: 'sys:app:apply',
+          },
+          {
+            name: '审核应用',
+            type: 2,
+            openModel: 0,
+            path: '/api/oauth2/base-app/audit',
+            method: '["PUT"]',
+            permissionId: 'sys:app:audit',
+          },
+          {
+            name: '删除应用',
+            type: 2,
+            openModel: 0,
+            path: '/api/oauth2/base-app/*',
+            method: '["DELETE"]',
+            permissionId: 'sys:app:delete',
+          },
         ]
       }
     ]

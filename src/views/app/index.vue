@@ -56,7 +56,7 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="dialog.create.creating=true">
+        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="dialog.create.open=true">
           新增
         </el-button>
       </div>
@@ -114,6 +114,11 @@
         sortable
       />
       <el-table-column
+        label="应用id"
+        prop="appId"
+        sortable
+      />
+      <el-table-column
         label="应用密钥"
         prop="appSecret"
         sortable
@@ -141,6 +146,19 @@
         sortable
         show-overflow-tooltip
       />
+      <!--操作-->
+      <el-table-column
+        label="操作"
+        width="230"
+        align="left"
+      >
+        <template v-slot="scope">
+          <div class="el-link-parent">
+            <a v-if="Number(scope.row.status) === 0" class="el-link el-link--primary" @click="dialogAudit(scope.row)"><i class="el-icon-edit" />审核</a>
+            <a class="el-link el-link--danger" @click="deleteRow(scope.row)"><i class="el-icon-delete" />删除</a>
+          </div>
+        </template>
+      </el-table-column>
       <!--隐藏-->
       <el-table-column
         v-if="false"
@@ -161,18 +179,37 @@
     />
 
     <!--  申请应用弹窗  -->
-    <el-dialog title="申请应用" width="600px" :visible.sync="dialog.create.creating" @close="dialog.create.creating = false">
+    <el-dialog title="申请应用" width="600px" :visible.sync="dialog.create.open" @close="dialog.create.open = false">
       <el-form ref="createForm" :model="dialog.create.form.data" :rules="dialog.create.form.rules" label-width="80px">
         <el-form-item label="应用名" prop="appName">
           <el-input v-model="dialog.create.form.data.appName" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="dialog.create.form.data.remark" clearable />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogCreateCancel">取 消</el-button>
-        <el-button type="primary" @click="dialogCreateSubmit('editUser')">确 定</el-button>
+        <el-button type="primary" @click="dialogCreateSubmit()">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--  审核应用弹窗  -->
+    <el-dialog title="审核应用" width="600px" :visible.sync="dialog.audit.open" @close="dialog.audit.open = false">
+      <el-form ref="createForm" :model="dialog.audit.form.data" :rules="dialog.audit.form.rules" label-width="80px">
+        <el-form-item label="应用名" prop="appName">
+          <el-input v-model="dialog.audit.form.data.appName" disabled />
+        </el-form-item>
+        <el-form-item label="审核结果" prop="status">
+          <el-radio-group v-model="dialog.audit.form.data.status">
+            <el-radio :label="1">通过</el-radio>
+            <el-radio :label="2">拒绝</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="dialog.audit.form.data.remark" clearable />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAuditCancel()">取 消</el-button>
+        <el-button type="primary" @click="dialogAuditSubmit()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -181,9 +218,9 @@
 <script>
 
 import { APP_STATUS_ARRAY, DATE_PICKER_DEFAULT_OPTIONS } from "@/constant/commons";
-import { applyAppApi, pageAppApi } from "@/api/app";
+import { applyAppApi, auditAppApi, deleteAppApi, pageAppApi } from "@/api/app";
 import * as validate from "@/utils/validate";
-import { simpleCreateUser } from "@/api/user";
+import { deleteUserById, simpleCreateUser } from "@/api/user";
 import { Message } from "element-ui";
 
 export default {
@@ -218,19 +255,24 @@ export default {
         // 显示大小
         size: 'medium'
       },
-
+      // 弹窗相关
       dialog: {
-        create: {
-          creating: false,
+        create: { // 新增/创建
+          open: false, // 是否打开窗口
           form: {
-            data: {},
-            rules: {
+            data: {}, // 弹窗的数据
+            rules: { // 弹窗的规则
               appName: [
                 { required: true, message: '请填写应用名称', trigger: 'blur' },
               ],
             }
           }
-
+        },
+        audit: {
+          open: false, // 是否打开窗口
+          form: {
+            data: {}, // 弹窗的数据
+          }
         }
       }
     }
@@ -343,7 +385,7 @@ export default {
     // 弹窗
     // 新增
     dialogCreateCancel() {
-      this.dialog.create.creating = false
+      this.dialog.create.open = false
       this.dialog.create.form.data = {}
     },
     dialogCreateSubmit() {
@@ -364,6 +406,44 @@ export default {
       });
     },
 
+    // 打开审核
+    dialogAudit(row) {
+      this.dialog.audit.open = true
+      this.dialog.audit.form.data = {
+        id: row.id,
+        appName: row.appName
+      }
+    },
+    dialogAuditCancel() {
+      this.dialog.audit.open = false
+      this.dialog.audit.form.data = {}
+    },
+    dialogAuditSubmit() {
+      auditAppApi(this.dialog.audit.form.data).then(response => {
+        // 保存成功
+        Message({
+          message: '审核成功',
+          type: 'success',
+        })
+        this.dialogAuditCancel()
+        this.load();
+      })
+    },
+    // 删除行
+    deleteRow(row) {
+      this.$confirm('此操作将永久删除该应用, 是否继续?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteAppApi(row.id).then(data => {
+          this.$message.success("删除成功")
+          this.load()
+        })
+      }).catch(() => {
+        this.$message.info("已取消删除");
+      })
+    },
   }
 }
 </script>

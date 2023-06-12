@@ -22,3 +22,23 @@ export function applyAppApi(data) {
   })
 }
 
+/**
+ * 审核应用
+ */
+export function auditAppApi(data) {
+  return request({
+    url: `/api/oauth2/base-app/audit`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 删除应用
+ */
+export function deleteAppApi(id) {
+  return request({
+    url: `/api/oauth2/base-app/${id}`,
+    method: 'delete',
+  })
+}

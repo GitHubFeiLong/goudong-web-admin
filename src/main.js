@@ -54,12 +54,18 @@ Vue.config.productionTip = false
 // 全局指令
 Vue.directive('permission', {
   // 或事件监听器应用前调用
-  inserted(el, binding) {
+  inserted(el, binding, vnode) {
+    console.log(el, binding, vnode)
     const value = binding.value;
     if (!checkPermission(value)) {
-      console.log("匹配")
       // 没有权限 移除Dom元素
-      el.parentNode && el.parentNode.removeChild(el)
+      if (binding.modifiers['remove']) {
+        el.parentNode && el.parentNode.removeChild(el)
+      } else if (binding.modifiers['hide']) {
+        el.style.zIndex = -9999
+      } else {
+        el.parentNode && el.parentNode.removeChild(el)
+      }
     }
   },
 })
