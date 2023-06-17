@@ -18,7 +18,6 @@ const state = {
   introduction: '',
   roles: [],
   menus: [],
-  permission_buttons: [], // 权限按钮集合
 }
 
 const mutations = {
@@ -37,7 +36,6 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_PERMISSION_BUTTONS: (state, permission_buttons) => { state.permission_buttons = permission_buttons; },
 }
 import { arrayToTree } from "@/utils/tree";
 const actions = {
@@ -100,7 +98,6 @@ const actions = {
 
         commit('SET_TOKEN', accessToken)
         commit('SET_ROLES', roles)
-        commit('SET_PERMISSION_BUTTONS', permission_buttons)
         commit('SET_NAME', username)
         commit('SET_AVATAR', user.avatar || defaultAvatarPng)
         commit('SET_INTRODUCTION', nickname)

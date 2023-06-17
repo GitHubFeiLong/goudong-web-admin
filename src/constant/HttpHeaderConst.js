@@ -14,6 +14,11 @@ export const BEARER = 'Bearer '
  */
 export const X_AES_KEY = 'X-Aes-Key'
 
+/**
+ * X-App-Id 请求头
+ */
+export const X_APP_ID = 'X-App-Id'
+
 export const CONTENT_DISPOSITION = 'content-disposition'
 export const CONTENT_LENGTH = 'content-length'
 export const CONTENT_RANGE = 'content-range'

@@ -7,19 +7,19 @@ import { validateDate, validateUrlAuthentication, validateUrlNotAuthentication }
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
 import { TOKEN_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
 import { refresh } from '@/api/user'
-import { AUTHORIZATION, BEARER } from '@/constant/HttpHeaderConst'
+import { AUTHORIZATION, BEARER, X_APP_ID } from '@/constant/HttpHeaderConst'
 import { DO_NOT_HANDLE_ERROR_MESSAGE } from "@/constant/DataMapConst";
 
 // 按照axios官方提示需要引入这两步
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
-
+// 应用Id
+const APP_ID = 'gdmty2nzc3otq1mdczmdqynjm2oa';
 /*
   记录下笔记：
   1. 顺序大致如下 ：请求拦截器 -> 响应拦截器 -> 自定义的catch -> 响应拦截器里的catch
   2. resolve和reject的参数共享，和后端的引用变量一样
  */
-
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   baseURL: process.env.GATEWAY_URL, // url = base url + request url
@@ -30,19 +30,27 @@ const service = axios.create({
   headers: {
     get: {
       'X-Client-Side': 'browser',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-App-Id': APP_ID
     },
     post: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
+      'X-App-Id': APP_ID
     },
     put: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
+      'X-App-Id': APP_ID
+    },
+    delete: {
+      'X-Client-Side': 'browser',
+      'X-App-Id': APP_ID
     },
     patch: {
       'X-Client-Side': 'browser',
-      'Content-Type': 'application/json;'
+      'Content-Type': 'application/json;',
+      'X-App-Id': APP_ID
     }
   },
   // `transformRequest` 允许在向服务器发送前，修改请求数据

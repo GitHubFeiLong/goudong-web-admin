@@ -1,4 +1,6 @@
 import store from '@/store'
+import LocalStorageUtil from "@/utils/LocalStorageUtil";
+import { PERMISSION_BUTTONS_LOCAL_STORAGE } from "@/constant/LocalStorageConst";
 
 /**
  * @param {Array} value
@@ -8,7 +10,7 @@ import store from '@/store'
 export default function checkPermission(value) {
   if (value) {
     // 判断按钮权限有没有
-    const permissionButton = store.getters.permissionButtons.find((item, index, arr) => item.permissionId === value);
+    const permissionButton = LocalStorageUtil.get(PERMISSION_BUTTONS_LOCAL_STORAGE).find((item, index, arr) => item.permissionId === value);
     return permissionButton !== null && permissionButton !== undefined
   }
   return false
