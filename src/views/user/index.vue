@@ -252,9 +252,30 @@
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a v-permission="'sys:user:edit'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editUser(scope.row)"><i class="el-icon-edit" />编辑</a>
-            <a v-permission="'sys:user:reset-password'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="resetPassword(scope.row)"><i class="el-icon-key" />重置密码</a>
-            <a v-permission="'sys:user:delete'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--danger': true}" @click="deleteUser(scope.row)"><i class="el-icon-delete" />删除</a>
+            <el-link
+              v-permission="'sys:user:edit'"
+              icon="el-icon-edit"
+              :underline="false"
+              type="primary"
+              :disabled="Number(scope.row.id) < 100"
+              @click="editUser(scope.row)"
+            >编辑</el-link>
+            <el-link
+
+              icon="el-icon-key"
+              :underline="false"
+              type="warning"
+              :disabled="Number(scope.row.id) < 100"
+              @click="resetPassword(scope.row)"
+            >重置密码</el-link>
+            <el-link
+              v-permission="'sys:user:delete'"
+              icon="el-icon-delete"
+              :underline="false"
+              type="danger"
+              :disabled="Number(scope.row.id) < 100"
+              @click="deleteUser(scope.row)"
+            >删除</el-link>
           </div>
         </template>
       </el-table-column>

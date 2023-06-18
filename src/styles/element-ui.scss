@@ -91,13 +91,17 @@
       margin-left: 10px;
     }
     // 图标后面加一个空格
-    i[class^="el-icon"]{
-      &::after{
-        width: 5px;
-        display: inline-block;
-        content: " ";
-      }
-    }
+    //i[class^="el-icon"]{
+    //  &::after{
+    //    width: 5px;
+    //    display: inline-block;
+    //    content: " ";
+    //  }
+    //}
+  }
+  .el-link-disable {
+    pointer-events: none;
+    opacity: 0.5;
   }
 
 }

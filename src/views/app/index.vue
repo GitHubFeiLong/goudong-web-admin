@@ -149,13 +149,24 @@
       <!--操作-->
       <el-table-column
         label="操作"
-        width="230"
-        align="left"
+        align="center"
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a :class="{'el-link-disable': Number(scope.row.id) === 1667779450730426368,'el-link':true, 'el-link--primary': true}" @click="dialogAudit(scope.row)"><i class="el-icon-edit" />审核</a>
-            <a :class="{'el-link-disable': Number(scope.row.id) === 1667779450730426368,'el-link':true, 'el-link--danger': true}" @click="deleteRow(scope.row)"><i class="el-icon-delete" />删除</a>
+            <el-link
+              icon="el-icon-edit"
+              :underline="false"
+              type="primary"
+              :disabled="Number(scope.row.id) === 1667779450730426368"
+              @click="dialogAudit(scope.row)"
+            >审核</el-link>
+            <el-link
+              icon="el-icon-delete"
+              :underline="false"
+              type="danger"
+              :disabled="Number(scope.row.id) === 1667779450730426368"
+              @click="deleteRow(scope.row)"
+            >删除</el-link>
           </div>
         </template>
       </el-table-column>

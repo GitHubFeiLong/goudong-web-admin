@@ -94,46 +94,58 @@
       <el-table-column
         fixed
         label="角色名称"
-        min-width="300"
         prop="roleNameCn"
         sortable
       />
       <el-table-column
         fixed
         label="角色标识"
-        min-width="300"
         prop="roleName"
         sortable
       />
       <el-table-column
         fixed
         label="用户数量"
-        min-width="80"
         prop="userNumbers"
         sortable
       />
       <el-table-column
         label="备注"
-        min-width="300"
         prop="remark"
         show-overflow-tooltip
       />
       <el-table-column
         label="创建时间"
-        min-width="150"
         prop="createTime"
         sortable
       />
       <el-table-column
-        fixed="right"
         label="操作"
-        min-width="180"
+        align="center"
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editRole(scope.row)"><i class="el-icon-edit" />编辑</a>
-            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editRoleMenu(scope.row)"><i class="el-icon-finished" />权限</a>
-            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--danger': true}" @click="deleteRole(scope.row.id)"><i class="el-icon-delete" />删除</a>
+            <el-link
+              icon="el-icon-edit"
+              :underline="false"
+              type="primary"
+              :disabled="Number(scope.row.id) < 100"
+              @click="editRole(scope.row)"
+            >编辑</el-link>
+            <el-link
+              icon="el-icon-finished"
+              :underline="false"
+              type="primary"
+              :disabled="Number(scope.row.id) < 100"
+              @click="editRoleMenu(scope.row)"
+            >权限</el-link>
+            <el-link
+              icon="el-icon-delete"
+              :underline="false"
+              type="danger"
+              :disabled="Number(scope.row.id) < 100"
+              @click="deleteRole(scope.row.id)"
+            >删除</el-link>
           </div>
         </template>
       </el-table-column>

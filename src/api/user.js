@@ -2,8 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   const username = data.username;
-  const password = data.username;
-  console.log(username, password)
+  const password = data.password;
   return request({
     url: `/api/oauth2/authentication/login?username=${username}&password=${password}`,
     method: 'post'
