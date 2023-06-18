@@ -129,6 +129,7 @@
     &::before {
       height: 0px; // 去掉底部的边框
     }
+
   }
   th {
     &:nth-last-child(1){
@@ -147,6 +148,8 @@
         border-right: none !important;
       }
     }
+
+
   }
 
   span.caret-wrapper{
@@ -165,7 +168,6 @@
   .el-table__body-wrapper{
     .el-table__body{
       tbody{
-
         .el-table__row{
           .cell{
             .el-tag{
@@ -174,14 +176,20 @@
                 margin-left: 5px;
               }
             }
+
           }
         }
       }
     }
   }
-
 }
-
+// 表格操作栏
+.el-link-parent {
+  .el-link-disable {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
 // 分页组件
 .el-pagination {
   text-align: center;

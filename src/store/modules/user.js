@@ -68,21 +68,24 @@ const actions = {
           // 循环所有
           user.menus.map((item, index, array) => {
             const metadata = item.metadata ? JSON.parse(item.metadata) : {};
-            if (item.type === 1) { // 菜单
-              permission_routes.push({
-                id: item.id,
-                parentId: item.parentId,
-                path: item.path,
-                name: item.name,
-                alwaysShow: item.parentId == null ? !item.hide : undefined,
-                meta: metadata,
-                sortNum: item.sortNum,
-                openModel: item.openModel
-              })
-            } else if (item.type === 2) { // 按钮
-              permission_buttons.push({
-                permissionId: item.permissionId
-              })
+            switch (item.type) {
+              case 1:
+                // 菜单
+                permission_routes.push({
+                  id: item.id,
+                  parentId: item.parentId,
+                  path: item.path,
+                  componentPath: item.componentPath,
+                  name: item.name,
+                  alwaysShow: item.parentId == null ? !item.hide : undefined,
+                  meta: metadata,
+                  sortNum: item.sortNum,
+                  openModel: item.openModel
+                })
+                break;
+              default: // 按钮
+                permission_buttons.push(item.permissionId)
+                break;
             }
           })
         }

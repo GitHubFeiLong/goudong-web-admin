@@ -154,8 +154,8 @@
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a v-if="Number(scope.row.status) === 0" class="el-link el-link--primary" @click="dialogAudit(scope.row)"><i class="el-icon-edit" />审核</a>
-            <a class="el-link el-link--danger" @click="deleteRow(scope.row)"><i class="el-icon-delete" />删除</a>
+            <a :class="{'el-link-disable': Number(scope.row.id) === 1667779450730426368,'el-link':true, 'el-link--primary': true}" @click="dialogAudit(scope.row)"><i class="el-icon-edit" />审核</a>
+            <a :class="{'el-link-disable': Number(scope.row.id) === 1667779450730426368,'el-link':true, 'el-link--danger': true}" @click="deleteRow(scope.row)"><i class="el-icon-delete" />删除</a>
           </div>
         </template>
       </el-table-column>

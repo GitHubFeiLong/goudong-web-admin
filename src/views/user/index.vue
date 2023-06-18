@@ -57,10 +57,10 @@
         <el-button v-permission="'sys:user:delete'" class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteUsers">
           删除
         </el-button>
-        <el-button class="el-button--small" icon="el-icon-upload2" @click="importUserDialog=true">
+        <el-button v-permission="'sys:user:import'" class="el-button--small" icon="el-icon-upload2" @click="importUserDialog=true">
           导入
         </el-button>
-        <el-button class="el-button--small" icon="el-icon-download" @click="exportExcel">
+        <el-button v-permission="'sys:user:export'" class="el-button--small" icon="el-icon-download" @click="exportExcel">
           导出
         </el-button>
       </div>
@@ -252,9 +252,9 @@
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editUser(scope.row)"><i class="el-icon-edit" />编辑</a>
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="resetPassword(scope.row)"><i class="el-icon-key" />重置密码</a>
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--danger" @click="deleteUser(scope.row)"><i class="el-icon-delete" />删除</a>
+            <a v-permission="'sys:user:edit'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editUser(scope.row)"><i class="el-icon-edit" />编辑</a>
+            <a v-permission="'sys:user:reset-password'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="resetPassword(scope.row)"><i class="el-icon-key" />重置密码</a>
+            <a v-permission="'sys:user:delete'" :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--danger': true}" @click="deleteUser(scope.row)"><i class="el-icon-delete" />删除</a>
           </div>
         </template>
       </el-table-column>

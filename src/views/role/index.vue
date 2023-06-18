@@ -131,9 +131,9 @@
       >
         <template v-slot="scope">
           <div class="el-link-parent">
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editRole(scope.row)"><i class="el-icon-edit" />编辑</a>
-            <a v-if="Number(scope.row.id) > 100" class="el-link el-link--primary" @click="editRoleMenu(scope.row)"><i class="el-icon-finished" />权限</a>
-            <a v-if="Number(scope.row.id) > 100 && scope.row.userNumbers == 0" class="el-link el-link--danger" @click="deleteRole(scope.row.id)"><i class="el-icon-delete" />删除</a>
+            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editRole(scope.row)"><i class="el-icon-edit" />编辑</a>
+            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--primary': true}" @click="editRoleMenu(scope.row)"><i class="el-icon-finished" />权限</a>
+            <a :class="{'el-link-disable': Number(scope.row.id) < 100,'el-link':true, 'el-link--danger': true}" @click="deleteRole(scope.row.id)"><i class="el-icon-delete" />删除</a>
           </div>
         </template>
       </el-table-column>

@@ -59,7 +59,10 @@ Vue.directive('permission', {
     const value = binding.value;
     if (!checkPermission(value)) {
       // 没有权限 移除Dom元素
-      if (binding.modifiers['remove']) {
+      if (binding.modifiers['disable']) {
+        console.log(el.classList)
+        el.classList.add("el-link-disable")
+      } else if (binding.modifiers['remove']) {
         el.parentNode && el.parentNode.removeChild(el)
       } else if (binding.modifiers['hide']) {
         el.style.zIndex = -9999
