@@ -55,13 +55,11 @@ Vue.config.productionTip = false
 Vue.directive('permission', {
   // 或事件监听器应用前调用
   inserted(el, binding, vnode) {
-    console.log(el, binding, vnode)
     const value = binding.value;
     if (!checkPermission(value)) {
       // 没有权限 移除Dom元素
       if (binding.modifiers['disable']) {
-        console.log(el.classList)
-        el.classList.add("el-link-disable")
+        el.classList.add("is-disabled")
       } else if (binding.modifiers['remove']) {
         el.parentNode && el.parentNode.removeChild(el)
       } else if (binding.modifiers['hide']) {
