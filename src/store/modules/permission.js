@@ -4,7 +4,6 @@ import {
   goudongWebAdminComponent,
 } from "@/router/modules/goudong-web-admin-router";
 import vueElementAdminRouter from "@/router/modules/vue-element-admin-router";
-import componentsRouter from "@/router/modules/components";
 
 function hasPermissionByMenus(menus, route) {
   if (route.type !== 0 && route.path) {
@@ -59,7 +58,7 @@ const actions = {
       // 循环设置组件
       permissionRoutesComponent(permission_routes);
       commit('SET_ROUTES', permission_routes)
-      // permission_routes = permission_routes.concat(vueElementAdminRouter).concat(componentsRouter)
+      permission_routes = constantRoutes.concat(vueElementAdminRouter).concat(permission_routes)
       resolve(permission_routes)
     })
   }

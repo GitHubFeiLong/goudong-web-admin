@@ -5,6 +5,20 @@
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
+      <el-form-item prop="appId">
+        <span class="svg-container">
+          <svg-icon icon-class="tree" />
+        </span>
+        <el-input
+          ref="appId"
+          v-model="loginForm.appId"
+          placeholder="AppId"
+          name="appId"
+          type="text"
+          tabindex="1"
+          autocomplete="on"
+        />
+      </el-form-item>
 
       <el-form-item prop="username">
         <span class="svg-container">
@@ -47,7 +61,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div style="position:relative">
+      <!--      <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
           <span>Password : admin</span>
@@ -60,7 +74,7 @@
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           Or connect with
         </el-button>
-      </div>
+      </div>-->
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -76,6 +90,8 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import { APP_ID } from "@/constant/LocalStorageConst";
+import LocalStorageUtil from "@/utils/LocalStorageUtil";
 
 export default {
   name: 'Login',
@@ -83,11 +99,13 @@ export default {
   data() {
     return {
       loginForm: {
+        appId: 'gdmty2nzc3otq1mdczmdqynjm2oa',
         username: 'admin',
         password: 'admin'
       },
       // 规则
       loginRules: {
+        appId: [{ required: true, trigger: 'blur' }],
         username: [{ required: true, trigger: 'blur' }],
         password: [{ required: true, trigger: 'blur' }]
       },
@@ -141,6 +159,7 @@ export default {
     },
     handleLogin() {
       // element的表单验证
+      LocalStorageUtil.set(APP_ID, this.loginForm.appId);
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true

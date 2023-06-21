@@ -13,8 +13,7 @@ import { DO_NOT_HANDLE_ERROR_MESSAGE } from "@/constant/DataMapConst";
 // 按照axios官方提示需要引入这两步
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
-// 应用Id
-const APP_ID = 'gdmty2nzc3otq1mdczmdqynjm2oa';
+
 /*
   记录下笔记：
   1. 顺序大致如下 ：请求拦截器 -> 响应拦截器 -> 自定义的catch -> 响应拦截器里的catch
@@ -31,26 +30,21 @@ const service = axios.create({
     get: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/x-www-form-urlencoded',
-      'X-App-Id': APP_ID
     },
     post: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
-      'X-App-Id': APP_ID
     },
     put: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
-      'X-App-Id': APP_ID
     },
     delete: {
       'X-Client-Side': 'browser',
-      'X-App-Id': APP_ID
     },
     patch: {
       'X-Client-Side': 'browser',
       'Content-Type': 'application/json;',
-      'X-App-Id': APP_ID
     }
   },
   // `transformRequest` 允许在向服务器发送前，修改请求数据
@@ -119,6 +113,10 @@ service.interceptors.request.use(async config => {
     // eslint-disable-next-line require-atomic-updates
     config.headers[AUTHORIZATION] = BEARER + LocalStorageUtil.getAccessToken()
   }
+
+  // 添加请求头 appId
+  config.headers[X_APP_ID] = LocalStorageUtil.getAppId();
+
   console.log("请求拦截器", config)
   return config
 }, error => {
