@@ -13,7 +13,7 @@ import { DO_NOT_HANDLE_ERROR_MESSAGE } from "@/constant/DataMapConst";
 // 按照axios官方提示需要引入这两步
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
-
+const appId = 'gd$1$aMTY2Nzc3OTQ1MDczMDQyNjM2OA'
 /*
   记录下笔记：
   1. 顺序大致如下 ：请求拦截器 -> 响应拦截器 -> 自定义的catch -> 响应拦截器里的catch
@@ -115,7 +115,7 @@ service.interceptors.request.use(async config => {
   }
 
   // 添加请求头 appId
-  config.headers[X_APP_ID] = LocalStorageUtil.getAppId();
+  config.headers[X_APP_ID] = appId;
 
   console.log("请求拦截器", config)
   return config

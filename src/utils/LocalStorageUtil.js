@@ -1,4 +1,4 @@
-import { APP_ID, TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
+import { TOKEN_LOCAL_STORAGE, USER_LOCAL_STORAGE } from '@/constant/LocalStorageConst'
 
 /**
  * localStorage 封装
@@ -51,10 +51,6 @@ export default class LocalStorageUtil {
    */
   static remove(key) {
     LocalStorageUtil.s.removeItem(key)
-  }
-
-  static getAppId() {
-    return LocalStorageUtil.get(APP_ID)
   }
 
   static getUser() {

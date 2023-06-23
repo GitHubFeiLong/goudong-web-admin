@@ -1,10 +1,5 @@
 /* LocalStorage相关常量*/
 /**
- * 应用Id
- * @type {string}
- */
-export const APP_ID = "app-id";
-/**
  * 用户的基本信息存储到本地
  */
 export const USER_LOCAL_STORAGE = 'user'
