@@ -1,6 +1,5 @@
 /** 自定义的菜单路由配置 **/
 
-import Layout from '@/layout'
 import { treeToArr } from "@/utils/tree";
 
 /**
@@ -35,7 +34,7 @@ export const goudongWebAdminResource = [
     alwaysShow: true, // will always show the root menu
     meta: {
       title: '系统管理',
-      icon: 'peoples',
+      icon: 'el-icon-s-tools',
     },
     children: [
       {
@@ -48,7 +47,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:user',
         meta: {
           title: '用户管理',
-          icon: 'peoples',
+          icon: 'el-icon-s-custom',
         },
         children: [
           {
@@ -174,7 +173,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:menu',
         meta: {
           title: '菜单管理',
-          icon: 'peoples',
+          icon: 'el-icon-menu',
         },
         children: [
           {

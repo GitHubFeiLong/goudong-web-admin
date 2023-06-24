@@ -11,6 +11,7 @@ import '@/styles/index.scss' // global css
 import '@/styles/dialog.scss' // global css
 import '@/styles/table.scss' // global css
 import '@/styles/variables.scss' // global css
+
 import App from './App'
 import store from './store'
 import router from './router'

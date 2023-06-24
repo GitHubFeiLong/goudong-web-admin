@@ -29,7 +29,8 @@
           >
             <template v-slot="{ node, data }">
               <span>
-                <i :class="data.icon" />
+                <i v-if="data.type === 1" class="el-icon-folder" />
+                <i v-else class="el-icon-document" />
                 <span class="el-tree-node-span">{{ data.name }}</span>
               </span>
             </template>
