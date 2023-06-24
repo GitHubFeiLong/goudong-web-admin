@@ -47,7 +47,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:user',
         meta: {
           title: '用户管理',
-          icon: 'el-icon-s-custom',
+          icon: 'peoples',
         },
         children: [
           {
@@ -118,7 +118,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:role',
         meta: {
           title: '角色管理',
-          icon: 'peoples',
+          icon: 'iconfont-jueseguanli',
         },
         children: [
           {
@@ -173,7 +173,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:menu',
         meta: {
           title: '菜单管理',
-          icon: 'el-icon-menu',
+          icon: 'iconfont-caidanguanli',
         },
         children: [
           {
@@ -196,7 +196,7 @@ export const goudongWebAdminResource = [
         permissionId: 'sys:app',
         meta: {
           title: '应用管理',
-          icon: 'peoples',
+          icon: 'iconfont-yingyongguanli',
         },
         children: [
           {

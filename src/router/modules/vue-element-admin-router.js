@@ -254,7 +254,9 @@ const vueElementAdminRouter = [
     component: Layout,
     children: [
       {
-        path: 'https://github.com/PanJiaChen/vue-element-ROLE_ADMIN',
+        // path: 'https://github.com/PanJiaChen/vue-element-ROLE_ADMIN',
+        path: 'index',
+        name: 'link',
         meta: { title: 'External Link', icon: 'link' }
       }
     ]
