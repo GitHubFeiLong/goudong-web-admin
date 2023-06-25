@@ -75,22 +75,6 @@ export const goudongWebAdminResource = [
             permissionId: 'sys:user:delete',
           },
           {
-            name: '导入用户',
-            type: 2,
-            openModel: 0,
-            path: '/api/user/base-user/*',
-            method: '["POST"]',
-            permissionId: 'sys:user:import',
-          },
-          {
-            name: '导出用户',
-            type: 2,
-            openModel: 0,
-            path: '/api/user/base-user/export',
-            method: '["GET"]',
-            permissionId: 'sys:user:export',
-          },
-          {
             name: '编辑用户',
             type: 2,
             openModel: 0,
@@ -176,6 +160,14 @@ export const goudongWebAdminResource = [
           icon: 'iconfont-caidanguanli',
         },
         children: [
+          {
+            name: '初始菜单',
+            type: 2,
+            openModel: 0,
+            path: '/api/user/base-menu/init',
+            method: '["POST"]',
+            permissionId: 'sys:menu:init',
+          },
           {
             name: '查询菜单',
             type: 2,

@@ -31,7 +31,6 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button class="el-button--small" icon="el-icon-edit" type="primary" @click="initMenu">初始菜单</el-button>
         <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="addRole">新增</el-button>
         <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteRoles">删除</el-button>
         <el-button class="el-button--small" icon="el-icon-upload2">导入</el-button>
@@ -304,20 +303,6 @@ export default {
       console.log(`当前页: ${val}`)
       this.role.page = val
       this.loadPageRole()
-    },
-    // 推送菜单
-    initMenu() {
-      const menus = [];
-      console.log(goudongWebAdminResource)
-      goudongWebAdminResource.filter(f => !f.hidden).forEach((item, index, arr) => {
-        const obj = this.generate(item);
-        menus.push(obj)
-      })
-      console.log(menus);
-
-      initMenuApi(menus).then(data => {
-        this.$message.success("推送成功")
-      })
     },
     generate(item) {
       const obj = {

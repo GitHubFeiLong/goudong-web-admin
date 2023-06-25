@@ -3,6 +3,7 @@
   <div class="app-container">
     <el-container class="app-container-main">
       <el-header height="76px">
+        <el-button icon="el-icon-edit" type="primary" @click="initMenu">初始菜单</el-button>
         <el-button icon="el-icon-plus" type="primary" @click="addMenu">新增</el-button>
         <el-button @click="expandedTree(true)">展开全部</el-button>
         <el-button @click="expandedTree(false)">折叠全部</el-button>
@@ -48,8 +49,9 @@
 </template>
 
 <script>
-import { listMenuApi } from "@/api/menu";
+import { initMenuApi, listMenuApi } from "@/api/menu";
 import { excludeApi } from "@/utils/tree";
+import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
 
 export default {
   name: 'MenuPage',
@@ -133,6 +135,20 @@ export default {
         }
       }
       return ""
+    },
+    // 推送菜单
+    initMenu() {
+      const menus = [];
+      console.log(goudongWebAdminResource)
+      goudongWebAdminResource.filter(f => !f.hidden).forEach((item, index, arr) => {
+        const obj = this.generate(item);
+        menus.push(obj)
+      })
+      console.log(menus);
+
+      initMenuApi(menus).then(data => {
+        this.$message.success("推送成功")
+      })
     },
     addMenu() { // 新增菜单
       this.createMenuDialog = true
