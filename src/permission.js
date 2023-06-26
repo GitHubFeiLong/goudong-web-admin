@@ -39,7 +39,7 @@ router.beforeEach(async(to, from, next) => {
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           await store.dispatch('user/getInfo').catch(reason => {
             console.log("获取当前用户异常，重定向登录页")
-            store.dispatch('user/resetToken')
+            // store.dispatch('user/resetToken')
             NProgress.done()
           })
           // const roles = store.getters.roles

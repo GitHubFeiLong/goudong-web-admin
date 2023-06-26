@@ -1,7 +1,7 @@
 <template>
   <section class="app-main">
     <el-backtop target=".app-main" :right="27" :bottom="40" />
-    <div class="app-container-parent">
+    <div id="app-container-parent" class="app-container-parent">
       <transition name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
           <router-view :key="key" />
@@ -28,6 +28,7 @@ export default {
 <style lang="scss" scoped>
 @import 'src/styles/element-variables';
 @import 'element-ui/packages/theme-chalk/src/common/var.scss';
+@import "~@/styles/variables.scss";
 .app-main {
   /* 84 = navbar + tags-view = 50 + 34 */
   height: calc(100vh - 84px);

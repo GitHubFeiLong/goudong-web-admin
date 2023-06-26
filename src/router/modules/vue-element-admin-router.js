@@ -261,6 +261,31 @@ const vueElementAdminRouter = [
       }
     ]
   },
+  {
+    name: '应用管理',
+    type: 1,
+    openModel: 1,
+    path: '/iframe',
+    component: Layout,
+    componentPath: '@/views/iframe/index',
+    redirect: '/iframe/index',
+    permissionId: 'sys:demo',
+    meta: {
+      title: 'iframe测试',
+      icon: 'iconfont-yingyongguanli',
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/iframe/index'),
+        name: '测试',
+        meta: {
+          title: '测试title',
+          icon: 'pdf'
+        }
+      }
+    ]
+  }
 
   // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
