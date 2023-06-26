@@ -268,21 +268,14 @@ const vueElementAdminRouter = [
     path: '/iframe',
     component: Layout,
     componentPath: '@/views/iframe/index',
-    redirect: '/iframe/index',
-    permissionId: 'sys:demo',
-    meta: {
-      title: 'iframe测试',
-      icon: 'iconfont-yingyongguanli',
-    },
+    permissionId: 'sys:iframe',
+    hidden: true,
     children: [
       {
-        path: 'index',
+        path: '/iframe/index',
         component: () => import('@/views/iframe/index'),
-        name: '测试',
-        meta: {
-          title: '测试title',
-          icon: 'pdf'
-        }
+        name: 'link',
+        meta: { title: 'element ui', icon: 'link' }
       }
     ]
   }
