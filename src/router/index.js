@@ -4,8 +4,6 @@ import Router from 'vue-router'
 import Layout from '@/layout'
 
 /* Router Modules */
-import { goudongWebAdminRouters } from '@/router/modules/goudong-web-admin-router'
-import vueElementAdminRouter from '@/router/modules/vue-element-admin-router'
 
 Vue.use(Router)
 
