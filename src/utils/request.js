@@ -144,6 +144,18 @@ service.interceptors.response.use(response => {
     return Promise.reject(result)
   }
 
+  if (status === 403) {
+    // 跳转到登录页
+    Router.push({ path: '/403' })
+    return Promise.reject(result)
+  }
+
+  if (status === 404) {
+    // 跳转到登录页
+    Router.push({ path: '/404' })
+    return Promise.reject(result)
+  }
+
   if (status >= 400) {
     // 当定义blob 且失败时 返回json
     if (config.responseType && config.responseType === 'blob' && result.type === 'application/json') {

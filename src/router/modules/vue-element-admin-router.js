@@ -123,10 +123,10 @@ const vueElementAdminRouter = [
     },
     children: [
       {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
+        path: '403',
+        component: () => import('@/views/error-page/403'),
+        name: 'Page403',
+        meta: { title: '403', noCache: true }
       },
       {
         path: '404',

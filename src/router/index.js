@@ -58,13 +58,13 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
+    path: '/403',
+    component: () => import('@/views/error-page/403'),
     hidden: true
   },
   {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
     hidden: true
   },
   {
@@ -120,7 +120,9 @@ export const constantRoutes = [
       }
     ]
   },
-  // ...vueElementAdminRouter
+
+  // 必须放在最后 404
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 /**

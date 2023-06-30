@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import errGif from '@/assets/401_images/401.gif'
+import errGif from '@/assets/403_images/403.gif'
 
 export default {
-  name: 'Page401',
+  name: 'Page403',
   data() {
     return {
       errGif: errGif + '?' + +new Date(),

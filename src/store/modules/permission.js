@@ -58,7 +58,8 @@ const actions = {
       // 循环设置组件
       permissionRoutesComponent(permission_routes);
       commit('SET_ROUTES', permission_routes)
-      permission_routes = constantRoutes.concat(vueElementAdminRouter).concat(permission_routes)
+      permission_routes = constantRoutes.concat(permission_routes)
+      // permission_routes = constantRoutes.concat(vueElementAdminRouter).concat(permission_routes)
       resolve(permission_routes)
     })
   }
