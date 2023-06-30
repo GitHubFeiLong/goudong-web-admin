@@ -5,7 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import getPageTitle from '@/utils/get-page-title'
 import LocalStorageUtil from '@/utils/LocalStorageUtil'
-import { PERMISSION_ROUTES_LOCAL_STORAGE } from "@/constant/LocalStorageConst";
+import { PERMISSION_ROUTES_LOCAL_STORAGE, TOKEN_LOCAL_STORAGE } from "@/constant/LocalStorageConst";
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -28,7 +28,6 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // determine whether the user has obtained his permission roles through getInfo
       // 当有角色，且已经根据角色添加过路由了就放行，否则需要去计算路由
-      console.log(123)
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
@@ -37,9 +36,9 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          await store.dispatch('user/getInfo').catch(reason => {
+          await store.dispatch('user/getInfoByLocalStorage').catch(reason => {
             console.log("获取当前用户异常，重定向登录页")
-            // store.dispatch('user/resetToken')
+            store.dispatch('user/resetToken')
             NProgress.done()
           })
           // const roles = store.getters.roles

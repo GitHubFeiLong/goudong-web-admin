@@ -262,7 +262,7 @@ const vueElementAdminRouter = [
     ]
   },
   {
-    name: '应用管理',
+    name: '应用管理11',
     type: 1,
     openModel: 1,
     path: '/iframe',

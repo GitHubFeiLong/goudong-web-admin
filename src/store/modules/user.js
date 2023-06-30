@@ -140,6 +140,27 @@ const actions = {
     })
   },
 
+  getInfoByLocalStorage({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      console.log("getInfo")
+      const user = LocalStorageUtil.getUser();
+      const { username, avatar, nickname } = user
+      const roles = []
+      for (const key in user.roles) {
+        roles.push(user.roles[key].roleName)
+      }
+      if (roles.length === 0) {
+        roles.push('匿名角色')
+      }
+
+      commit('SET_TOKEN', LocalStorageUtil.getAccessToken())
+      commit('SET_ROLES', roles)
+      commit('SET_NAME', user.username)
+      commit('SET_AVATAR', user.avatar || defaultAvatarPng)
+      commit('SET_INTRODUCTION', nickname)
+      resolve(user)
+    })
+  },
   // 退出
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
