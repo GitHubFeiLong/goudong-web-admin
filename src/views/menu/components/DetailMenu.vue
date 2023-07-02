@@ -236,6 +236,7 @@ export default {
     selectMenu() {
       this.menu = { ...this.selectMenu }
       this.menu.icon = ''
+      this.menu.method = 'GET'
       this.menuData = this.$store.getters.allMenus;
       this.parentMenu.id = this.selectMenu.parentId
 
