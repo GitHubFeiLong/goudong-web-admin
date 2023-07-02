@@ -420,9 +420,11 @@ export default {
     // 打开审核
     dialogAudit(row) {
       this.dialog.audit.open = true
+
       this.dialog.audit.form.data = {
         id: row.id,
-        appName: row.appName
+        appName: row.appName,
+        status: row.status
       }
     },
     dialogAuditCancel() {

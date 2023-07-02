@@ -42,7 +42,7 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes)
+    state.routes = routes
   },
 }
 
@@ -57,8 +57,10 @@ const actions = {
     return new Promise(resolve => {
       // 循环设置组件
       permissionRoutesComponent(permission_routes);
+      // 必须放在最后 404
+      permission_routes.push({ path: '*', redirect: '/404', hidden: true })
+      // permission_routes = constantRoutes.concat(permission_routes)
       commit('SET_ROUTES', permission_routes)
-      permission_routes = constantRoutes.concat(permission_routes)
       // permission_routes = constantRoutes.concat(vueElementAdminRouter).concat(permission_routes)
       resolve(permission_routes)
     })

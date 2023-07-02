@@ -24,10 +24,28 @@ export function listMenuApi() {
   })
 }
 
+/**
+ * 新增菜单
+ * @param data
+ * @returns {*}
+ */
 export function addMenuApi(data) {
   return request({
     url: `/api/user/base-menu`,
     method: 'post',
+    data
+  })
+}
+
+/**
+ * 修改菜单
+ * @param data
+ * @returns {*}
+ */
+export function updateMenuApi(data) {
+  return request({
+    url: `/api/user/base-menu`,
+    method: 'put',
     data
   })
 }

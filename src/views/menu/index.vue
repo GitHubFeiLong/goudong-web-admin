@@ -150,6 +150,40 @@ export default {
         this.$message.success("推送成功")
       })
     },
+    generate(item) {
+      const obj = {
+        name: item.name,
+        type: item.type,
+        openModel: item.openModel,
+        path: item.path,
+        permissionId: item.permissionId,
+        method: item.method,
+        metadata: item.meta,
+      }
+      if (item.meta) {
+        if (item.meta.icon) {
+          obj.icon = item.meta.icon
+        }
+        if (!item.meta.title) {
+          obj.metadata.title = obj.name
+        }
+
+        obj.metadata = JSON.stringify(obj.metadata)
+      }
+      // 菜单（组件）未单独配置组件路由
+      if (item.type === 1 && !item.componentPath) {
+        obj.componentPath = item.path
+      }
+
+      if (item.children) {
+        // 子元素
+        obj.children = [];
+        item.children.forEach((i, index, arr) => {
+          obj.children.push(this.generate(i));
+        })
+      }
+      return obj;
+    },
     addMenu() { // 新增菜单
       this.createMenuDialog = true
     },

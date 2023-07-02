@@ -176,6 +176,22 @@ export const goudongWebAdminResource = [
             method: '["GET"]',
             permissionId: 'sys:menu:query',
           },
+          {
+            name: '新增菜单',
+            type: 2,
+            openModel: 0,
+            path: '/api/user/base-menu/base-menu',
+            method: '["POST"]',
+            permissionId: 'sys:menu:add',
+          },
+          {
+            name: '编辑菜单',
+            type: 2,
+            openModel: 0,
+            path: '/api/user/base-menu/base-menu',
+            method: '["PUT"]',
+            permissionId: 'sys:menu:edit',
+          },
         ]
       },
       {

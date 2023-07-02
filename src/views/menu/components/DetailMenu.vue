@@ -12,8 +12,10 @@
               <el-select ref="selectParentMenu" v-model="parentMenu.id" placeholder="请选择上级菜单">
                 <el-option :key="parentMenu.id" :value="parentMenu.id" :label="parentMenu.name" hidden />
                 <el-tree
+                  ref="selectParentMenuTree"
                   :data="menuData"
                   :props="menuProps"
+                  default-expand-all
                   node-key="id"
                   accordion
                   highlight-current
@@ -56,7 +58,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="菜单图标:" prop="remark" :class="iconInputClass">
-              <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" :disabled="menu.type === 2" clearable>
+              <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" disabled clearable>
                 <template #prefix>
                   <span style="padding-left: 5px; color: #606266 ">
                     <i :class="menu.icon" />
@@ -133,6 +135,9 @@
         <el-form-item label="菜单元数据:" prop="metadata">
           <el-input v-model="menu.metadata" type="textarea" :rows="5" placeholder="请输入JSON格式的路由元数据" :disabled="menu.type === 0" />
         </el-form-item>
+        <el-form-item>
+          <el-button icon="el-icon-edit" type="primary" @click="updateMenu">修改</el-button>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -142,6 +147,9 @@
 
 import { EL_ICONS } from "@/constant/commons";
 import { isJSON } from "@/utils/validate";
+import { simpleCreateUser } from "@/api/user";
+import { Message } from "element-ui";
+import { updateMenuApi } from "@/api/menu";
 export default {
   name: 'DetailMenu',
   props: {
@@ -155,15 +163,17 @@ export default {
     },
   },
   data() {
-    const validateMetadata = (rule, value, callback) => {
-      isJSON(value).then(boo => {
-        console.log(boo)
-        if (!boo) {
-          callback(new Error(""));
-        } else {
-          callback();
-        }
-      })
+    const validateMetadata = async(rule, value, callback) => {
+      console.log(value)
+      if (value) {
+        await isJSON(value).then(boo => {
+          if (boo) {
+            callback();
+          }
+          callback(new Error());
+        })
+      }
+      callback();
     };
     return {
       menuData: undefined,
@@ -225,9 +235,17 @@ export default {
   watch: {
     selectMenu() {
       this.menu = { ...this.selectMenu }
+      this.menu.icon = ''
       this.menuData = this.$store.getters.allMenus;
-      this.parentMenu.id = this.menu.parentId
-      this.parentMenu.name = '系统管理'
+      this.parentMenu.id = this.selectMenu.parentId
+
+      var pMenuNames = this.menu.menuFullName.split("/");
+      console.log(pMenuNames)
+      if (pMenuNames.length > 1) {
+        this.parentMenu.name = pMenuNames[pMenuNames.length - 2].trim()
+      } else {
+        this.parentMenu.name = ''
+      }
     },
     'menu.type'() {
       switch (this.menu.type) {
@@ -252,13 +270,6 @@ export default {
           break;
       }
     },
-    'menu.icon'() {
-      if (this.menu.icon !== '') {
-        this.iconInputClass = 'icon-input-class';
-      } else {
-        this.iconInputClass = 'default-icon-input-class';
-      }
-    }
   },
   methods: {
     handleMenuNodeClick(data) {
@@ -293,15 +304,26 @@ export default {
       }
       this.close();
     },
-    submitForm() {
-      console.log(this.menu)
+    // 修改
+    updateMenu() {
       let data = { ...this.menu };
       data.method = JSON.stringify(this.menu.method);
-      // addMenuApi(data).then(data => {
-      //   this.$message.success("添加成功");
-      //   this.refreshMenu();
-      //   this.close();
-      // })
+      data.metadata = data.metadata ? data.metadata : undefined;
+      this.$refs.addMenuForm1.validate((valid) => {
+        if (valid) {
+          this.$refs.addMenuForm2.validate((valid2) => {
+            if (valid2) {
+              updateMenuApi(data).then(resp => {
+                console.log(resp);
+              })
+            } else {
+              return false;
+            }
+          });
+        } else {
+          return false;
+        }
+      });
     },
     close() {
     }

@@ -118,9 +118,6 @@ export const constantRoutes = [
       }
     ]
   },
-
-  // 必须放在最后 404
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 /**

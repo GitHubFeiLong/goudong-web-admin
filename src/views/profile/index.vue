@@ -34,6 +34,7 @@ import UserCard from './components/UserCard'
 import Activity from './components/Activity'
 import Timeline from './components/Timeline'
 import Account from './components/Account'
+import LocalStorageUtil from "@/utils/LocalStorageUtil";
 
 export default {
   name: 'Profile',
@@ -56,10 +57,11 @@ export default {
   },
   methods: {
     getUser() {
+      let user = LocalStorageUtil.getUser();
       this.user = {
-        name: this.name,
+        name: user.username,
         role: this.roles.join(' | '),
-        email: 'admin@test.com',
+        email: user.email,
         avatar: this.avatar
       }
     }

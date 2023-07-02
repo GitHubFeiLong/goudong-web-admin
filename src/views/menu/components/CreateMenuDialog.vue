@@ -53,7 +53,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="菜单图标:" prop="remark" :class="iconInputClass">
-            <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" :disabled="menu.type === 2" clearable>
+            <el-select v-model="menu.icon" popper-class="icon-el-select" :popper-append-to-body="false" placeholder="请选择菜单图标" disabled clearable>
               <template #prefix>
                 <span style="padding-left: 5px; color: #606266 ">
                   <i :class="menu.icon" />

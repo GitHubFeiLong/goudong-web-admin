@@ -192,3 +192,16 @@ export function changeLockedApi(userId) {
     method: 'put'
   })
 }
+
+/**
+ * 修改用户自己的密码
+ * @param password
+ * @returns {*}
+ */
+export function changeOwnPassword(password) {
+  return request({
+    url: `/api/user/base-user/change-own-password`,
+    method: 'put',
+    data: { password: password }
+  })
+}

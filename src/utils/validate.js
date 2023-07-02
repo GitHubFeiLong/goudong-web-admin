@@ -204,6 +204,30 @@ export function password(rule, value, callback) {
 }
 
 /**
+ * 强密码校验
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
+export function strongPassword(rule, value, callback) {
+  // 强密码（三种都包含）
+  const strong = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])/;
+
+  // 基本条件
+  if (value === '' || value === undefined || value === null || value.length < 8 || value.length > 20) {
+    return callback(new Error("请输入8-20位字母，数字，符号的组合"))
+  }
+  // 强
+  if (strong.test(value)) {
+    console.log(value, "是强密码")
+    return callback()
+  }
+
+  callback(new Error("请输入8-20位字母，数字，符号的组合"))
+}
+
+/**
  * 手机号校验
  * @param rule
  * @param value
