@@ -4,7 +4,7 @@
     <div class="detail-menu-header">{{ selectMenu.menuFullName }}</div>
 
     <div class="detail-menu-body">
-      <el-form ref="addMenuForm1" v-model="menu" :rules="rules1" label-width="100px" :inline="true" label-position="right">
+      <el-form ref="addMenuForm1" :model="menu" :rules="rules1" label-width="100px" :inline="true" label-position="right">
         <el-row>
           <el-col :span="12">
             <el-form-item label="上级菜单:" prop="parentId">
@@ -131,7 +131,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-form ref="addMenuForm2" v-model="menu" :rules="rules2" label-width="100px" label-position="right">
+      <el-form ref="addMenuForm2" :model="menu" :rules="rules2" label-width="100px" label-position="right">
         <el-form-item label="菜单元数据:" prop="metadata">
           <el-input v-model="menu.metadata" type="textarea" :rows="5" placeholder="请输入JSON格式的路由元数据" :disabled="menu.type === 0" />
         </el-form-item>
@@ -147,7 +147,7 @@
 
 import { EL_ICONS } from "@/constant/commons";
 import { isJSON } from "@/utils/validate";
-import { simpleCreateUser } from "@/api/user";
+import { deleteUserByIdsApi, simpleCreateUser } from "@/api/user";
 import { Message } from "element-ui";
 import { updateMenuApi } from "@/api/menu";
 export default {
@@ -218,7 +218,7 @@ export default {
       },
       rules1: {
         name: [
-          { required: true, message: '请输入菜单名称', trigger: 'blur' }
+          { required: true, message: '请输入菜单名称1', trigger: 'blur' }
         ],
         sortNum: [
           { required: true, type: 'number', min: 1, max: 99999, message: '请输入排序号', trigger: 'blur' }
@@ -325,12 +325,22 @@ export default {
       let data = { ...this.menu };
       data.method = JSON.stringify(this.menu.method);
       data.metadata = data.metadata ? JSON.stringify(data.metadata) : undefined;
+
       this.$refs.addMenuForm1.validate((valid) => {
         if (valid) {
           this.$refs.addMenuForm2.validate((valid2) => {
             if (valid2) {
-              updateMenuApi(data).then(resp => {
-                console.log(resp);
+              this.$confirm('此操作将永久修改该菜单, 是否继续?', '保存', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                updateMenuApi(data).then(resp => {
+                  this.$message.success("保存成功")
+                  console.log(resp);
+                })
+              }).catch(() => {
+                // this.$message.info("已取消");
               })
             } else {
               return false;

@@ -31,7 +31,7 @@
             <template v-slot="{ node, data }">
               <span>
                 <i v-if="data.type === 1" class="el-icon-folder" />
-                <i v-else class="el-icon-document" />
+                <svg-icon v-else icon-class="iconfont-anniuquanxiang" />
                 <span class="el-tree-node-span">{{ data.name }}</span>
               </span>
             </template>
