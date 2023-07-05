@@ -159,7 +159,7 @@
               icon="el-icon-edit"
               :underline="false"
               type="primary"
-              :disabled="Number(scope.row.id) === 1667779450730426368"
+              :disabled="Number(scope.row.id) === 1667779450730426368 || scope.row.status !== 0"
               @click="dialogAudit(scope.row)"
             >审核</el-link>
             <el-link
