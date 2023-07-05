@@ -41,6 +41,7 @@
       </div>
       <div class="filter-item">
         <el-button
+          v-permission="'sys:app:query'"
           icon="el-icon-search"
           type="primary"
           @click="searchFunc"
@@ -56,7 +57,7 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="dialog.create.open=true">
+        <el-button v-permission="'sys:app:apply'" class="el-button--small" icon="el-icon-plus" type="primary" @click="dialog.create.open=true">
           新增
         </el-button>
       </div>
@@ -154,6 +155,7 @@
         <template v-slot="scope">
           <div class="el-link-parent">
             <el-link
+              v-permission="'sys:app:audit'"
               icon="el-icon-edit"
               :underline="false"
               type="primary"
@@ -161,6 +163,7 @@
               @click="dialogAudit(scope.row)"
             >审核</el-link>
             <el-link
+              v-permission="'sys:app:delete'"
               icon="el-icon-delete"
               :underline="false"
               type="danger"

@@ -49,3 +49,15 @@ export function updateMenuApi(data) {
     data
   })
 }
+
+/**
+ * 删除菜单
+ * @param id
+ * @returns {*}
+ */
+export function deleteMenuApi(id) {
+  return request({
+    url: `/api/user/base-menu/${id}`,
+    method: 'delete',
+  })
+}

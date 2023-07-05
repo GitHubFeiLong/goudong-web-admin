@@ -3,8 +3,8 @@
   <div class="app-container">
     <el-container class="app-container-main">
       <el-header height="76px">
-        <el-button icon="el-icon-edit" type="primary" @click="initMenu">初始菜单</el-button>
-        <el-button icon="el-icon-plus" type="primary" @click="addMenu">新增</el-button>
+        <el-button v-permission="'sys:menu:init'" icon="el-icon-edit" type="primary" @click="initMenu">初始菜单</el-button>
+        <el-button v-permission="'sys:menu:add'" icon="el-icon-plus" type="primary" @click="addMenu">新增</el-button>
         <el-button @click="expandedTree(true)">展开全部</el-button>
         <el-button @click="expandedTree(false)">折叠全部</el-button>
       </el-header>

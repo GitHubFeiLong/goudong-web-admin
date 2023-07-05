@@ -36,6 +36,7 @@
       </div>
       <div class="filter-item">
         <el-button
+          v-permission="'sys:user:query'"
           icon="el-icon-search"
           type="primary"
           @click="searchFunc"
@@ -217,9 +218,9 @@
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.enabled"
+            :disabled="permissionDisabled('sys:user:enable')"
             :active-value="true"
             :inactive-value="false"
-            :disabled="scope.row.id <= 2147483647"
             @change="changeEnabled(scope.row)"
           />
         </template>
@@ -234,9 +235,9 @@
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.locked"
+            :disabled="permissionDisabled('sys:user:lock')"
             :active-value="true"
             :inactive-value="false"
-            :disabled="scope.row.id <= 2147483647"
             active-color="#F56C6C"
             inactive-color="#C0CCDA"
             @change="changeLocked(scope.row)"
@@ -261,6 +262,7 @@
               @click="editUser(scope.row)"
             >编辑</el-link>
             <el-link
+              v-permission="'sys:user:reset-password'"
               icon="el-icon-key"
               :underline="false"
               type="warning"

@@ -16,6 +16,7 @@
       </div>
       <div class="filter-item">
         <el-button
+          v-permission="'sys:role:query'"
           icon="el-icon-search"
           type="primary"
           @click="searchFunc"
@@ -31,10 +32,10 @@
     <!--顶部操作栏-->
     <div class="el-table-tool">
       <div class="left-tool">
-        <el-button class="el-button--small" icon="el-icon-plus" type="primary" @click="addRole">新增</el-button>
-        <el-button class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteRoles">删除</el-button>
-        <el-button class="el-button--small" icon="el-icon-upload2">导入</el-button>
-        <el-button class="el-button--small" icon="el-icon-download">导出</el-button>
+        <el-button v-permission="'sys:role:add'" class="el-button--small" icon="el-icon-plus" type="primary" @click="addRole">新增</el-button>
+        <el-button v-permission="'sys:role:delete'" class="el-button--small" icon="el-icon-delete" type="danger" @click="deleteRoles">删除</el-button>
+        <!--        <el-button class="el-button&#45;&#45;small" icon="el-icon-upload2">导入</el-button>
+        <el-button class="el-button&#45;&#45;small" icon="el-icon-download">导出</el-button>-->
         <!--        <el-button class="el-button&#45;&#45;small" icon="el-icon-upload2" @click="importUserDialog=true">
           导入
         </el-button>
@@ -125,6 +126,7 @@
         <template v-slot="scope">
           <div class="el-link-parent">
             <el-link
+              v-permission="'sys:role:edit'"
               icon="el-icon-edit"
               :underline="false"
               type="primary"
@@ -132,6 +134,7 @@
               @click="editRole(scope.row)"
             >编辑</el-link>
             <el-link
+              v-permission="'sys:role:permission'"
               icon="el-icon-finished"
               :underline="false"
               type="primary"
@@ -139,6 +142,7 @@
               @click="editRoleMenu(scope.row)"
             >权限</el-link>
             <el-link
+              v-permission="'sys:role:delete'"
               icon="el-icon-delete"
               :underline="false"
               type="danger"

@@ -16,3 +16,22 @@
 <!--user 是icon的文件名-->
  <svg-icon icon-class="user" />
 ```
+
+## 按钮权限
+前端项目中有三类需要注意的按钮权限：
+1. 主要按钮
+2. table的切换状态按钮
+3. table操作栏中的操作按钮
+
+### 使用方式
+
+### 全局指令
+使用全局指令`v-permission`,
+```html
+<el-button v-permission="'sys:menu:delete'"></el-button>
+```
+### 使用全局方法
+因为element-ui组件使用`v-permission`指令，会将其隐藏
+```html
+<el-switch :disabled="permissionDisabled('sys:user:lock')"/>
+```

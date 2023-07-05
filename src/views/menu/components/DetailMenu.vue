@@ -136,7 +136,8 @@
           <el-input v-model="menu.metadata" type="textarea" :rows="5" placeholder="请输入JSON格式的路由元数据" :disabled="menu.type === 0" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="updateMenu"> <svg-icon icon-class="iconfont-baocun" />保存</el-button>
+          <el-button v-permission="'sys:menu:delete'" type="danger" icon="el-icon-delete" @click="deleteMenu">删除</el-button>
+          <el-button v-permission="'sys:menu:edit'" type="primary" @click="updateMenu"> <svg-icon icon-class="iconfont-baocun" />保存</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -149,7 +150,7 @@ import { EL_ICONS } from "@/constant/commons";
 import { isJSON } from "@/utils/validate";
 import { deleteUserByIdsApi, simpleCreateUser } from "@/api/user";
 import { Message } from "element-ui";
-import { updateMenuApi } from "@/api/menu";
+import { deleteMenuApi, updateMenuApi } from "@/api/menu";
 export default {
   name: 'DetailMenu',
   props: {
@@ -319,6 +320,20 @@ export default {
         remark: '',
       }
       this.close();
+    },
+    // 删除菜单
+    deleteMenu() {
+      this.$confirm('此操作将永久删除该菜单, 是否继续?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteMenuApi(this.menu.id).then(resp => {
+          this.$message.success("删除成功")
+        })
+      }).catch(() => {
+        this.$message.info("取消删除");
+      })
     },
     // 修改
     updateMenu() {
