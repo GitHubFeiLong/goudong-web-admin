@@ -234,7 +234,7 @@ export default {
       if (this.visible) {
         this.menuData = this.$store.getters.allMenus;
         if (this.icons.length === 0) {
-          this.icons = EL_ICONS
+          // this.icons = EL_ICONS
         }
       }
     },
@@ -262,11 +262,11 @@ export default {
       }
     },
     'menu.icon'() {
-      if (this.menu.icon !== '') {
-        this.iconInputClass = 'icon-input-class';
-      } else {
-        this.iconInputClass = 'default-icon-input-class';
-      }
+      // if (this.menu.icon !== '') {
+      //   this.iconInputClass = 'icon-input-class';
+      // } else {
+      //   this.iconInputClass = 'default-icon-input-class';
+      // }
     }
   },
   methods: {

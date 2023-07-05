@@ -38,7 +38,7 @@
           </el-tree>
         </el-aside>
         <el-main class="detail">
-          <DetailMenu v-show="selectMenu.menuFullName !== ''" :select-menu="selectMenu" />
+          <DetailMenu v-show="selectMenu.menuFullName !== ''" :select-menu="selectMenu" :refresh-menu="load" />
         </el-main>
       </el-container>
     </el-container>
@@ -50,7 +50,7 @@
 
 <script>
 import { initMenuApi, listMenuApi } from "@/api/menu";
-import { excludeApi } from "@/utils/tree";
+import { menuTreeHandler } from "@/utils/tree";
 import { goudongWebAdminResource } from "@/router/modules/goudong-web-admin-router";
 
 export default {
@@ -89,7 +89,7 @@ export default {
         this.menus = data;
 
         // 将菜单中的接口过滤
-        const arr2 = excludeApi(this.menus)
+        const arr2 = menuTreeHandler(this.menus)
         this.$store.dispatch('menu/setAllMenus', arr2);
       })
     },

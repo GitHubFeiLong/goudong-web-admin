@@ -162,6 +162,11 @@ export default {
         return false;
       }
     },
+    // 父组件刷新菜单数据
+    refreshMenu: {
+      type: Function,
+      default: null
+    }
   },
   data() {
     const validateMetadata = async(rule, value, callback) => {
@@ -330,6 +335,7 @@ export default {
       }).then(() => {
         deleteMenuApi(this.menu.id).then(resp => {
           this.$message.success("删除成功")
+          this.close()
         })
       }).catch(() => {
         this.$message.info("取消删除");
@@ -352,7 +358,7 @@ export default {
               }).then(() => {
                 updateMenuApi(data).then(resp => {
                   this.$message.success("保存成功")
-                  console.log(resp);
+                  this.refreshMenu();
                 })
               }).catch(() => {
                 // this.$message.info("已取消");
@@ -367,6 +373,8 @@ export default {
       });
     },
     close() {
+      this.refreshMenu();
+      this.selectMenu.menuFullName = ''
     }
   },
 }
