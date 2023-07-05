@@ -5,6 +5,13 @@
     <a class="document-btn" target="_blank" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">国内文档</a>
     <dropdown-menu class="document-btn" :items="articleList" title="系列文章" />
     <a class="document-btn" target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/zh/job/">内推招聘</a>
+
+    <div>
+      <router-link to="/">Go to Home</router-link>
+      <router-link to="/about">Go to About</router-link>
+
+      <router-view />
+    </div>
   </div>
 </template>
 

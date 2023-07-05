@@ -4,7 +4,7 @@
     <div class="detail-menu-header">{{ selectMenu.menuFullName }}</div>
 
     <div class="detail-menu-body">
-      <el-form ref="addMenuForm1" :model="menu" :rules="rules" label-width="100px" :inline="true" label-position="right">
+      <el-form ref="addMenuForm1" v-model="menu" :rules="rules1" label-width="100px" :inline="true" label-position="right">
         <el-row>
           <el-col :span="12">
             <el-form-item label="上级菜单:" prop="parentId">
@@ -131,12 +131,12 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-form ref="addMenuForm2" :model="menu" :rules="rules" label-width="100px" label-position="right">
+      <el-form ref="addMenuForm2" v-model="menu" :rules="rules2" label-width="100px" label-position="right">
         <el-form-item label="菜单元数据:" prop="metadata">
           <el-input v-model="menu.metadata" type="textarea" :rows="5" placeholder="请输入JSON格式的路由元数据" :disabled="menu.type === 0" />
         </el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-edit" type="primary" @click="updateMenu">修改</el-button>
+          <el-button type="primary" @click="updateMenu"> <svg-icon icon-class="iconfont-baocun" />保存</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -216,16 +216,15 @@ export default {
         metadata: undefined,
         remark: '',
       },
-      rules: {
+      rules1: {
         name: [
           { required: true, message: '请输入菜单名称', trigger: 'blur' }
-        ],
-        remark: [
-          { required: false, max: 255, message: '备注限制最多255字符', trigger: 'blur' }
         ],
         sortNum: [
           { required: true, type: 'number', min: 1, max: 99999, message: '请输入排序号', trigger: 'blur' }
         ],
+      },
+      rules2: {
         metadata: [
           { required: false, message: '请输入正确的JSON格式', trigger: 'blur', validator: validateMetadata }
         ]
@@ -234,14 +233,30 @@ export default {
   },
   watch: {
     selectMenu() {
-      this.menu = { ...this.selectMenu }
-      this.menu.icon = ''
-      this.menu.method = 'GET'
+      this.menu.hide = this.selectMenu.hide
+      this.menu.id = this.selectMenu.id
+      this.menu.menuFullName = this.selectMenu.menuFullName
+      this.menu.metadata = this.selectMenu.metadata
+      this.menu.name = this.selectMenu.name
+      this.menu.openModel = this.selectMenu.openModel
+      this.menu.parentId = this.selectMenu.parentId
+      this.menu.path = this.selectMenu.path
+      this.menu.permissionId = this.selectMenu.permissionId
+      this.menu.sortNum = this.selectMenu.sortNum
+      this.menu.type = this.selectMenu.type
+      this.menu.icon = undefined
+
+      // 请求方法下拉选
+      if (this.selectMenu.method) {
+        this.menu.method = JSON.parse(this.selectMenu.method)
+      } else {
+        this.menu.method = [];
+      }
+      // TODO 菜单不包含按钮
       this.menuData = this.$store.getters.allMenus;
       this.parentMenu.id = this.selectMenu.parentId
 
-      var pMenuNames = this.menu.menuFullName.split("/");
-      console.log(pMenuNames)
+      const pMenuNames = this.selectMenu.menuFullName.split("/");
       if (pMenuNames.length > 1) {
         this.parentMenu.name = pMenuNames[pMenuNames.length - 2].trim()
       } else {
@@ -309,7 +324,7 @@ export default {
     updateMenu() {
       let data = { ...this.menu };
       data.method = JSON.stringify(this.menu.method);
-      data.metadata = data.metadata ? data.metadata : undefined;
+      data.metadata = data.metadata ? JSON.stringify(data.metadata) : undefined;
       this.$refs.addMenuForm1.validate((valid) => {
         if (valid) {
           this.$refs.addMenuForm2.validate((valid2) => {

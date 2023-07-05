@@ -121,8 +121,8 @@ export default {
       }
     },
     menuNodeClick(data, node) { // 菜单节点被点击
-      console.log(data)
-      console.log(node)
+      // console.log(data)
+      // console.log(node)
       this.selectMenu = { ...data }
       this.selectMenu.menuFullName = this.getMenuAllName(node)
     },
