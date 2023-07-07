@@ -23,7 +23,7 @@ export function simpleUpload(file) {
  */
 export function exportUserTemplateApi() {
   return request({
-    url: `/api/file/user/template/user`,
+    url: `/api/file/user-server/template/user`,
     method: 'get',
     responseType: 'blob',
   }).then(response => {
@@ -38,7 +38,7 @@ export function exportUserTemplateApi() {
  */
 export function exportUserApi(data) {
   return request({
-    url: `/api/file/user/export/user`,
+    url: `/api/file/user-server/export/user`,
     method: 'get',
     params: data,
     responseType: 'blob',

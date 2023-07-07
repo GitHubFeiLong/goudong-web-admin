@@ -80,14 +80,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="权限标识:" prop="permissionId">
-              <el-input v-model="menu.permissionId" placeholder="请输入权限标识" clearable :disabled="menu.type === 0" />
+              <el-tooltip effect="dark" :content="menu.permissionId" placement="top">
+                <el-input v-model="menu.permissionId" placeholder="请输入权限标识" clearable :disabled="menu.type === 0" />
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item :label="routePath.label" prop="path">
-              <el-input v-model="menu.path" :placeholder="routePath.placeholder" clearable />
+              <el-tooltip effect="dark" :content="menu.path" placement="top">
+                <el-input v-model="menu.path" :placeholder="routePath.placeholder" clearable />
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">

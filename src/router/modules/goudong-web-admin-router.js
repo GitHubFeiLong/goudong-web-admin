@@ -75,6 +75,14 @@ export const goudongWebAdminResource = [
             permissionId: 'sys:user:delete',
           },
           {
+            name: '导出用户',
+            type: 2,
+            openModel: 0,
+            path: '/api/file/user-server/export/user',
+            method: '["GET"]',
+            permissionId: 'sys:user:export',
+          },
+          {
             name: '编辑用户',
             type: 2,
             openModel: 0,
