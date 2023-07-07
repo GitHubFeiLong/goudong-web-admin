@@ -83,7 +83,6 @@
         align="center"
       />
       <el-table-column
-        fixed
         label="序号"
         min-width="50"
       >
@@ -92,19 +91,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed
         label="角色名称"
         prop="roleNameCn"
         sortable
       />
       <el-table-column
-        fixed
         label="角色标识"
         prop="roleName"
         sortable
       />
       <el-table-column
-        fixed
         label="用户数量"
         prop="userNumbers"
         sortable

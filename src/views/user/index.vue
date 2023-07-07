@@ -125,7 +125,6 @@
         align="center"
       />
       <el-table-column
-        fixed
         label="序号"
         width="50"
         align="center"
@@ -135,7 +134,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed
         label="用户名"
         width="75"
         prop="username"
@@ -209,7 +207,6 @@
         show-overflow-tooltip
       />
       <el-table-column
-        fixed="right"
         label="激活"
         width="80"
         prop="enabled"
@@ -226,7 +223,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        fixed="right"
         label="锁定"
         width="80"
         prop="locked"
@@ -246,7 +242,6 @@
       </el-table-column>
 
       <el-table-column
-        fixed="right"
         label="操作"
         width="230"
         align="center"

@@ -228,7 +228,7 @@ export default {
       },
       rules1: {
         name: [
-          { required: true, message: '请输入菜单名称1', trigger: 'blur' }
+          { required: true, message: '请输入菜单名称', trigger: 'blur' }
         ],
         sortNum: [
           { required: true, type: 'number', min: 1, max: 99999, message: '请输入排序号', trigger: 'blur' }
@@ -246,6 +246,7 @@ export default {
       this.menu.hide = this.selectMenu.hide
       this.menu.id = this.selectMenu.id
       this.menu.menuFullName = this.selectMenu.menuFullName
+      console.log(this.selectMenu.metadata)
       this.menu.metadata = this.selectMenu.metadata
       this.menu.name = this.selectMenu.name
       this.menu.openModel = this.selectMenu.openModel
@@ -284,7 +285,6 @@ export default {
           break;
         case 1:
           this.menu.method = undefined
-          this.menu.metadata = undefined
           this.menu.hide = false
           this.routePath = {
             label: '路由地址:',
