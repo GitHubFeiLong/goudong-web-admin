@@ -3,7 +3,7 @@
   <el-dialog title="编角色" width="600px" :visible.sync="visible" @close="close">
     <el-form ref="editRoleForm" :model="role" :rules="rules" label-width="80px">
       <el-form-item label="角色名称" prop="roleNameCn">
-        <el-input v-model="role.roleNameCn" clearable />
+        <el-input v-model="role.roleNameCn" clearable disabled />
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="role.remark" clearable />
